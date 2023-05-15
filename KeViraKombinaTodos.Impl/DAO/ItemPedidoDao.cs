@@ -79,7 +79,8 @@ namespace KeViraKombinaTodos.Impl.DAO {
                 string query = "SELECT IP.PedidoID, IP.ProdutoID, IP.Preco, IP.Quantidade, Prod.Descricao " +
                     "FROM ItemPedido IP " +
                     "INNER JOIN Pedido P ON P.PedidoID = IP.PedidoID " +
-                    "INNER JOIN Produto Prod ON Prod.ProdutoID = IP.ProdutoID ";
+                    "INNER JOIN Produto Prod ON Prod.ProdutoID = IP.ProdutoID " +
+                    "WHERE P.PedidoID = " + PedidoID;
 
                 SqlCommand cmd = new SqlCommand(query, conexao.conn);
                 cmd.CommandType = System.Data.CommandType.Text;

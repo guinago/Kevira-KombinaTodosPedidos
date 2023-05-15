@@ -109,6 +109,22 @@
             </dd>
 
             <dt>
+                @Html.LabelFor(model => model.Observacao, "Observação")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Observacao)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.Restricao, "Restrição")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Restricao)
+            </dd>
+
+            <dt>
 
             <dt>
                 @Html.LabelFor(model => model.Status, "Status")
@@ -134,7 +150,7 @@
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="Button" value="Voltar" id="btnVoltar" class="btn btn-warning" onClick="location.href='@Url.Action("CreateCondPagtoPedido", "Pedido")'; return false;" />
-                <input type="submit" value="Editar" id="btnEdit" class="btn btn-primary" onclick="location.href='@Url.Action("Edit", "Pedido", new { ProdutoID = Model.PedidoID})'; return false;" />
+                <input type="submit" value="Editar" id="btnEdit" class="btn btn-primary" onclick="location.href='@Url.Action("Edit", "Pedido", new { PedidoID = Model.PedidoID})'; return false;" />
             </div>
         </div>
     </p>

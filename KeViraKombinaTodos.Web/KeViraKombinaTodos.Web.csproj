@@ -785,6 +785,7 @@
     <Content Include="Views\Pedido\VisualizarPedidos.cshtml" />
     <Content Include="Views\Pedido\_GridProdutos.cshtml" />
     <Content Include="Views\Pedido\_GridItens.cshtml" />
+    <Content Include="Views\Pedido\VisualizarEntregas.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\backups-css\bootstrap.min.css.map" />
