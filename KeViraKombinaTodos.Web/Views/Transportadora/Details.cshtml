@@ -1,0 +1,37 @@
+﻿@model KeViraKombinaTodos.Web.Models.TransportadoraModel
+
+<div class="container">
+    <h2>Detalhes Transportadora</h2>
+
+    <div>
+        <hr />
+        <dl class="dl-horizontal">
+
+            <dt>
+                @Html.LabelFor(model => model.Descricao, "Descrição")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Descricao)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.Codigo, "Código")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Codigo)
+            </dd>
+
+        </dl>
+    </div>
+    <p>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="Button" value="Voltar" id="btnVoltar" class="btn btn-warning" onClick="location.href='@Url.Action("Index", "Transportadora")'; return false;" />
+                <input type="submit" value="Excluir" id="btnExcluir" class="btn btn-danger" onclick="location.href='@Url.Action("Excluir", "Transportadora", new { transportadoraID = Model.TransportadoraID})'; return false;" />
+                <input type="submit" value="Editar" id="btnEditar" class="btn btn-primary" onclick="location.href='@Url.Action("Edit", "Transportadora", new { transportadoraID = Model.TransportadoraID})'; return false;" />
+            </div>
+        </div>
+    </p>
+</div>

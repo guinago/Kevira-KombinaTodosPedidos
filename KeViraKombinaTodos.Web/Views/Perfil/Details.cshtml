@@ -1,0 +1,55 @@
+﻿@model KeViraKombinaTodos.Web.Models.PerfilModel
+
+<div class="container">
+    <h2>Detalhes Perfil</h2>
+
+    <div>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.LabelFor(model => model.Descricao, "Descrição")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Descricao)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.Codigo, "Código")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Codigo)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.SouTodoPoderoso, "Pode ver todos os pedidos")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.SouTodoPoderoso)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.SouComprador, "Pode ver apenas seus pedidos")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.SouComprador)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.SouTransportador, "Pode ver apenas suas entregas")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.SouTransportador)
+            </dd>
+        </dl>
+    </div>
+    <p>
+        <input type="Button" value="Voltar" id="btnVoltar" class="btn btn-warning" onClick="location.href='@Url.Action("Index", "Perfil")'; return false;" />
+        <input type="submit" value="Excluir" id="btnExcluir" class="btn btn-danger" onclick="location.href='@Url.Action("Excluir", "Perfil", new { perfilID = Model.PerfilID})'; return false;" />
+        <input type="submit" value="Editar" id="btnEdit" class="btn btn-primary" onclick="location.href='@Url.Action("Edit", "Perfil", new { perfilID = Model.PerfilID})'; return false;" />
+    </p>
+</div>

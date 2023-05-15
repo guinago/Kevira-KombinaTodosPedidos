@@ -1,0 +1,35 @@
+﻿@model IEnumerable<KeViraKombinaTodos.Web.Models.TransportadoraModel>
+
+@using GridMvc.Html
+@{
+    ViewBag.Title = "Transportadora";
+}
+<div class="container">
+    <h2>Transportadora</h2>
+
+    <div class="code-cut">
+        @Html.Grid(Model).Columns(columns =>
+        {
+            columns.Add(c => c.Descricao).Titled("Descrição").Filterable(true).Sortable(true);
+            columns.Add(c => c.Codigo).Titled("Código").Filterable(true).Sortable(true);
+            columns.Add(c => c.DataCriacao).Titled("Data Criação").Filterable(true).Sortable(true);
+            columns.Add(c => c.DataModificacao).Titled("Data Modificação").Filterable(true).Sortable(true);
+            columns.Add()
+                    .Encoded(false)
+                    .Sanitized(false)
+                    .SetWidth(30)
+                    .RenderValueAs(o => Html.ActionLink("Detalhes", "Details", new { transportadoraID = o.TransportadoraID }));
+
+        }).WithPaging(10).Sortable(true).EmptyText("Seu filtro não retornou resultados.")
+    </div>
+    <p>
+        <table>
+            <tr>
+                <td>
+                    <input type="button" value="Nova Transportadora" class="btn btn-primary" onclick="location.href='@Url.Action("Create", "Transportadora")'; return false;" />
+                </td>
+
+            </tr>
+        </table>
+    </p>
+</div>

@@ -1,0 +1,21 @@
+﻿@model KeViraKombinaTodos.Web.Models.PedidoModel
+
+<div class="container">
+    <div>
+        <h4>Detalhes Entrega</h4>
+        <hr />
+        @using (Html.BeginForm())
+        {
+            Html.RenderPartial("_FormEntrega", Model);
+        }
+    </div>
+    <p>
+        <div class="row">
+            @{Html.RenderPartial("_FormButtons"); }            
+        </div>
+    </p>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/funcoesjs")
+}

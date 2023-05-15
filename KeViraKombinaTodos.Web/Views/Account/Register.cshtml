@@ -1,0 +1,99 @@
+﻿@model KeViraKombinaTodos.Web.Models.RegisterViewModel
+@{
+    ViewBag.Title = "Registrar";
+    Culture = Culture;
+}
+<div class="container">
+    <h2>@ViewBag.Title</h2>
+
+    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <h2>Cadastro Comprador.</h2>
+        <hr />
+        @Html.ValidationSummary("", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(m => m.Nome, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Nome, new { @class = "form-control", onkeyup = "return RemoveCharacter(this.id)" })
+                @Html.ValidationMessageFor(model => model.Email)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.SobreNome, "Sobre-nome", new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.SobreNome, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.CPF, "CPF", new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.CPF, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.PhoneNumber, "Telefone", new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Email)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Senha, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.PasswordFor(m => m.Senha, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+            </div>
+        </div>
+        <p>
+            <table>
+                <tr>
+                    <td>
+                        <input type="submit" value="Registrar" class="btn btn-primary" />
+
+                    </td>
+                </tr>
+            </table>
+        </p>
+    }
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/inputmask")
+    @Scripts.Render("~/bundles/funcoesjs")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#PhoneNumber").inputmask("mask", { "mask": "(99)99999-9999" });
+
+            //validação CNPJ/CPF
+            $('#CPF').blur(function () {
+                // O CPF ou CNPJ
+                var cpf_cnpj = $(this).val();
+                // Testa a validação e formata se estiver OK
+                if (formata_cpf_cnpj(cpf_cnpj)) {
+                    $(this).val(formata_cpf_cnpj(cpf_cnpj));
+                } else {
+                    alert('CPF ou CNPJ inválido!');
+                    $("#CGC").val("");
+                }
+            });
+        });
+    </script>
+}

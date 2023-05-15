@@ -1,0 +1,24 @@
+﻿@model KeViraKombinaTodos.Web.Models.PedidoModel
+
+@using GridMvc.Html
+@{
+    ViewBag.Title = "Carrinho Produtos";
+}
+
+<div class="container">
+    <h2>Selecione os Produtos</h2>
+    <hr>
+
+    @Html.Partial("_GridProdutos", Model.Itens)
+
+    <p>
+        <table>
+            <tr>
+                <td>
+                    <input type="button" value="Avançar" class="btn btn-primary" onclick="location.href='@Url.Action("CreateDadosCliente", "Pedido")'; return false;" />
+                </td>
+
+            </tr>
+        </table>
+    </p>
+</div>

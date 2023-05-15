@@ -1,0 +1,56 @@
+﻿@model KeViraKombinaTodos.Web.Models.PedidoModel
+
+
+@{
+    ViewBag.Title = "Carrinho Pedido";
+}
+<div class="container">
+
+    <h2>Produtos</h2>
+
+    @if (Model.Itens != null)
+    {
+
+        for (int i = 0; i < Model.Itens.Count; i++)
+        {
+        <div class="form-group">
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.CheckBoxFor(model => model.Itens[i].Checked)
+                    @Html.DisplayFor(model => model.Itens[i].Descricao, new { htmlAttributes = new { @class = "control-label col-md-6" } })
+                </div>
+            </div>
+        </div>
+        }
+    }
+    <table>
+        <tr>
+            <td>
+                <input type="button" value="Avançar" class="btn btn-primary" onclick="location.href='@Url.Action("Create", "Pedido")'; return false;" />           
+            </td>
+
+        </tr>
+    </table>
+
+</div>
+
+@section scripts{
+    @Scripts.Render("~/bundles/jquery")
+        <script type="text/javascript">
+
+            function DisplayPedido(model) {  
+
+                    $.ajax({
+                        url: '@Url.Action("DisplayPedido")' + model,
+                        type: 'POST',
+                        success: function (result) {
+                            
+                        },
+                        error: function () {
+                            console.log('Error BackToCatalog');
+                        }
+                    });
+            };
+
+        </script>
+}

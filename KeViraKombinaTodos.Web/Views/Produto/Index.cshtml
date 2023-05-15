@@ -1,0 +1,36 @@
+﻿@model IEnumerable<KeViraKombinaTodos.Web.Models.ProdutoModel>
+
+@using GridMvc.Html
+@{
+    ViewBag.Title = "Produtos";
+}
+<div class="container">
+    <h2>Produtos</h2>
+
+    <div class="code-cut">
+        @Html.Grid(Model).Columns(columns =>
+        {
+            columns.Add(c => c.Descricao).Titled("Descrição").Filterable(true).Sortable(true);
+            columns.Add(c => c.Codigo).Titled("Código").Filterable(true).Sortable(true);
+            columns.Add(c => c.Valor).Titled("Valor").Filterable(true).Sortable(true);
+            columns.Add(c => c.Quantidade).Titled("Quantidade").Filterable(true).Sortable(true);
+            columns.Add(c => c.Ativo).Titled("Ativo").Filterable(true).Sortable(true);
+            columns.Add()
+                  .Encoded(false)
+                  .Sanitized(false)
+                  .SetWidth(30)
+                            .RenderValueAs(o => Html.ActionLink("Detalhes", "Details", new { produtoID = o.ProdutoID }));
+
+        }).WithPaging(10).Sortable(true).EmptyText("Seu filtro não retornou resultados.")
+    </div>
+    <p>
+        <table>
+            <tr>
+                <td>
+                    <input type="button" value="Novo Produto" class="btn btn-primary" onclick="location.href='@Url.Action("Create", "Produto")'; return false;" />
+                </td>
+
+            </tr>
+        </table>
+    </p>
+</div>

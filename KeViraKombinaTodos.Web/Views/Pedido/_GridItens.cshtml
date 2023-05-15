@@ -1,0 +1,15 @@
+﻿@model IEnumerable<KeViraKombinaTodos.Web.Models.PedidoItemModel>
+@using GridMvc.Html
+@{
+    ViewBag.Title = "partial";
+}
+
+<div class="code-cut">
+    @Html.Grid(Model).Columns(columns =>
+    {
+        columns.Add(c => c.Descricao).Titled("Descrição").Filterable(true).Sortable(true);
+        columns.Add(c => c.Preco).Titled("Preço").Filterable(true).Sortable(true);
+        
+
+    }).WithPaging(10).Sortable(true).EmptyText("Seu filtro não retornou resultados.")
+</div>

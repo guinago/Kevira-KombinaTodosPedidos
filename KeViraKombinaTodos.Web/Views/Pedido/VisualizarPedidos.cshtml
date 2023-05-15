@@ -1,0 +1,18 @@
+﻿@model IEnumerable<KeViraKombinaTodos.Web.Models.PedidoModel>
+
+@using GridMvc.Html
+@{
+    ViewBag.Title = "Carrinho Produtos";
+}
+<div class="container">
+    <div class="code-cut">
+        @Html.Grid(Model).Columns(columns =>
+        {
+            columns.Add(c => c.PedidoID).Titled("Pedido").Filterable(true).Sortable(true);
+            columns.Add(c => c.ValorTotal).Titled("Valor Total").Filterable(true).Sortable(true);
+
+            columns.Add().Encoded(false).Sanitized(false).SetWidth(30)
+            .RenderValueAs(o => Html.ActionLink("Detalhes", "Details", new { pedidoID = o.PedidoID }));
+        }).WithPaging(10).Sortable(true).EmptyText("Seu filtro não retornou resultados.")
+    </div>
+</div>

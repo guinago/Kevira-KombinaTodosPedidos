@@ -1,0 +1,73 @@
+﻿@model KeViraKombinaTodos.Web.Models.ProdutoModel
+<div class="container">
+    <h2>Detalhes Produto</h2>
+    <div>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.LabelFor(model => model.Descricao, "Descrição")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Descricao)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.Codigo, "Código")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Codigo)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.Valor)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Valor)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.Quantidade)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Quantidade)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.Ativo)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Ativo)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.DataCriacao, "Data Criação")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.DataCriacao)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.DataModificacao, "Data Modificação")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.DataModificacao)
+            </dd>
+        </dl>
+    </div>
+    <p>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="Button" value="Voltar" id="btnVoltar" class="btn btn-warning" onClick="location.href='@Url.Action("Index", "Produto")'; return false;" />
+                <input type="submit" value="Excluir" id="btnExcluir" class="btn btn-danger" onclick="location.href='@Url.Action("Excluir", "Produto", new { ProdutoID = Model.ProdutoID})'; return false;" />
+                <input type="submit" value="Editar" id="btnEdit" class="btn btn-primary" onclick="location.href='@Url.Action("Edit", "Produto", new { ProdutoID = Model.ProdutoID})'; return false;" />
+            </div>
+        </div>
+    </p>
+</div>

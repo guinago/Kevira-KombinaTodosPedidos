@@ -1,0 +1,112 @@
+﻿@model KeViraKombinaTodos.Web.Models.PedidoModel
+<div class="container">
+    <h2>Pedido  ( @Html.DisplayFor(model => model.PedidoID) )</h2>
+    <div>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.LabelFor(model => model.PedidoID, "Número do Pedido")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PedidoID)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.DataCriacao, "Data Criação")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.DataCriacao)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.DataCriacao, "Data Criação")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.DataCriacao)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.Nome, "Nome")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Nome)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.DadosEntrega.Municipio, "Município")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.DadosEntrega.Municipio)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.DadosEntrega.Logradouro, "Rua")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.DadosEntrega.Logradouro)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.DadosEntrega.Numero, "Número")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.DadosEntrega.Numero)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.DadosEntrega.Complemento, "Complemento")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.DadosEntrega.Complemento)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.PedidoItem.Produto, "Produto")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PedidoItem.Produto)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.PedidoItem.Quantidade, "Quantidade")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PedidoItem.Quantidade)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.PedidoItem.Preco, "Preço")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PedidoItem.Preco)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.ValorTotal, "Total Pedido")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ValorTotal)
+            </dd>
+        </dl>
+    </div>
+    <p>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="Button" value="Voltar" id="btnVoltar" class="btn btn-warning" onClick="location.href='@Url.Action("CreateCondPagtoPedido", "Pedido")'; return false;" />
+                <input type="submit" value="Editar" id="btnEdit" class="btn btn-primary" onclick="location.href='@Url.Action("Edit", "Pedido", new { ProdutoID = Model.PedidoID})'; return false;" />
+            </div>
+        </div>
+    </p>
+</div>

@@ -1,0 +1,37 @@
+﻿@model KeViraKombinaTodos.Web.Models.CondicaoPagamentoModel
+
+@{
+    ViewBag.Title = "Formas de Pagamento";
+}
+<div class="container">
+    <h2>Selecionar Condição de Pagamento</h2>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CondicaoPagamentoID, "Condição de Pagamento", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(x => Model.CondicaoPagamentoID, new SelectList(Model.ListCondPgto, "Key", "Value"), htmlAttributes: new { @class = "form-control", id = "Country" })
+                @Html.ValidationMessageFor(model => model.CondicaoPagamentoID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+        <p>
+            <table>
+                <tr>
+                    <td>
+                        <input type="submit" value="Gerar Pedido" class="btn btn-primary" />
+                        <input type="Button" value="Voltar" id="btnVoltar" class="btn btn-warning" onClick="location.href='@Url.Action("CreateDadosEntrega", "Pedido")'; return false;" />
+                    </td>
+
+                </tr>
+            </table>
+        </p>
+    }
+</div>

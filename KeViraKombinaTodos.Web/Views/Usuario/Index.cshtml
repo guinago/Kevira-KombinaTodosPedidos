@@ -1,0 +1,26 @@
+﻿@model IEnumerable<KeViraKombinaTodos.Web.Models.UsuarioModel>
+
+@using GridMvc.Html
+@{
+    ViewBag.Title = "Usuários";
+}
+
+<div class="container">
+    <h2>Usuário</h2>
+
+    <div class="code-cut">
+        @Html.Grid(Model).Columns(columns => 
+        {
+       columns.Add(c => c.Nome).Titled("Nome").Filterable(true).Sortable(true);
+       columns.Add(c => c.CPF).Titled("CPF").Filterable(true).Sortable(true);
+       columns.Add(c => c.Telefone).Titled("Telefone").Filterable(true).Sortable(true);
+       columns.Add(c => c.Email).Titled("E-mail").Filterable(true);
+       columns.Add()
+             .Encoded(false)
+             .Sanitized(false)
+             .SetWidth(30)
+             .RenderValueAs(o => Html.ActionLink("Detalhes", "Details", new { usuarioID = o.UsuarioID }));
+
+        }).WithPaging(10).Sortable(true).EmptyText("Seu filtro não retornou resultados.")
+    </div>
+</div>

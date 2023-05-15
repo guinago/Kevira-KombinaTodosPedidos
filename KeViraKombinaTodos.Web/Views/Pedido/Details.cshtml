@@ -1,0 +1,141 @@
+﻿@model KeViraKombinaTodos.Web.Models.PedidoModel
+<div class="container">
+    <h2>Pedido  ( @Html.DisplayFor(model => model.PedidoID) )</h2>
+    <div>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.LabelFor(model => model.PedidoID, "Número do Pedido")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PedidoID)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.DataCriacao, "Data Criação")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.DataCriacao)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.DataEntrega, "Data Entrega")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.DataEntrega)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.Cliente, "Nome")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Cliente)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.Telefone, "Telefone")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Telefone)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.CPF, "CPF")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CPF)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.Email, "Email")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.CEP, "CEP")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CEP)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.Estado, "Estado")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Estado)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.Bairro, "Bairro")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Bairro)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.Municipio, "Município")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Municipio)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.Endereco, "Endereço")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Endereco)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.Complemento, "Complemento")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Complemento)
+            </dd>
+
+            <dt>
+
+            <dt>
+                @Html.LabelFor(model => model.Status, "Status")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Status)
+            </dd>
+
+            <dt>
+                @Html.LabelFor(model => model.ValorTotal, "Valor Total do Pedido")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ValorTotal)
+            </dd>
+        </dl>
+
+        @Html.Partial("_GridItens", Model.Itens)
+
+    </div>
+    <p>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="Button" value="Voltar" id="btnVoltar" class="btn btn-warning" onClick="location.href='@Url.Action("CreateCondPagtoPedido", "Pedido")'; return false;" />
+                <input type="submit" value="Editar" id="btnEdit" class="btn btn-primary" onclick="location.href='@Url.Action("Edit", "Pedido", new { ProdutoID = Model.PedidoID})'; return false;" />
+            </div>
+        </div>
+    </p>
+</div>

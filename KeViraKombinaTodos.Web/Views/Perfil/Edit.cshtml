@@ -1,0 +1,75 @@
+﻿@model KeViraKombinaTodos.Web.Models.PerfilModel
+
+<div class="container">
+    <h2>Editar Perfil</h2>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.PerfilID, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.PerfilID, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                    @Html.ValidationMessageFor(model => model.PerfilID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Descricao, htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Descricao, "Decrição", new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Descricao, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Codigo, htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Codigo, "Código", new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Codigo, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-10">
+                    <div class="checkbox">
+                        @Html.EditorFor(model => model.SouTodoPoderoso)
+                        @Html.ValidationMessageFor(model => model.SouTodoPoderoso, "", new { @class = "text-danger" })
+                        @Html.LabelFor(model => model.SouTodoPoderoso, "Posso visualizar Tudo", htmlAttributes: new { @class = "control-label col-md-6" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-10">
+                    <div class="checkbox">
+                        @Html.EditorFor(model => model.SouComprador)
+                        @Html.ValidationMessageFor(model => model.SouTodoPoderoso, "", new { @class = "text-danger" })
+                        @Html.LabelFor(model => model.SouTodoPoderoso, "Posso visualizar meus pedidos", htmlAttributes: new { @class = "control-label col-md-6" })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-10">
+                    <div class="checkbox">
+                        @Html.EditorFor(model => model.SouTransportador)
+                        @Html.ValidationMessageFor(model => model.SouTodoPoderoso, "", new { @class = "text-danger" })
+                        @Html.LabelFor(model => model.SouTodoPoderoso, "Pode visualizar minhas entregas", htmlAttributes: new { @class = "control-label col-md-6" })
+                    </div>
+                </div>
+            </div>
+            <p>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="Button" value="Voltar" class="btn btn-warning" onClick="location.href='@Url.Action("Details", "Perfil", new { perfilID = Model.PerfilID})'; return false;" />
+                        <input type="submit" value="Salvar" class="btn btn-primary" />
+                    </div>
+                </div>
+            </p>
+        </div>
+    }
+</div>
