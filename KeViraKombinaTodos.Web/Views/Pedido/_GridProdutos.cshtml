@@ -7,9 +7,10 @@
 <div class="code-cut">
     @Html.Grid(Model).Columns(columns =>
     {
+        columns.Add(c => c.Codigo).Titled("Código").Filterable(true).Sortable(true);
         columns.Add(c => c.Descricao).Titled("Descrição").Filterable(true).Sortable(true);
         columns.Add(c => c.Preco).Titled("Preço").Filterable(true).Sortable(true);
-        
+        columns.Add(c => c.Quantidade).Titled("Quantidade/Estoque").Filterable(true).Sortable(true);
         columns.Add().Encoded(false).Sanitized(false).SetWidth(30).RenderValueAs(o => Html.ActionLink((o.NoCarrinho == false ? "Adicionar" : "Remover"), (o.NoCarrinho == false ? "InserirCarrinho" : "RemoverCarrinho"), new { produtoID = o.ProdutoID }));
 
     }).WithPaging(10).Sortable(true).EmptyText("Seu filtro não retornou resultados.")

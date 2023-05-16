@@ -76,7 +76,7 @@ namespace KeViraKombinaTodos.Impl.DAO {
             try
             {
                 SqlDataReader reader;
-                string query = "SELECT IP.PedidoID, IP.ProdutoID, IP.Preco, IP.Quantidade, Prod.Descricao " +
+                string query = "SELECT IP.PedidoID, IP.ProdutoID, IP.Preco, IP.Quantidade, Prod.Descricao, Prod.Codigo " +
                     "FROM ItemPedido IP " +
                     "INNER JOIN Pedido P ON P.PedidoID = IP.PedidoID " +
                     "INNER JOIN Produto Prod ON Prod.ProdutoID = IP.ProdutoID " +

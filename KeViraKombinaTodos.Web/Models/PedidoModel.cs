@@ -58,6 +58,7 @@ namespace KeViraKombinaTodos.Web.Models
         public bool Checked { get; set; }
         public bool NoCarrinho { get; set; }
         public string Descricao { get; set; }
+        public string Codigo { get; set; }
     }
     public class DadosClienteModel
     {
