@@ -51,13 +51,7 @@ namespace KeViraKombinaTodos.Web.Controllers {
 		[HttpPost]
 		public ActionResult Create(CondicaoPagamentoModel model) {
 			int condicaoPagamentoID = 0;
-			try {
-
-                foreach (var item in model.ListCondPgto.Where(l => l.Key.Equals(model.CondPgto)))
-                {
-                    model.Descricao = item.Value;
-                }
-                    
+			try {                 
                 CondicaoPagamento condicaoPagamento = ConverterTiposObjetosCondicaoPagamentoViewModelParaCondicaoPagamento(model);
 
                 condicaoPagamentoID = _condicaoPagamentoService.CriarCondicaoPagamento(condicaoPagamento);
@@ -74,12 +68,6 @@ namespace KeViraKombinaTodos.Web.Controllers {
 		[HttpPost]
 		public ActionResult Edit(CondicaoPagamentoModel model) {
 			try {
-
-                foreach (var item in model.ListCondPgto.Where(l => l.Key.Equals(model.CondPgto)))
-                {
-                    model.Descricao = item.Value;
-                }
-
                 _condicaoPagamentoService.AtualizarCondicaoPagamento(ConverterTiposObjetosCondicaoPagamentoViewModelParaCondicaoPagamento(model));
                 return RedirectToAction("Index");
 			} catch {
@@ -99,9 +87,6 @@ namespace KeViraKombinaTodos.Web.Controllers {
 
 		private CondicaoPagamentoModel ConverterTiposObjetosCondicaoPagamentoParaCondicaoPagamentoViewModel(CondicaoPagamento CondicaoPagamento) {
 			CondicaoPagamentoModel model = new CondicaoPagamentoModel();
-
-            if(CondicaoPagamento.CondPgto == null)
-                CondicaoPagamento.CondPgto = model.ListCondPgto.FirstOrDefault(l => l.Value == CondicaoPagamento.Descricao).Key;
 
             PropertyCopier<CondicaoPagamento, CondicaoPagamentoModel>.Copy(CondicaoPagamento, model);
 

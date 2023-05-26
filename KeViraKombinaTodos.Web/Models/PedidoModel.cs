@@ -43,7 +43,7 @@ namespace KeViraKombinaTodos.Web.Models
             this.Itens = new List<PedidoItemModel>();
         }
         public DadosClienteModel DadosCliente { get; set; }
-        public DadosEntregaModel DadosEntrega { get; set; }
+        public DadosEntregaModel DadosEntrega { get; set; }      
     }
     public class PedidoItemModel
     {

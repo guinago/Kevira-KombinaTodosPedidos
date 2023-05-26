@@ -21,8 +21,10 @@ namespace KeViraKombinaTodos.Impl.DAO {
             string query = "INSERT INTO CondicaoPagamento " +
                 "VALUES(" +
                 string.Format("'{0}',", CondicaoPagamento.Descricao) +
-                string.Format("{0},", "GETDATE()") +
-                string.Format("{0}", "GETDATE()") +
+                //string.Format("'{0}',", CondicaoPagamento.Codigo) +
+                string.Format("{0}, ", "GETDATE()") +
+                string.Format("{0}, ", "GETDATE()") +
+                string.Format("'{0}' ", CondicaoPagamento.Codigo) +
                 ")" +
 
                 " DECLARE @CondicaoPagamentoID INT = (SELECT @@IDENTITY AS CondicaoPagamentoID)" +
@@ -47,6 +49,7 @@ namespace KeViraKombinaTodos.Impl.DAO {
             string query = "UPDATE CondicaoPagamento " +
                 "SET " +
                 string.Format("Descricao = '{0}',", CondicaoPagamento.Descricao) +
+                string.Format("Codigo = '{0}',", CondicaoPagamento.Codigo) +
                 "DataModif = GETDATE()" +
                 string.Format(" WHERE CondicaoPagamentoID = {0}", CondicaoPagamento.CondicaoPagamentoID);
 
@@ -60,6 +63,7 @@ namespace KeViraKombinaTodos.Impl.DAO {
 
             band.CondicaoPagamentoID = Convert.ToInt32(reader["CondicaoPagamentoID"]);
             band.Descricao = (string)reader["Descricao"];
+            band.Codigo = (string)reader["Codigo"];
             band.DataCriacao = (DateTime)reader["Datacriacao"];
             band.DataModificacao = (DateTime)reader["DataModif"];
 

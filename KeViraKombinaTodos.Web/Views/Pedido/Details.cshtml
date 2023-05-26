@@ -1,151 +1,114 @@
 ﻿@model KeViraKombinaTodos.Web.Models.PedidoModel
+
+@Styles.Render("~/Content/css")
+
 <div class="container">
     <h2>Pedido  ( @Html.DisplayFor(model => model.PedidoID) )</h2>
+    <hr />
+    <table>
+        <tr>
+            <td>
+                <strong>Número Pedido:</strong> @Model.PedidoID
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Data Criação:</strong> @Model.DataCriacao.Value.Date.ToShortDateString()
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Data Entrega:</strong> @Model.DataEntrega.Value.Date.ToShortDateString()
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Nome:</strong> @Model.Cliente
+            </td>
+        <tr>
+        <tr>
+            <td>
+                <strong>Telefone:</strong> @Model.Telefone
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>CPF:</strong> @Model.CPF
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Email:</strong> @Model.Email
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Condição de Pagamento:</strong> @Model.CondicaoPagamento
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>CEP:</strong> @Model.CEP
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Estado:</strong> @Model.Estado
+            </td>
+
+        </tr>
+        <tr>
+            <td>
+                <strong>Bairro:</strong> @Model.Bairro
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Municipio:</strong> @Model.Municipio
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Endereço:</strong> @Model.Endereco
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Complemento:</strong> @Model.Complemento
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Observação:</strong> @Model.Observacao
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Restrição:</strong> @Model.Restricao
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Status:</strong> @Model.Status
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Transportadora:</strong> @Model.Transportadora
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Total do Pedido:</strong> @Model.ValorTotal
+            </td>
+        </tr>
+    </table>
+    <br />
+
     <div>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.LabelFor(model => model.PedidoID, "Número do Pedido")
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.PedidoID)
-            </dd>
-
-            <dt>
-                @Html.LabelFor(model => model.DataCriacao, "Data Criação")
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.DataCriacao)
-            </dd>
-
-            <dt>
-                @Html.LabelFor(model => model.DataEntrega, "Data Entrega")
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.DataEntrega)
-            </dd>
-
-            <dt>
-                @Html.LabelFor(model => model.Cliente, "Nome")
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Cliente)
-            </dd>
-
-            <dt>
-                @Html.LabelFor(model => model.Telefone, "Telefone")
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Telefone)
-            </dd>
-
-            <dt>
-                @Html.LabelFor(model => model.CPF, "CPF")
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.CPF)
-            </dd>
-
-            <dt>
-                @Html.LabelFor(model => model.Email, "Email")
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Email)
-            </dd>
-
-            <dt>
-                @Html.LabelFor(model => model.CEP, "CEP")
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.CEP)
-            </dd>
-
-            <dt>
-                @Html.LabelFor(model => model.Estado, "Estado")
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Estado)
-            </dd>
-
-            <dt>
-                @Html.LabelFor(model => model.Bairro, "Bairro")
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Bairro)
-            </dd>
-
-            <dt>
-                @Html.LabelFor(model => model.Municipio, "Município")
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Municipio)
-            </dd>
-
-            <dt>
-                @Html.LabelFor(model => model.Endereco, "Endereço")
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Endereco)
-            </dd>
-
-            <dt>
-                @Html.LabelFor(model => model.Complemento, "Complemento")
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Complemento)
-            </dd>
-
-            <dt>
-                @Html.LabelFor(model => model.Observacao, "Observação")
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Observacao)
-            </dd>
-
-            <dt>
-                @Html.LabelFor(model => model.Restricao, "Restrição")
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Restricao)
-            </dd>
-
-            <dt>
-
-            <dt>
-                @Html.LabelFor(model => model.Status, "Status")
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Status)
-            </dd>
-
-            <dt>
-                @Html.LabelFor(model => model.ValorTotal, "Valor Total do Pedido")
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.ValorTotal)
-            </dd>
-        </dl>
-
-        @Html.Partial("_GridItens", Model.Itens)
-
+        @Html.Partial("_GridItens", Model.Itens.ToList())
     </div>
+
     <p>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -154,4 +117,43 @@
             </div>
         </div>
     </p>
+
 </div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/inputmask")
+    @Scripts.Render("~/bundles/funcoesjs")
+    <script src="https://www.appelsiini.net/download/jquery.jeditable.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var oldValue = '';
+            $('.edit').editable('@Url.Action("SaveItem")', {
+                cssclass: 'jeditForm',
+                tooltip: 'clique aqui',
+                width: 'none',
+                height: 'none',
+                onsubmit: function (settings, original) {
+                    oldValue = original.revert;
+                },
+                submitdata: function () {
+                    return {
+                        //pedidoID: $(this).data('pedidoID'),
+                        id: $(this).data('id'),
+                        PropertyName: $(this).data('propertyname')
+                    }
+                },
+                callback: function (value, settings) {
+                    var jsonData = $.parseJSON(value);
+                    if (jsonData.status) {
+                        $(this).text(jsonData.value);
+                    } else {
+                        $(this).text(oldValue)
+                    }
+                }
+            })
+        })
+
+    </script>
+}

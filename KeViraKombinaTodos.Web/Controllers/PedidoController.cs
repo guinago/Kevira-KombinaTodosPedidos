@@ -22,14 +22,16 @@ namespace KeViraKombinaTodos.Web.Controllers
         private ITransportadoraService _transportadoraService;
         private IRedisService _cacheService;
         private IClienteService _clienteService;
+        private ICondicaoPagamentoService _condPgtoService;
 
-        public PedidoController(IPedidoService pedidoService, IProdutoService produtoService, ITransportadoraService transportadoraService, IRedisService cacheService, IClienteService clienteService)
+        public PedidoController(IPedidoService pedidoService, IProdutoService produtoService, ITransportadoraService transportadoraService, IRedisService cacheService, IClienteService clienteService, ICondicaoPagamentoService condPgtoService)
         {
             _pedidoService = pedidoService ?? throw new ArgumentNullException(nameof(pedidoService));
             _produtoService = produtoService ?? throw new ArgumentException(nameof(produtoService));
             _transportadoraService = transportadoraService ?? throw new ArgumentException(nameof(transportadoraService));
             _cacheService = cacheService ?? throw new ArgumentException(nameof(cacheService));
             _clienteService = clienteService ?? throw new ArgumentException(nameof(clienteService));
+            _condPgtoService = condPgtoService ?? throw new ArgumentException(nameof(condPgtoService));
         }
         #endregion
 
@@ -43,6 +45,11 @@ namespace KeViraKombinaTodos.Web.Controllers
         }
 
         public ActionResult VisualizarPedidos()
+        {
+            return View(CarregarPedidos());
+        }
+
+        public ActionResult VisualizarEntregas()
         {
             return View(CarregarPedidos());
         }
@@ -117,13 +124,44 @@ namespace KeViraKombinaTodos.Web.Controllers
 
             return RedirectToAction("Index");
         }
+
+        public ActionResult CreateCarrinhoItens()
+        {
+            PedidoModel model = new PedidoModel();
+
+            var itensCache = CarregarItensDoCache();
+
+            itensCache.ForEach(d => model.Itens.Add(d));
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult CreateCarrinhoItens(PedidoModel model)
+        {
+            try
+            {
+                var key = "CreateCarrinhoItens_" + User.Identity.GetIdUsuarioLogado();
+
+                var jsonModel = JsonConvert.SerializeObject(model);
+
+                _cacheService.SetStrings(key, jsonModel);
+            }
+            catch
+            {
+                return View(model);
+            }
+            return RedirectToAction("CreateDadosCliente");
+        }
+
         public ActionResult CreateDadosCliente()
         {
             DadosClienteModel model = new DadosClienteModel();
 
             var result = CarregarModelCache("CreateDadosCliente_" + User.Identity.GetIdUsuarioLogado(), model);
 
-            model = result as DadosClienteModel;           
+            if(result != null)
+                model = result as DadosClienteModel;           
 
             return View(model);
         }
@@ -182,7 +220,11 @@ namespace KeViraKombinaTodos.Web.Controllers
 
         public ActionResult CreateCondPagtoPedido()
         {
-            return View(new CondicaoPagamentoModel());
+            CondicaoPagamentoModel model = new CondicaoPagamentoModel();
+
+            model.ListCondPagamento = GetModelCondPagto();
+
+            return View(model);
         }
 
         [HttpPost]
@@ -212,24 +254,6 @@ namespace KeViraKombinaTodos.Web.Controllers
 
             return RedirectToAction("Details", new { pedidoID = IDPedido });
         }
-
-        // Este método é para a listagem de Pedidos
-        //[HttpPost]
-        //public ActionResult ListarPedidos()
-        //{
-        //    IList<PedidoModel> model = new List<PedidoModel>();
-
-        //    IList<Pedido> pedidos = _pedidoService.CarregarPedidos();
-
-        //    foreach (var item in pedidos)
-        //    {
-        //        PedidoModel modelPedido = new PedidoModel();
-
-        //        modelPedido = ConverterTiposObjetosPedidoParaPedidoViewModel(item);
-        //        model.Add(modelPedido);
-        //    }
-        //    return View(model);
-        //}
 
         public ActionResult Details(int pedidoID)
         {
@@ -275,7 +299,8 @@ namespace KeViraKombinaTodos.Web.Controllers
         {
             try
             {
-                 _cacheService.SetStrings("CreateDadosCliente_" + User.Identity.GetIdUsuarioLogado(), string.Empty);
+                _cacheService.SetStrings("CreateCarrinhoItens_" + User.Identity.GetIdUsuarioLogado(), string.Empty);
+                _cacheService.SetStrings("CreateDadosCliente_" + User.Identity.GetIdUsuarioLogado(), string.Empty);
                 _cacheService.SetStrings("CreateDadosEntrega_" + User.Identity.GetIdUsuarioLogado(), string.Empty);
                 _cacheService.SetStrings("GerandoPedido_" + User.Identity.GetIdUsuarioLogado(), string.Empty);   
             }
@@ -326,24 +351,33 @@ namespace KeViraKombinaTodos.Web.Controllers
 
             try
             {
+                //var modelCarrinhoPedido = new PedidoModel();
+                //var resultCarrinho = CarregarModelCache("CreateCarrinhoItens_" + User.Identity.GetIdUsuarioLogado(), modelCarrinhoPedido);
+                //modelCarrinhoPedido = resultCarrinho as PedidoModel;
+
+                //if(modelCarrinhoPedido != null)
+                //    modelPedido = modelCarrinhoPedido;
+
                 var modelDadosCliente = new DadosClienteModel();
                 var result = CarregarModelCache("CreateDadosCliente_" + User.Identity.GetIdUsuarioLogado(), modelDadosCliente);
                 modelDadosCliente = result as DadosClienteModel;
 
-                modelPedido.DadosCliente = modelDadosCliente;
+                if(modelDadosCliente != null)
+                    modelPedido.DadosCliente = modelDadosCliente;
 
                 var modelDadosEntrega = new DadosEntregaModel();
                 var resultEntrega = CarregarModelCache("CreateDadosEntrega_" + User.Identity.GetIdUsuarioLogado(), modelDadosEntrega);
                 modelDadosEntrega = resultEntrega as DadosEntregaModel;
 
-                modelPedido.DadosEntrega = modelDadosEntrega;
+                if(modelDadosEntrega != null)
+                    modelPedido.DadosEntrega = modelDadosEntrega;
 
                 var itensCache = CarregarItensDoCache();
 
                 itensCache.ForEach(d=> modelPedido.Itens.Add(d));
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 throw;
@@ -359,6 +393,7 @@ namespace KeViraKombinaTodos.Web.Controllers
             item.Preco = produto.Valor;
             item.Quantidade = produto.Quantidade;
             item.Descricao = produto.Descricao;
+            item.Codigo = produto.Codigo;
 
             return item;
         }
@@ -405,11 +440,40 @@ namespace KeViraKombinaTodos.Web.Controllers
             return itens;
         }
 
+        [HttpPost]
+        public ActionResult SaveItem(int produtoID, string propertyName, string value)
+        {
+            var status = false;
+            var message = "";
+
+            //try
+            //{
+            //    //_pedidoService.AtualizarItemPedido(ConverterTiposObjetosPedidoViewModelParaPedido(model));
+
+            //    return RedirectToAction("Index");
+            //}
+            //catch
+            //{
+            //    return View(model);
+            //}
+
+            var response = new { value = value, status = status, message = message };
+            JObject o = JObject.FromObject(response);
+            return Content(o.ToString());
+        }
         private PedidoModel ConverterTiposObjetosPedidoParaPedidoViewModel(Pedido Pedido)
         {
             PedidoModel model = new PedidoModel();
 
             PropertyCopier<Pedido, PedidoModel>.Copy(Pedido, model);
+
+            model.DadosEntrega = new DadosEntregaModel();
+            model.DadosEntrega.TransportadoraIDSelected = model.TransportadoraID;
+            GetModelTransportadoraGeral().ForEach(d => model.DadosEntrega.ListTransportadora.Add(d.Key, d.Value));
+
+            model.CondPagtoPedido = new CondicaoPagamentoModel();
+            model.CondPagtoPedido.CondicaoPagamentoID = model.CondicaoPagamentoID; 
+            GetModelCondPagto().ForEach(d => model.CondPagtoPedido.ListCondPagamento.Add(d.Key, d.Value));
 
             return model;
         }
@@ -485,6 +549,7 @@ namespace KeViraKombinaTodos.Web.Controllers
         private PedidoModel CarregarPedido(int pedidoID)
         {
             PedidoModel model = new PedidoModel();
+
             Pedido pedido = _pedidoService.CarregarPedido(pedidoID);
             IList<ItemPedido> itensPedido = _pedidoService.CarregarItensPedido(pedidoID);
 
@@ -492,6 +557,7 @@ namespace KeViraKombinaTodos.Web.Controllers
                 return null;
 
             model = ConverterTiposObjetosPedidoParaPedidoViewModel(pedido);
+
             foreach (var item in itensPedido)
             {
                 model.Itens.Add(ConverterTiposObjetosPedidoItemParaPedidoItemViewModel(item));
@@ -516,6 +582,16 @@ namespace KeViraKombinaTodos.Web.Controllers
             var transportadora = (List<Transportadora>)_transportadoraService.CarregarTransportadoras();
 
             transportadora.ForEach(d => result.Add(d.TransportadoraID, d.Descricao));
+
+            return result;
+        }
+
+        public IDictionary<int, string> GetModelCondPagto()
+        {
+            var result = new Dictionary<int, string>();
+            var condPagamentos = (List<CondicaoPagamento>)_condPgtoService.CarregarCondicoesPagamento();
+
+            condPagamentos.ForEach(d => result.Add(d.CondicaoPagamentoID, d.Descricao));
 
             return result;
         }

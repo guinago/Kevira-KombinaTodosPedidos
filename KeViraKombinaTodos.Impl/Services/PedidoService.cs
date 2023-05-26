@@ -50,6 +50,11 @@ namespace KeViraKombinaTodos.Impl.Services {
         {
             return _itemPedidoDao.CarregarItensPedido(PedidoID);
         }
+
+        public void AtualizarItemPedido(ItemPedido Pedido)
+        {
+            _itemPedidoDao.AtualizarItemPedido(Pedido);
+        }
         #endregion
     }
 }

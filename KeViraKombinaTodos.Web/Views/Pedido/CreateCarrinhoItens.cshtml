@@ -1,0 +1,58 @@
+﻿@model KeViraKombinaTodos.Web.Models.PedidoModel
+
+<div class="container">
+    <h2>Carrinho Itens</h2>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        foreach (var itens in Model.Itens)
+        {
+            <div class="form-horizontal">
+                <hr />
+                <div class="form-group">
+                    @Html.LabelFor(Model => itens.Codigo, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(Model => itens.Codigo, "Código", new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                        @Html.ValidationMessageFor(Model => itens.Codigo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(Model => itens.Descricao, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(Model => itens.Descricao, "Descrição", new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                        @Html.ValidationMessageFor(Model => itens.Descricao, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(Model => itens.Preco, "Preço", htmlAttributes: new { @class = "control-label col-md-6" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(Model => itens.Preco, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(Model => itens.Preco, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(Model => itens.Quantidade, "Quantidade", htmlAttributes: new { @class = "control-label col-md-6" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(Model => itens.Quantidade, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(Model => itens.Quantidade, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        }
+        <p>
+            <table>
+                <tr>
+                    <td>
+                        <input type="submit" value="Avançar" class="btn btn-primary" />
+                        <input type="Button" value="Voltar" id="btnVoltar" class="btn btn-warning" onClick="location.href='@Url.Action("Index", "Pedido")'; return false;" />
+                    </td>
+                </tr>
+            </table>
+        </p>
+    }
+</div>

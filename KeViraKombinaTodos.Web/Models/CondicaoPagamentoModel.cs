@@ -9,17 +9,13 @@ namespace KeViraKombinaTodos.Web.Models {
         public int CondicaoPagamentoID { get; set; }
         [Required]				
 		public string Descricao { get; set; }
-		public int? CondPgto { get; set; }
+        public string Codigo { get; set; }
         public DateTime? DataCriacao { get; set; }
         public DateTime? DataModificacao { get; set; }
-        public IDictionary<int, string> ListCondPgto { get; set; }		
-		public CondicaoPagamentoModel() {
-			this.ListCondPgto = new Dictionary<int, string>();
-
-			this.ListCondPgto.Add(1, "DINHEIRO");
-			this.ListCondPgto.Add(2, "CARTÃO DE DÉBITO");
-			this.ListCondPgto.Add(3, "CARTÃO DE CRÉDITO");
-			this.ListCondPgto.Add(4, "PIX");
-		}
-	}	
+        public IDictionary<int, string> ListCondPagamento { get; set; }
+        public CondicaoPagamentoModel()
+        {
+            this.ListCondPagamento = new Dictionary<int, string>();
+        }
+    }	
 }

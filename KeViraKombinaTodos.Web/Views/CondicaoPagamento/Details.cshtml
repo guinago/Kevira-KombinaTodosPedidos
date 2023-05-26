@@ -1,20 +1,21 @@
 ﻿@model KeViraKombinaTodos.Web.Models.CondicaoPagamentoModel
+
 <div class="container">
     <h2>Detalhes Condição de Pagamento</h2>
-
-    <div>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.LabelFor(model => model.Descricao, "Descrição")
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Descricao)
-            </dd>
-
-        </dl>
-    </div>
+    <hr />
+    <table>
+        <tr>
+            <td>
+                <strong>Código:</strong> @Model.Codigo
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Descrição:</strong> @Model.Descricao
+            </td>
+        </tr>
+    </table>
+    <hr />
     <p>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">

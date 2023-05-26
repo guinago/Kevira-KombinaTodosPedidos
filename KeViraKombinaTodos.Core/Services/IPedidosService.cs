@@ -13,6 +13,8 @@ namespace KeViraKombinaTodos.Core.Services {
         int CriarItemPedido(ItemPedido Pedido);
         IList<ItemPedido> CarregarItensPedido(int PedidoID);
 
+        void AtualizarItemPedido(ItemPedido Pedido);
+
         #endregion
     }
 }
