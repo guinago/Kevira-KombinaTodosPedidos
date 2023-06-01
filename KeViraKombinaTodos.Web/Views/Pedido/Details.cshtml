@@ -89,7 +89,7 @@
         </tr>
         <tr>
             <td>
-                <strong>Status:</strong> @Model.Status
+                <strong>Status:</strong> @Model.StatusPedido
             </td>
         </tr>
         <tr>
@@ -112,7 +112,7 @@
     <p>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="Button" value="Voltar" id="btnVoltar" class="btn btn-warning" onClick="location.href='@Url.Action("CreateCondPagtoPedido", "Pedido")'; return false;" />
+                <input type="Button" value="Voltar" id="btnVoltar" class="btn btn-warning" onClick="location.href='@Url.Action("VisualizarPedidos", "Pedido")'; return false;" />
                 <input type="submit" value="Editar" id="btnEdit" class="btn btn-primary" onclick="location.href='@Url.Action("Edit", "Pedido", new { PedidoID = Model.PedidoID})'; return false;" />
             </div>
         </div>
@@ -139,20 +139,26 @@
                 },
                 submitdata: function () {
                     return {
-                        //pedidoID: $(this).data('pedidoID'),
-                        id: $(this).data('id'),
-                        PropertyName: $(this).data('propertyname')
+                        pedidoID: parseInt('@Model.PedidoID'),
+                        produtoID: $(this).data('id'),
+                        propertyName: $(this).data('propertyname'),
+                        value: $(this).data('value')
+
                     }
                 },
                 callback: function (value, settings) {
                     var jsonData = $.parseJSON(value);
-                    if (jsonData.status) {
+                    if ($(this).data('propertyname') == "Quantidade" && jsonData.status && jsonData.value == 0) {
+                        $(this).text(jsonData.value);
+                        window.location.reload();
+                    }else if (jsonData.status) {
                         $(this).text(jsonData.value);
                     } else {
                         $(this).text(oldValue)
                     }
                 }
             })
+           
         })
 
     </script>

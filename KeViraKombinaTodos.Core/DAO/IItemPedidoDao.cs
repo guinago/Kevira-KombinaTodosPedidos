@@ -7,5 +7,6 @@ namespace KeViraKombinaTodos.Core.DAO {
 		int CriarPedido(Pedido Pedidos);
 		Pedido CarregarPedido(int PedidoID);
         void AtualizarPedido(Pedido Pedidos);
+        void ExcluirPedido(int PedidoID);
     }
 }

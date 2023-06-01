@@ -1,58 +1,72 @@
-﻿@model KeViraKombinaTodos.Web.Models.PedidoModel
+﻿
+@model IEnumerable<KeViraKombinaTodos.Web.Models.PedidoItemModel>
+
+@{
+    ViewBag.Title = "Carrinho Produtos";
+}
 
 <div class="container">
-    <h2>Carrinho Itens</h2>
+    <h2>Carrinho de Produtos</h2>
+    <hr>
 
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
+    @Html.Partial("_GridCarrinho", Model)
 
-        foreach (var itens in Model.Itens)
-        {
-            <div class="form-horizontal">
-                <hr />
-                <div class="form-group">
-                    @Html.LabelFor(Model => itens.Codigo, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(Model => itens.Codigo, "Código", new { htmlAttributes = new { @class = "form-control", @readonly = true } })
-                        @Html.ValidationMessageFor(Model => itens.Codigo, "", new { @class = "text-danger" })
-                    </div>
-                </div>
+    <p>
+        <table>
+            <tr>
+                <td>
+                    <input type="Button" value="Voltar" id="btnVoltar" class="btn btn-warning" onClick="location.href='@Url.Action("Index", "Pedido")'; return false;" />
+                    <input type="button" value="Avançar" class="btn btn-primary" onclick="location.href='@Url.Action("CreateDadosCliente", "Pedido")'; return false;" />
+                </td>
 
-                <div class="form-group">
-                    @Html.LabelFor(Model => itens.Descricao, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(Model => itens.Descricao, "Descrição", new { htmlAttributes = new { @class = "form-control", @readonly = true } })
-                        @Html.ValidationMessageFor(Model => itens.Descricao, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(Model => itens.Preco, "Preço", htmlAttributes: new { @class = "control-label col-md-6" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(Model => itens.Preco, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(Model => itens.Preco, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(Model => itens.Quantidade, "Quantidade", htmlAttributes: new { @class = "control-label col-md-6" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(Model => itens.Quantidade, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(Model => itens.Quantidade, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-            </div>
-        }
-        <p>
-            <table>
-                <tr>
-                    <td>
-                        <input type="submit" value="Avançar" class="btn btn-primary" />
-                        <input type="Button" value="Voltar" id="btnVoltar" class="btn btn-warning" onClick="location.href='@Url.Action("Index", "Pedido")'; return false;" />
-                    </td>
-                </tr>
-            </table>
-        </p>
-    }
+            </tr>
+        </table>
+    </p>
 </div>
+
+<style>
+    .table td {
+        width: 25%
+    }
+</style>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/inputmask")
+    @Scripts.Render("~/bundles/funcoesjs")
+    <script src="https://www.appelsiini.net/download/jquery.jeditable.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var oldValue = '';
+            $('.edit').editable('@Url.Action("CreateCarrinhoItens")', {
+                cssclass: 'jeditForm',
+                tooltip: 'clique aqui',
+                width: 'none',
+                height: 'none',
+                onsubmit: function (settings, original) {
+                    oldValue = original.revert;
+                },
+                submitdata: function () {
+                    return {
+                        produtoID: $(this).data('id'),
+                        propertyName: $(this).data('propertyname'),
+                        value: $(this).data('value')
+                    }
+                },
+                callback: function (value, settings) {
+                    var jsonData = $.parseJSON(value);
+                    if ($(this).data('propertyname') == "Quantidade" && jsonData.status && jsonData.value == 0) {
+                        $(this).text(jsonData.value);
+                        window.location.reload();
+                    } else if (jsonData.status) {
+                        $(this).text(jsonData.value);
+                    } else {
+                        $(this).text(oldValue)
+                    }
+                }
+            })
+        })
+
+    </script>
+}

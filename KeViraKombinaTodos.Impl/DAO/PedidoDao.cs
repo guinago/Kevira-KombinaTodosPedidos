@@ -50,32 +50,34 @@ namespace KeViraKombinaTodos.Impl.DAO {
 			return LoadOnlyOneRetorno(PedidoID);
 		}				
 		public void AtualizarPedido(Pedido obj) {
-            string query = "UPDATE Pedidos " +
+            string query = "UPDATE Pedido " +
                 "SET " +
-            string.Format("'{0}',", obj.PedidoID) +
-            string.Format("'{0}',", obj.VendedorID) +
-            string.Format("'{0}',", obj.ClienteID) +
-            string.Format("'{0}',", obj.TransportadoraID) +
-            string.Format("'{0}',", obj.CondicaoPagamentoID) +
-            string.Format("'{0}',", obj.Telefone) +
-            string.Format("'{0}',", obj.Email) +
-            string.Format("'{0}',", obj.CEP) +
-            string.Format("'{0}',", obj.Endereco) +
-            string.Format("'{0}',", obj.Estado) +
-            string.Format("'{0}',", obj.Municipio) +
-            string.Format("'{0}',", obj.Bairro) +
-            string.Format("'{0}',", obj.DataEntrega.Value.ToString("yyyy-MM-dd HH:mm:ss")) +
-            string.Format("'{0}',", obj.Observacao) +
-            string.Format("'{0}',", obj.Restricao) +
-            string.Format("'{0}',", obj.NotaFiscal) +
-            string.Format("'{0}',", obj.Status) +
-            string.Format("CONVERT(FLOAT, REPLACE({0},',','.') ), ", obj.ValorTotal.ToString().Replace(",", ".")) +
-            string.Format("{0}, ", "GETDATE(), ") +
-            string.Format("{0} ", "GETDATE() ") +
-            string.Format(" WHERE PedidosID = {0}", obj.PedidoID);
+            string.Format("TransportadoraID = '{0}',", obj.TransportadoraID) +
+            string.Format("CondicaoPagamentoID = '{0}',", obj.CondicaoPagamentoID) +
+            string.Format("Telefone = '{0}',", obj.Telefone) +
+            string.Format("Email = '{0}',", obj.Email) +
+            string.Format("CEP = '{0}',", obj.CEP) +
+            string.Format("Endereco = '{0}',", obj.Endereco) +
+            string.Format("Estado = '{0}',", obj.Estado) +
+            string.Format("Municipio = '{0}',", obj.Municipio) +
+            string.Format("Bairro = '{0}',", obj.Bairro) +
+            string.Format("DataEntrega = '{0}',", obj.DataEntrega.Value.ToString("yyyy-MM-dd HH:mm:ss")) +
+            string.Format("Observacao = '{0}',", obj.Observacao) +
+            string.Format("Restricao = '{0}',", obj.Restricao) +
+            string.Format("NotaFiscal = '{0}',", obj.NotaFiscal) +
+            string.Format("Status = '{0}',", obj.Status) +
+            string.Format("ValorTotal = CONVERT(FLOAT, REPLACE({0},',','.') ), ", obj.ValorTotal.ToString().Replace(",", ".")) +
+            string.Format("DataModif = GETDATE() ") +
+            string.Format(" WHERE PedidoID = {0}", obj.PedidoID);
 
             ExecutarQuery(query);
-		}      
+		}
+
+        public void ExcluirPedido(int PedidoID)
+        {
+            string query = string.Format("DELETE Pedido WHERE PedidoID = {0}", PedidoID);
+            ExecutarQuery(query);
+        }
         #endregion
 
         #region Methods Private

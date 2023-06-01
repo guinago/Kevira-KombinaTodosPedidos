@@ -37,17 +37,20 @@ namespace KeViraKombinaTodos.Impl.DAO {
 		public void AtualizarItemPedido(ItemPedido obj) {
             string query = "UPDATE ItemPedido " +
             "SET " +
-            string.Format("'{0}',", obj.PedidoID) +
-            string.Format("'{0}',", obj.ProdutoID) +
-            string.Format("CONVERT(FLOAT, REPLACE({0},',','.') ), ", obj.Preco.ToString().Replace(",", ".")) +
-            string.Format("{0}, ", obj.Quantidade.ToString().Replace(",", ".")) +
-            string.Format("{0}, ", "GETDATE() ") +
-            string.Format("{0} ", "GETDATE() ") +
-            string.Format(" WHERE PedidosID = {0}", obj.PedidoID) +
+            string.Format("Preco = CONVERT(FLOAT, REPLACE({0},',','.') ), ", obj.Preco != null ? obj.Preco.ToString().Replace(",", ".") : "Preco") +
+            string.Format("Quantidade = CONVERT(FLOAT, REPLACE({0},',','.') ), ", obj.Quantidade != null ? obj.Quantidade.ToString().Replace(",", ".") : "Quantidade") +
+            string.Format("DataModif = GETDATE() ") +
+            string.Format(" WHERE PedidoID = {0}", obj.PedidoID) +
             string.Format(" AND ProdutoID = {0}", obj.ProdutoID);
 
             ExecutarQuery(query);
-		}      
+		}
+
+        public void ExcluirItemPedido(int PedidoID, int ProdutoID)
+        {
+            string query = string.Format("DELETE ItemPedido WHERE PedidoID = {0} AND ProdutoID = {1}", PedidoID, ProdutoID);
+            ExecutarQuery(query);
+        }
         #endregion
 
         #region Methods Private
@@ -59,6 +62,7 @@ namespace KeViraKombinaTodos.Impl.DAO {
             band.Preco = Convert.ToInt32(reader["Preco"]);
             band.Quantidade = Convert.ToInt32(reader["Quantidade"]);
             band.Descricao = Convert.ToString(reader["Descricao"]);
+            band.Codigo = Convert.ToString(reader["Codigo"]);
 
             return band;
 		}

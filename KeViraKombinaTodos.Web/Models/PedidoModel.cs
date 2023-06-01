@@ -35,15 +35,22 @@ namespace KeViraKombinaTodos.Web.Models
         public string Vendedor { get; set; }
         public string CondicaoPagamento { get; set; }
         public string Transportadora { get; set; }
+        public string StatusPedido { get; set; }
         public IList<PedidoItemModel> Itens { get; set; }
         public PedidoItemModel PedidoItem { get; set; }
         public CondicaoPagamentoModel CondPagtoPedido { get; set; }
+        public IDictionary<int, string> ListStatus { get; set; }
         public PedidoModel()
         {
             this.Itens = new List<PedidoItemModel>();
+            this.ListStatus = new Dictionary<int, string>();
+
+            this.ListStatus.Add(0, "Pendente");
+            this.ListStatus.Add(1, "Entregue");
+            this.ListStatus.Add(2, "Cancelado");
         }
         public DadosClienteModel DadosCliente { get; set; }
-        public DadosEntregaModel DadosEntrega { get; set; }      
+        public DadosEntregaModel DadosEntrega { get; set; }
     }
     public class PedidoItemModel
     {

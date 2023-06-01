@@ -2,7 +2,7 @@
 
 <div>
     @{
-        var webGrid = new WebGrid(source: Model, defaultSort: "Descricao");
+        var webGrid = new WebGrid(Model, defaultSort: "Descricao");
     }
     @webGrid.GetHtml(
         tableStyle:"table table-responsive table-striped table-bordered",

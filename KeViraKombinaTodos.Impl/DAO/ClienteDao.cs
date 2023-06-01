@@ -60,7 +60,7 @@ namespace KeViraKombinaTodos.Impl.DAO {
                 string.Format("Bairro = '{0}', ", cliente.Bairro) +
                 string.Format("Endereco = '{0}', ", cliente.Endereco) +
                 string.Format("Complemento = '{0}', ", cliente.Complemento) +
-                "DataModif = GetDate()" + cliente +
+                "DataModif = GetDate()" +
                 string.Format(" WHERE clienteID = {0}", cliente.ClienteID);
 
             ExecutarQuery(query);

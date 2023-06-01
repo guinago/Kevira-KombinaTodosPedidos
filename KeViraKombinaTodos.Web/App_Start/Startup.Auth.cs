@@ -64,9 +64,15 @@ namespace KeViraKombinaTodos.Web
 
             app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             {
-                ClientId = "704468813670-akpddqjan5hd73fev7iiuofvrrffglc2.apps.googleusercontent.com",
-                ClientSecret = "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"
+                ClientId = "704468813670-eislhh9r34g32aka6vitai19mt77stsg.apps.googleusercontent.com",
+                ClientSecret = "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"
             });
+
+            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            //{
+            //    ClientId = "1076324369990-h39kqjptn9lk0g8485a611l8qf6r61n3.apps.googleusercontent.com",
+            //    ClientSecret = "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"
+            //});
         }
     }
 }

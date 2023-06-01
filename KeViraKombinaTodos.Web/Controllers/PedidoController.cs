@@ -54,7 +54,7 @@ namespace KeViraKombinaTodos.Web.Controllers
             return View(CarregarPedidos());
         }
 
-        public ActionResult InserirCarrinho(int produtoID)
+        public ActionResult InserirCarrinho(int id)
         {
             try
             {
@@ -72,9 +72,9 @@ namespace KeViraKombinaTodos.Web.Controllers
                     }
                 }
 
-                if (!itens.Exists(d => d.ProdutoID.GetValueOrDefault() == produtoID))
+                if (!itens.Exists(d => d.ProdutoID.GetValueOrDefault() == id))
                 {
-                    var produtoItem = TransformarProdutoEmItemPedido(_produtoService.CarregarProduto(produtoID));
+                    var produtoItem = TransformarProdutoEmItemPedido(_produtoService.CarregarProduto(id));
 
                     itens.Add(produtoItem);
 
@@ -90,7 +90,7 @@ namespace KeViraKombinaTodos.Web.Controllers
             }
             return RedirectToAction("Index");
         }
-        public ActionResult RemoverCarrinho(int produtoID)
+        public ActionResult RemoverCarrinho(int id)
         {
             try
             {
@@ -108,9 +108,9 @@ namespace KeViraKombinaTodos.Web.Controllers
                     }
                 }
 
-                if (itens.Exists(d => d.ProdutoID.GetValueOrDefault() == produtoID))
+                if (itens.Exists(d => d.ProdutoID.GetValueOrDefault() == id))
                 {
-                    itens.Remove(itens.FirstOrDefault(d => d.ProdutoID.GetValueOrDefault() == produtoID));
+                    itens.Remove(itens.FirstOrDefault(d => d.ProdutoID.GetValueOrDefault() == id));
 
                     var jsonModel = JsonConvert.SerializeObject(itens);
 
@@ -127,32 +127,64 @@ namespace KeViraKombinaTodos.Web.Controllers
 
         public ActionResult CreateCarrinhoItens()
         {
-            PedidoModel model = new PedidoModel();
-
+            IList<PedidoItemModel> model = new List<PedidoItemModel>();
             var itensCache = CarregarItensDoCache();
 
-            itensCache.ForEach(d => model.Itens.Add(d));
+            itensCache.ForEach(d => model.Add(d));
 
             return View(model);
         }
 
         [HttpPost]
-        public ActionResult CreateCarrinhoItens(PedidoModel model)
+        public ActionResult CreateCarrinhoItens(int produtoID, string propertyName, float value)
         {
+            var status = false;
+            var message = "";
+            var key = "GerandoPedido_" + User.Identity.GetIdUsuarioLogado();
+
             try
             {
-                var key = "CreateCarrinhoItens_" + User.Identity.GetIdUsuarioLogado();
+                var itensCache = CarregarItensDoCache();
+                foreach (var item in itensCache.Where(i => i.ProdutoID == produtoID))
+                {
+                    if (propertyName == "Quantidade")
+                    {
+                        if (value == 0)
+                        {
+                            try
+                            {
+                                RemoverCarrinho(produtoID);
+                                status = true;
+                            }
+                            catch (Exception ex)
+                            {
+                                message = ex.Message;
+                                ModelState.AddModelError(message, "Erro ao atualizar o Item do Pedido");
+                            }
+                        }
+                        else
+                            item.Quantidade = value;
+                    }
+                    else
+                        item.Preco = value;
+                }
+                if (!status)
+                {
+                    var jsonModel = JsonConvert.SerializeObject(itensCache);
 
-                var jsonModel = JsonConvert.SerializeObject(model);
-
-                _cacheService.SetStrings(key, jsonModel);
+                    _cacheService.SetStrings(key, jsonModel);
+                    status = true;
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                return View(model);
+                message = ex.Message;
             }
-            return RedirectToAction("CreateDadosCliente");
+            var response = new { value = value, status = status, message = message };
+            JObject o = JObject.FromObject(response);
+            return Content(o.ToString());
         }
+
 
         public ActionResult CreateDadosCliente()
         {
@@ -262,6 +294,8 @@ namespace KeViraKombinaTodos.Web.Controllers
             if (model == null)
                 return RedirectToAction("Index");
 
+            model.StatusPedido = model.ListStatus.FirstOrDefault(l => l.Key == model.Status).Value;
+
             return View(model);
         }
 
@@ -277,7 +311,7 @@ namespace KeViraKombinaTodos.Web.Controllers
             {
                 _pedidoService.AtualizarPedido(ConverterTiposObjetosPedidoViewModelParaPedido(model));
 
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", new { pedidoID = model.PedidoID });
             }
             catch
             {
@@ -299,7 +333,6 @@ namespace KeViraKombinaTodos.Web.Controllers
         {
             try
             {
-                _cacheService.SetStrings("CreateCarrinhoItens_" + User.Identity.GetIdUsuarioLogado(), string.Empty);
                 _cacheService.SetStrings("CreateDadosCliente_" + User.Identity.GetIdUsuarioLogado(), string.Empty);
                 _cacheService.SetStrings("CreateDadosEntrega_" + User.Identity.GetIdUsuarioLogado(), string.Empty);
                 _cacheService.SetStrings("GerandoPedido_" + User.Identity.GetIdUsuarioLogado(), string.Empty);   
@@ -351,13 +384,6 @@ namespace KeViraKombinaTodos.Web.Controllers
 
             try
             {
-                //var modelCarrinhoPedido = new PedidoModel();
-                //var resultCarrinho = CarregarModelCache("CreateCarrinhoItens_" + User.Identity.GetIdUsuarioLogado(), modelCarrinhoPedido);
-                //modelCarrinhoPedido = resultCarrinho as PedidoModel;
-
-                //if(modelCarrinhoPedido != null)
-                //    modelPedido = modelCarrinhoPedido;
-
                 var modelDadosCliente = new DadosClienteModel();
                 var result = CarregarModelCache("CreateDadosCliente_" + User.Identity.GetIdUsuarioLogado(), modelDadosCliente);
                 modelDadosCliente = result as DadosClienteModel;
@@ -379,10 +405,8 @@ namespace KeViraKombinaTodos.Web.Controllers
             }
             catch (Exception ex)
             {
-
                 throw;
             }
-
             return modelPedido;
         }
 
@@ -410,7 +434,6 @@ namespace KeViraKombinaTodos.Web.Controllers
 
                 itens.Add(item);
             }
-
             return itens;
         }
         private List<PedidoItemModel> CarregarItensDoCache()
@@ -436,26 +459,51 @@ namespace KeViraKombinaTodos.Web.Controllers
             {
                 // fica mudo por enquanto
             }
-
             return itens;
         }
 
         [HttpPost]
-        public ActionResult SaveItem(int produtoID, string propertyName, string value)
+        public ActionResult SaveItem(int pedidoID, int produtoID, string propertyName, float value)
         {
             var status = false;
             var message = "";
+            PedidoItemModel model = new PedidoItemModel();
+            model.PedidoID = pedidoID;
+            model.ProdutoID = produtoID;
+            if (propertyName == "Quantidade")
+            {
+                if (value == 0)
+                {
+                    try
+                    {
+                        _pedidoService.ExcluirItemPedido(pedidoID, produtoID);
+                        status = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        message = ex.Message;
+                        ModelState.AddModelError(message, "Erro ao atualizar o Item do Pedido");
+                    }
+                }
+                else
+                    model.Quantidade = value;
+            }
+            else
+                model.Preco = value;
 
-            //try
-            //{
-            //    //_pedidoService.AtualizarItemPedido(ConverterTiposObjetosPedidoViewModelParaPedido(model));
-
-            //    return RedirectToAction("Index");
-            //}
-            //catch
-            //{
-            //    return View(model);
-            //}
+            if (!status)
+            {
+                try
+                {
+                    _pedidoService.AtualizarItemPedido(ConverterTiposObjetosPedidoItemViewModelParaPedidoItem(model));
+                    status = true;
+                }
+                catch (Exception ex)
+                {
+                    message = ex.Message;
+                    ModelState.AddModelError(message, "Erro ao atualizar o Item do Pedido");
+                }
+            }
 
             var response = new { value = value, status = status, message = message };
             JObject o = JObject.FromObject(response);
@@ -475,6 +523,8 @@ namespace KeViraKombinaTodos.Web.Controllers
             model.CondPagtoPedido.CondicaoPagamentoID = model.CondicaoPagamentoID; 
             GetModelCondPagto().ForEach(d => model.CondPagtoPedido.ListCondPagamento.Add(d.Key, d.Value));
 
+            model.StatusPedido = model.StatusPedido = model.ListStatus.FirstOrDefault(l => l.Key == model.Status).Value;
+
             return model;
         }
 
@@ -490,36 +540,44 @@ namespace KeViraKombinaTodos.Web.Controllers
         private Pedido ConverterTiposObjetosPedidoViewModelParaPedido(PedidoModel model)
         {
             model.VendedorID = User.Identity.GetIdUsuarioLogado();
+            int ClienteID = model.ClienteID;
 
             Cliente Cliente = new Cliente();
-            Cliente.CPF = model.DadosCliente.CPF;
-            Cliente.Nome = model.DadosCliente.Nome;
-            Cliente.Telefone = model.DadosCliente.Telefone;
-            Cliente.Email = model.DadosCliente.Email;
-            Cliente.CEP = model.DadosEntrega.CEP;
-            Cliente.Estado = model.DadosEntrega.Estado;
-            Cliente.Municipio = model.DadosEntrega.Municipio;
-            Cliente.Bairro = model.DadosEntrega.Bairro;
-            Cliente.Endereco = model.DadosEntrega.Logradouro + model.DadosEntrega.Numero;
-            Cliente.Complemento = model.DadosEntrega.Complemento;
+            Cliente.ClienteID = model.ClienteID;
+            Cliente.CPF = model.DadosCliente != null ? model.DadosCliente.CPF : model.CPF;
+            Cliente.Nome = model.DadosCliente != null ? model.DadosCliente.Nome : model.Cliente;
+            Cliente.Telefone = model.DadosCliente != null ? model.DadosCliente.Telefone : model.Telefone;
+            Cliente.Email = model.DadosCliente != null ? model.DadosCliente.Email : model.Email;
+            Cliente.CEP = model.DadosEntrega.CEP != null ? model.DadosEntrega.CEP : model.CEP;
+            Cliente.Estado = model.DadosEntrega.Estado != null ? model.DadosEntrega.Estado : model.Estado;
+            Cliente.Municipio = model.DadosEntrega.Municipio != null ? model.DadosEntrega.Municipio : model.Municipio;
+            Cliente.Bairro = model.DadosEntrega.Bairro != null ? model.DadosEntrega.Bairro : model.Bairro;
+            Cliente.Endereco = model.DadosEntrega.Complemento != null ? model.DadosEntrega.Logradouro + ", " + model.DadosEntrega.Numero : model.Endereco;
+            Cliente.Complemento = model.DadosEntrega != null ? model.DadosEntrega.Complemento : model.Complemento;
 
-            var ClienteID = _clienteService.CriarCliente(Cliente);
+            if(model.DadosCliente != null)
+            {
+                ClienteID = _clienteService.CriarCliente(Cliente);
+            }               
+            else
+                _clienteService.AtualizarCliente(Cliente);
 
             Pedido Pedido = new Pedido();
-            Pedido.ClienteID = ClienteID;
+            Pedido.PedidoID = model.PedidoID;
+            Pedido.ClienteID = ClienteID != 0 ? ClienteID : model.ClienteID;
             Pedido.VendedorID = model.VendedorID;
-            Pedido.TransportadoraID = model.DadosEntrega.TransportadoraIDSelected;
-            Pedido.CondicaoPagamentoID = model.CondPagtoPedido.CondicaoPagamentoID;
-            Pedido.Telefone = model.DadosCliente.Telefone;
-            Pedido.Email = model.DadosCliente.Email;
-            Pedido.CEP = model.DadosEntrega.CEP;
-            Pedido.Estado = model.DadosEntrega.Estado;
-            Pedido.Municipio = model.DadosEntrega.Municipio;
-            Pedido.Bairro = model.DadosEntrega.Bairro;
-            Pedido.Endereco = model.DadosEntrega.Logradouro + model.DadosEntrega.Numero;
-            Pedido.DataEntrega = model.DadosEntrega.DataEntrega;
-            Pedido.Observacao = model.DadosEntrega.Observacao;
-            Pedido.Restricao = model.DadosEntrega.Restricao;
+            Pedido.TransportadoraID =  model.DadosEntrega.TransportadoraIDSelected;
+            Pedido.CondicaoPagamentoID = model.CondPagtoPedido != null ? model.CondPagtoPedido.CondicaoPagamentoID : model.CondicaoPagamentoID;
+            Pedido.Telefone = model.DadosCliente != null ? model.DadosCliente.Telefone : model.Telefone;
+            Pedido.Email = model.DadosCliente != null ? model.DadosCliente.Email : model.Email;
+            Pedido.CEP = model.DadosEntrega.CEP != null ? model.DadosEntrega.CEP : model.CEP;
+            Pedido.Estado = model.DadosEntrega.Estado != null ? model.DadosEntrega.Estado : model.Estado;
+            Pedido.Municipio = model.DadosEntrega.Municipio != null ? model.DadosEntrega.Municipio : model.Municipio;
+            Pedido.Bairro = model.DadosEntrega.Bairro != null ? model.DadosEntrega.Bairro : model.Bairro;
+            Pedido.Endereco = model.DadosEntrega.Logradouro != null ? model.DadosEntrega.Logradouro + ", " + model.DadosEntrega.Numero : model.Endereco;
+            Pedido.DataEntrega = model.DadosEntrega.DataEntrega != null ? model.DadosEntrega.DataEntrega : model.DataEntrega;
+            Pedido.Observacao = model.DadosEntrega.Observacao != null ? model.DadosEntrega.Observacao : model.Observacao;
+            Pedido.Restricao = model.DadosEntrega.Restricao != null ? model.DadosEntrega.Restricao : model.Restricao;
             Pedido.NotaFiscal = model.NotaFiscal;
             Pedido.Status = model.Status;
             Pedido.ValorTotal = model.Itens.Sum(i => i.Preco * i.Quantidade).GetValueOrDefault();
