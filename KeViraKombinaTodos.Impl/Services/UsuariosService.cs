@@ -36,12 +36,12 @@ namespace KeViraKombinaTodos.Impl.Services {
 			_AspNetUsersDao.AtualizarPerfilUsuario(idUser, perfilID);
 		}
 
-		public IList<Usuario> CarregarUsuarios() {
-			return _UsuariosDao.CarregarUsuarios();
+		public IList<AspNetUsers> CarregarUsuarios() {
+			return _AspNetUsersDao.CarregarUsuarios();
 		}
 
-		public Usuario CarregarUsuario(int usuarioID) {
-			return _UsuariosDao.CarregarUsuario(usuarioID);
+		public AspNetUsers CarregarUsuario(int usuarioID) {
+			return _AspNetUsersDao.CarregarUsuario(usuarioID);
 		}
 		public void CriarNovoUsuarioWorkflow(AspNetUsers objeto) {
 			_AspNetUsersDao.CriarNovoUsuarioWorkflow(objeto);

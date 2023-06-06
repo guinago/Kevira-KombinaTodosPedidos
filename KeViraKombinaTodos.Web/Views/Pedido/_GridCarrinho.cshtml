@@ -1,23 +1,17 @@
 ﻿@model IEnumerable<KeViraKombinaTodos.Web.Models.PedidoItemModel>
 
 <div>
-    @{
-        var webGrid = new WebGrid(Model, defaultSort: "Descricao");
-    }
-    @webGrid.GetHtml(
-        tableStyle:"table table-responsive table-striped table-bordered",
-        columns: webGrid.Columns(
-            webGrid.Column("Codigo", header: "Código"),
-            webGrid.Column("Descricao", header: "Descrição"),
-            webGrid.Column("Preco", header: "Preço", format: @<text><div class="edit" data-id="@item.ProdutoID" data-propertyname="Preco">@item.Preco</div></text>),
-            webGrid.Column("Quantidade", header: "Quantidade", format: @<text><div class="edit" data-id="@item.ProdutoID" data-propertyname="Quantidade">@item.Quantidade</div></text>)
-            )
+@{
+    var webGrid = new WebGrid(Model, defaultSort: "Descricao");
+}
+@webGrid.GetHtml(
+    tableStyle:"table table-responsive table-striped table-bordered",
+    columns: webGrid.Columns(
+        webGrid.Column("Codigo", header: "Código"),
+        webGrid.Column("Descricao", header: "Descrição"),
+        webGrid.Column("Preco", header: "Preço", format: @<text><div class="edit" data-id="@item.ProdutoID" data-propertyname="Preco">@item.Preco</div></text>),
+        webGrid.Column("Quantidade", header: "Quantidade", format: @<text><div class="edit" data-id="@item.ProdutoID" data-propertyname="Quantidade">@item.Quantidade</div></text>)
     )
+)
 </div>
-
-<style>
-    .table td {
-        width: 25%
-    }
-</style>
 

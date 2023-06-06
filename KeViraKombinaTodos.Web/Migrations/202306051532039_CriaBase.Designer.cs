@@ -13,7 +13,7 @@ namespace KeViraKombinaTodos.Web.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "202305101722307_CriaBase"; }
+            get { return "202306051532039_CriaBase"; }
         }
         
         string IMigrationMetadata.Source

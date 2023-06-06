@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 
 namespace KeViraKombinaTodos.Impl.DAO {
 	[Component]
@@ -41,23 +42,30 @@ namespace KeViraKombinaTodos.Impl.DAO {
 			string query = string.Format("DELETE Produto WHERE ProdutoID = {0}", ProdutoID);
 			ExecutarQuery(query);
 		}
-		public void AtualizarProduto(Produto Produto) {
-            string query = "UPDATE Produto " +
-                "SET " +
-                string.Format("Descricao = '{0}', ", Produto.Descricao) +
-                string.Format("Codigo = '{0}', ", Produto.Codigo) +
-                string.Format("Valor = CONVERT(FLOAT, REPLACE({0},',','.') ), ", Produto.Valor) +
-                string.Format("Quantidade = CONVERT(FLOAT, REPLACE({0},',','.') ), ", Produto.Quantidade) +
-                string.Format("Ativo = {0}, ", Convert.ToInt32(Produto.Ativo)) +
-                "DataModif = GETDATE() " +
-                string.Format(" WHERE ProdutoID = {0}", Produto.ProdutoID);
+        public void AtualizarProduto(Produto Produto)
+        {
+            StringBuilder query = new StringBuilder();
+            query.AppendLine(string.Format("UPDATE Produto "));
+            query.AppendLine(string.Format("SET "));
+            if (!string.IsNullOrWhiteSpace(Produto.Descricao))
+                query.AppendLine(string.Format("Descricao = '{0}',", Produto.Descricao));
+            if (!string.IsNullOrWhiteSpace(Produto.Codigo))
+                query.AppendLine(string.Format("Codigo = '{0}',", Produto.Codigo));
+            if (!Produto.Valor.Equals(0))
+                query.AppendLine(string.Format("Valor = '{0}',", Produto.Valor));
+            if (!Produto.Quantidade.Equals(0))
+                query.AppendLine(string.Format("Quantidade = '{0}',", Produto.Quantidade));
+            if (!string.IsNullOrWhiteSpace(Produto.Ativo.ToString()))
+                query.AppendLine(string.Format("Ativo = '{0}',", Convert.ToInt32(Produto.Ativo)));
+            query.AppendLine(string.Format("DataModif = GETDATE()"));
+            query.AppendLine(string.Format(" WHERE ProdutoID = {0}", Produto.ProdutoID));
 
-            ExecutarQuery(query);
-		}
-		#endregion
+            ExecutarQuery(query.ToString());
+        }
+        #endregion
 
-		#region Methods Private
-		private Produto RetornaProdutoReader(SqlDataReader reader) {
+        #region Methods Private
+        private Produto RetornaProdutoReader(SqlDataReader reader) {
 			Produto band = new Produto();
 
 			band.ProdutoID = Convert.ToInt32(reader["ProdutoID"]);

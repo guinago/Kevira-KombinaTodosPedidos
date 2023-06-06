@@ -4,6 +4,7 @@ using KeViraKombinaTodos.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Text;
 
 namespace KeViraKombinaTodos.Impl.DAO
 {
@@ -34,17 +35,28 @@ namespace KeViraKombinaTodos.Impl.DAO
             ExecutarQuery(query);
 
         }
+
         public void AtualizarUsuario(AspNetUsers objeto)
         {
-            string query = "UPDATE AspNetUsers " +
-                "SET " +
-                string.Format("Email ='{0}', ", objeto.Email) +
-                string.Format("PhoneNumber = '{0}', ", objeto.PhoneNumber) +
-                string.Format("UserName = '{0}' ", objeto.Nome) +
-                string.Format("WHERE ID = " + objeto.ID);
+            StringBuilder query = new StringBuilder();
+            query.AppendLine(string.Format("UPDATE AspNetUsers "));
+            query.AppendLine(string.Format("SET "));
+            if (!string.IsNullOrWhiteSpace(objeto.Nome))
+                query.AppendLine(string.Format("Nome = '{0}',", objeto.Nome));
+            if (!string.IsNullOrWhiteSpace(objeto.CGC))
+                query.AppendLine(string.Format("CPF = '{0}',", objeto.CGC));
+            if (!string.IsNullOrWhiteSpace(objeto.PhoneNumber))
+                query.AppendLine(string.Format("PhoneNumber = '{0}',", objeto.PhoneNumber));
+            if (!string.IsNullOrWhiteSpace(objeto.Email))
+                query.AppendLine(string.Format("Email = '{0}',", objeto.Email));
+            if (objeto.IsEnabled.Equals(0))
+                query.AppendLine(string.Format("Ativo = '{0}',", Convert.ToInt32(objeto.IsEnabled)));
+            if (!string.IsNullOrWhiteSpace(objeto.PerfilID.ToString()))
+                query.AppendLine(string.Format("PerfilID = '{0}',", objeto.PerfilID));
+            query.AppendLine(string.Format("DataModif = GETDATE()"));
+            query.AppendLine(string.Format(" WHERE ID = {0}", objeto.Id));
 
-            ExecutarQuery(query);
-
+            ExecutarQuery(query.ToString());
         }
         public int AtualizarColunaIDMaster(string email)
         {
@@ -81,9 +93,9 @@ namespace KeViraKombinaTodos.Impl.DAO
             ExecutarQuery(query);
         }
 
-        public IList<AspNetUsers> CarregarUsuariosWorkflow(int workflowID)
+        public IList<AspNetUsers> CarregarUsuarios()
         {
-            return LoadAllUsersWF(workflowID);
+            return LoadAllUsersWF();
         }
         public AspNetUsers CarregarUsuario(int id)
         {
@@ -100,11 +112,11 @@ namespace KeViraKombinaTodos.Impl.DAO
             user.Email = (string)reader["Email"];
             user.PhoneNumber = (string)reader["PhoneNumber"];
             user.UserName = (string)reader["UserName"];
-            user.DataCadastro = (DateTime)reader["DataCadastro"];
-            user.CGC = (string)reader["CGC"];
-            user.Nome = (string)reader["Nome"];
+            user.DataCadastro = (DateTime)reader["DataCriacao"];
+            user.CGC = (string)reader["CPF"];
+            user.Nome = (string)reader["Nome"] + (string)reader["SobreNome"];
             user.IsEnabled = Convert.ToBoolean(reader["IsEnabled"]);
-            user.PerfilID = (int)reader["PerfilID"];
+            //user.PerfilID = Convert.ToBoolean(reader["IsEnabled"]);//(int)reader["PerfilID"];
 
             return user;
         }
@@ -175,7 +187,7 @@ namespace KeViraKombinaTodos.Impl.DAO
             conexao.CloseConexao();
         }
 
-        private IList<AspNetUsers> LoadAllUsersWF(int workflowID)
+        private IList<AspNetUsers> LoadAllUsersWF()
         {
             ConexaoDB conexao = new ConexaoDB(TipoConexao.Conexao.Classe);
 
@@ -189,7 +201,7 @@ namespace KeViraKombinaTodos.Impl.DAO
             try
             {
                 SqlDataReader reader;
-                string query = "SELECT * FROM AspNetUsers WHERE IsEnabled = 1 AND IDMaster = " + workflowID;
+                string query = "SELECT * FROM AspNetUsers WHERE IsEnabled = 1";
                 SqlCommand cmd = new SqlCommand(query, conexao.conn);
                 cmd.CommandType = System.Data.CommandType.Text;
 

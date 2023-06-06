@@ -5,7 +5,7 @@ namespace KeViraKombinaTodos.Core.DAO {
 	public interface IAspNetUsersDao {
 		int AtualizarColunaIDMaster(string email);
 		void AtualizarPerfilUsuario(int idUser, int perfilID);
-		IList<AspNetUsers> CarregarUsuariosWorkflow(int workflowID);
+		IList<AspNetUsers> CarregarUsuarios();
 		AspNetUsers CarregarUsuario(int id);
 		void CriarNovoUsuarioWorkflow(AspNetUsers objeto);
 		void AtualizarUsuario(AspNetUsers objeto);

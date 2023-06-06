@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 
 namespace KeViraKombinaTodos.Impl.DAO {
 	[Component]
@@ -46,14 +47,17 @@ namespace KeViraKombinaTodos.Impl.DAO {
 			ExecutarQuery(query);
 		}
 		public void AtualizarCondicaoPagamento(CondicaoPagamento CondicaoPagamento) {
-            string query = "UPDATE CondicaoPagamento " +
-                "SET " +
-                string.Format("Descricao = '{0}',", CondicaoPagamento.Descricao) +
-                string.Format("Codigo = '{0}',", CondicaoPagamento.Codigo) +
-                "DataModif = GETDATE()" +
-                string.Format(" WHERE CondicaoPagamentoID = {0}", CondicaoPagamento.CondicaoPagamentoID);
+            StringBuilder query = new StringBuilder();
+            query.AppendLine(string.Format("UPDATE CondicaoPagamento "));
+            query.AppendLine(string.Format("SET "));
+            if(!string.IsNullOrWhiteSpace(CondicaoPagamento.Descricao))
+                query.AppendLine(string.Format("Descricao = '{0}',", CondicaoPagamento.Descricao));
+            if(!string.IsNullOrWhiteSpace(CondicaoPagamento.Codigo))
+                query.AppendLine(string.Format("Codigo = '{0}',", CondicaoPagamento.Codigo));
+            query.AppendLine(string.Format("DataModif = GETDATE()"));
+            query.AppendLine(string.Format(" WHERE CondicaoPagamentoID = {0}", CondicaoPagamento.CondicaoPagamentoID));
 
-            ExecutarQuery(query);
+            ExecutarQuery(query.ToString());
 		}
 		#endregion
 

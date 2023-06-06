@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 
 namespace KeViraKombinaTodos.Impl.DAO {
 	[Component]
@@ -39,24 +40,31 @@ namespace KeViraKombinaTodos.Impl.DAO {
 			ExecutarQuery(query);
 		}
 
-		public void AtualizarPerfil(Perfil perfil) {
-			string query = "UPDATE Perfil " +
-				"SET " +
-				string.Format("Descricao = '{0}', ", perfil.Descricao) +
-				string.Format("Codigo = '{0}', ", perfil.Codigo) +
-                string.Format("SouTodoPoderoso = {0}, ", Convert.ToInt32(perfil.SouTodoPoderoso)) +
-                string.Format("SouComprador = {0}, ", Convert.ToInt32(perfil.SouComprador)) +
-                string.Format("SouTransportador = {0}, ", Convert.ToInt32(perfil.SouTransportador)) +
-                "DataModif = GetDate()" +
-				string.Format(" WHERE PerfilID = '{0}'", perfil.PerfilID);
+        public void AtualizarPerfil(Perfil Perfil)
+        {
+            StringBuilder query = new StringBuilder();
+            query.AppendLine(string.Format("UPDATE Perfil "));
+            query.AppendLine(string.Format("SET "));
+            if (!string.IsNullOrWhiteSpace(Perfil.Descricao))
+                query.AppendLine(string.Format("Descricao = '{0}',", Perfil.Descricao));
+            if (!string.IsNullOrWhiteSpace(Perfil.Codigo))
+                query.AppendLine(string.Format("Codigo = '{0}',", Perfil.Codigo));
+            if (!string.IsNullOrWhiteSpace(Perfil.SouComprador.ToString()))
+                query.AppendLine(string.Format("SouComprador = '{0}',", Convert.ToInt32(Perfil.SouComprador)));
+            if (!string.IsNullOrWhiteSpace(Perfil.SouTransportador.ToString()))
+                query.AppendLine(string.Format("SouTransportador = '{0}',", Convert.ToInt32(Perfil.SouTransportador)));
+            if (!string.IsNullOrWhiteSpace(Perfil.SouTodoPoderoso.ToString()))
+                query.AppendLine(string.Format("SouTodoPoderoso = '{0}',", Convert.ToInt32(Perfil.SouTodoPoderoso)));
+            query.AppendLine(string.Format("DataModif = GETDATE()"));
+            query.AppendLine(string.Format(" WHERE PerfilID = {0}", Perfil.PerfilID));
 
-			ExecutarQuery(query);
-		}
+            ExecutarQuery(query.ToString());
+        }
 
-		#endregion
+        #endregion
 
-		#region Methods Private
-		private Perfil RetornaPerfilReader(SqlDataReader reader) {
+        #region Methods Private
+        private Perfil RetornaPerfilReader(SqlDataReader reader) {
 			Perfil band = new Perfil();
 
             band.PerfilID = Convert.ToInt32(reader["PerfilID"]);

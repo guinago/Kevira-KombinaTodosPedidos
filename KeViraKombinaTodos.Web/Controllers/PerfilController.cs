@@ -5,6 +5,7 @@ using KeViraKombinaTodos.Core.Models;
 using KeViraKombinaTodos.Core.Services;
 using KeViraKombinaTodos.Web.Extensions;
 using KeViraKombinaTodos.Web.Models;
+using Newtonsoft.Json.Linq;
 
 namespace KeViraKombinaTodos.Web.Controllers {
 	[AuthorizeAttribute]
@@ -30,15 +31,6 @@ namespace KeViraKombinaTodos.Web.Controllers {
 				modelPerfil = ConverterTiposObjetosPerfilParaPerfilViewModel(item);
 				model.Add(modelPerfil);
 			}
-
-			return View(model);
-		}
-		public ActionResult Details(int perfilID) {
-			PerfilModel model = CarregarPerfil(perfilID);
-
-			if (model == null)
-				return RedirectToAction("Index");
-			
 			return View(model);
 		}
 
@@ -54,32 +46,91 @@ namespace KeViraKombinaTodos.Web.Controllers {
 
 				perfilID = _perfilService.CriarPerfil(perfil);
 
-			} catch {
-				return View(model);
+			} catch (Exception ex){
+                ModelState.AddModelError(ex.Message, "Erro ao criar Perfil");
+                return View(model);
 			}
-			return RedirectToAction("Details", new { perfilID = perfilID });
-		}
-		public ActionResult Edit(int perfilID) {
-			return View(CarregarPerfil(perfilID));
+			return RedirectToAction("Index");
 		}
 
-		[HttpPost]
-		public ActionResult Edit(PerfilModel model) {
-			try {
-				_perfilService.AtualizarPerfil(ConverterTiposObjetosPerfilViewModelParaPerfil(model));
+        [HttpPost]
+        public ActionResult Edit(int perfilID, string propertyName, string value)
+        {
+            var status = false;
+            var message = "";
+            var produto = _perfilService.CarregarPerfil(perfilID);
+            PerfilModel model = new PerfilModel();
+            model.SouComprador = produto.SouComprador;
+            model.SouTodoPoderoso = produto.SouTodoPoderoso;
+            model.SouTransportador = produto.SouTransportador;
+            model.PerfilID = perfilID;
 
-				return RedirectToAction("Index");
-			} catch {
-				return View(model);
-			}
-		}		
+            if (propertyName == "Codigo")
+            {
+                model.Codigo = value;
+            }
+            else
+                model.Descricao = value;
 
-		public ActionResult Excluir(int perfilID) {
+            try
+            {
+                _perfilService.AtualizarPerfil(ConverterTiposObjetosPerfilViewModelParaPerfil(model));
+                status = true;
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                ModelState.AddModelError(message, "Erro ao atualizar perfil");
+            }
 
-            _perfilService.ExcluirPerfil(perfilID);
+            var response = new { value = value, status = status, message = message };
+            JObject o = JObject.FromObject(response);
+            return Content(o.ToString());
+        }
 
+        public ActionResult EditCheckd(int perfilID, string propertyName, int value)
+        {
+            var message = "";
+            PerfilModel model = new PerfilModel();
+            model.PerfilID = perfilID;
+
+            if (propertyName == "SouComprador")
+            {
+                model.SouComprador = Convert.ToBoolean(value);
+            }
+            else if (propertyName == "SouTransportador")
+                model.SouTransportador = Convert.ToBoolean(value);
+            else
+                model.SouTodoPoderoso = Convert.ToBoolean(value);
+
+            try
+            {
+                _perfilService.AtualizarPerfil(ConverterTiposObjetosPerfilViewModelParaPerfil(model));
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                ModelState.AddModelError(message, "Erro ao atualizar perfil");
+            }
             return RedirectToAction("Index");
-		}
+        }
+
+        public ActionResult Excluir(int perfilID, int value = 0)
+        {
+            var message = "";
+
+            try
+            {
+                _perfilService.ExcluirPerfil(perfilID);
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                ModelState.AddModelError(message, "Erro ao atualizar condição de pagamento");
+            }
+            return RedirectToAction("Index");
+        }
+
 		#endregion
 
 		#region Methods

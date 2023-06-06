@@ -5,8 +5,8 @@ namespace KeViraKombinaTodos.Core.Services {
 	public interface IUsuarioService {
 
 		#region Methods
-		IList<Usuario> CarregarUsuarios();
-        Usuario CarregarUsuario(int usuarioID);
+		IList<AspNetUsers> CarregarUsuarios();
+        AspNetUsers CarregarUsuario(int usuarioID);
         void AtualizarUsuario(Usuario usuario);
         void AtualizarAspNetUsers(AspNetUsers usuario);
         void ExcluirUsuario(int usuarioID);

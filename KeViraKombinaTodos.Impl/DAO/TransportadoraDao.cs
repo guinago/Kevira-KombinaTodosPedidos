@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 
 namespace KeViraKombinaTodos.Impl.DAO {
 	[Component]
@@ -44,20 +45,25 @@ namespace KeViraKombinaTodos.Impl.DAO {
 			string query = string.Format("DELETE Transportadora WHERE TransportadoraID = {0}", TransportadoraID);
 			ExecutarQuery(query);
 		}
-		public void AtualizarTransportadora(Transportadora Transportadora) {
-            string query = "UPDATE Transportadora " +
-                "SET " +
-                string.Format("Descricao = '{0}',", Transportadora.Descricao) +
-                string.Format("Codigo = '{0}',", Transportadora.Codigo) +
-                "DataModif = GETDATE()" +
-                string.Format(" WHERE TransportadoraID = {0}", Transportadora.TransportadoraID);
 
-            ExecutarQuery(query);
-		}
-		#endregion
+        public void AtualizarTransportadora(Transportadora Transportadora)
+        {
+            StringBuilder query = new StringBuilder();
+            query.AppendLine(string.Format("UPDATE Transportadora "));
+            query.AppendLine(string.Format("SET "));
+            if (!string.IsNullOrWhiteSpace(Transportadora.Descricao))
+                query.AppendLine(string.Format("Descricao = '{0}',", Transportadora.Descricao));
+            if (!string.IsNullOrWhiteSpace(Transportadora.Codigo))
+                query.AppendLine(string.Format("Codigo = '{0}',", Transportadora.Codigo));
+            query.AppendLine(string.Format("DataModif = GETDATE()"));
+            query.AppendLine(string.Format(" WHERE TransportadoraID = {0}", Transportadora.TransportadoraID));
 
-		#region Methods Private
-		private Transportadora RetornaTransportadoraReader(SqlDataReader reader) {
+            ExecutarQuery(query.ToString());
+        }
+        #endregion
+
+        #region Methods Private
+        private Transportadora RetornaTransportadoraReader(SqlDataReader reader) {
 			Transportadora band = new Transportadora();
 
             band.TransportadoraID = Convert.ToInt32(reader["TransportadoraID"]);

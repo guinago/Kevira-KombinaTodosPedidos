@@ -52,8 +52,10 @@
                     LockoutEnabled = c.Boolean(nullable: false),
                     AccessFailedCount = c.Int(nullable: false),
                     UserName = c.String(nullable: false, maxLength: 256),
+                    PerfilID = c.Int(nullable: true)
                 })
                 .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Perfil", t => t.PerfilID, cascadeDelete: true, name: "PerfilID")
                 .Index(t => t.UserName, unique: true, name: "UserNameIndex");
 
             CreateTable(
@@ -102,6 +104,7 @@
           {
               CondicaoPagamentoID = c.Int(nullable: false, identity: true),
               Descricao = c.String(nullable: false, maxLength: 1000),
+              Codigo = c.String(nullable: false, maxLength: 1000),
               DataCriacao = c.DateTime(nullable: false),
               DataModif = c.DateTime(nullable: true),
           })
@@ -218,12 +221,13 @@
                   NotaFiscal = c.String(nullable: true, maxLength: 20),
                   Status = c.Int(nullable: false, defaultValue: 0),
                   ValorTotal = c.Double(nullable: true),
+                  Frete = c.Double(nullable: true),
                   DataCriacao = c.DateTime(nullable: false),
                   DataModif = c.DateTime(nullable: true),
               })
               .PrimaryKey(p => new { p.PedidoID })
               .ForeignKey("dbo.Cliente", t => t.ClienteID, cascadeDelete: true, name: "ClienteID")
-              .ForeignKey("dbo.Usuario", t => t.VendedorID, cascadeDelete: true, name: "UsuarioID")
+              .ForeignKey("dbo.AspNetUsers", t => t.VendedorID, cascadeDelete: true, name: "id")
               .ForeignKey("dbo.Transportadora", t => t.TransportadoraID, cascadeDelete: true, name: "TransportadoraID")
               .ForeignKey("dbo.CondicaoPagamento", t => t.CondicaoPagamentoID, cascadeDelete: true, name: "CondicaoPagamentoID");
         }

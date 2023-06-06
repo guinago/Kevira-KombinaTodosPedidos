@@ -7,6 +7,7 @@ using KeViraKombinaTodos.Core.Models;
 using KeViraKombinaTodos.Core.Services;
 using KeViraKombinaTodos.Web.Extensions;
 using KeViraKombinaTodos.Web.Models;
+using Newtonsoft.Json.Linq;
 
 namespace KeViraKombinaTodos.Web.Controllers {
 	[AuthorizeAttribute]
@@ -35,14 +36,6 @@ namespace KeViraKombinaTodos.Web.Controllers {
 
 			return View(model);
 		}
-		public ActionResult Details(int condicaoPagamentoID) {
-			CondicaoPagamentoModel model = CarregarCondicaoPagamento(condicaoPagamentoID);
-
-			if (model == null)
-				return RedirectToAction("Index");
-			
-			return View(model);
-		}
 
 		public ActionResult Create() {
 			return View(new CondicaoPagamentoModel());
@@ -56,31 +49,54 @@ namespace KeViraKombinaTodos.Web.Controllers {
 
                 condicaoPagamentoID = _condicaoPagamentoService.CriarCondicaoPagamento(condicaoPagamento);
 
-            } catch {
-				return View(model);
+            } catch (Exception ex){
+                ModelState.AddModelError(ex.Message, "Erro ao criar condição de pagamento");
+                return View(model);
 			}
-			return RedirectToAction("Details", new { condicaoPagamentoID = condicaoPagamentoID });
-		}
-		public ActionResult Edit(int condicaoPagamentoID) {
-			return View(CarregarCondicaoPagamento(condicaoPagamentoID));
+			return RedirectToAction("Index");
 		}
 
 		[HttpPost]
-		public ActionResult Edit(CondicaoPagamentoModel model) {
-			try {
+		public ActionResult Edit(int condicaoPagamentoID, string propertyName, string value) {
+            var status = false;
+            var message = "";
+            CondicaoPagamentoModel model = new CondicaoPagamentoModel();
+            model.CondicaoPagamentoID = condicaoPagamentoID;
+
+            if (propertyName == "Codigo")
+            {
+                model.Codigo = value;
+            }
+            else
+                model.Descricao = value;
+
+            try {
                 _condicaoPagamentoService.AtualizarCondicaoPagamento(ConverterTiposObjetosCondicaoPagamentoViewModelParaCondicaoPagamento(model));
-                return RedirectToAction("Index");
-			} catch {
-				return View(model);
-			}
-		}
+                status = true;
+			} catch (Exception ex){
+                message = ex.Message;
+                ModelState.AddModelError(message, "Erro ao atualizar condição de pagamento");
+            }
 
-		public ActionResult Excluir(int condicaoPagamentoID) {
+            var response = new { value = value, status = status, message = message };
+            JObject o = JObject.FromObject(response);
+            return Content(o.ToString());
+        }
 
-            _condicaoPagamentoService.ExcluirCondicaoPagamento(condicaoPagamentoID);
+        public ActionResult Excluir(int condicaoPagamentoID, int value = 0) {
+            var message = "";
 
+            try
+            {
+                _condicaoPagamentoService.ExcluirCondicaoPagamento(condicaoPagamentoID);
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                ModelState.AddModelError(message, "Erro ao atualizar condição de pagamento");
+            }
             return RedirectToAction("Index");
-		}
+        }
 		#endregion
 
 		#region Methods

@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using KeViraKombinaTodos.Core.Models;
 using KeViraKombinaTodos.Core.Services;
 using KeViraKombinaTodos.Web.Models;
+using Newtonsoft.Json.Linq;
 
 namespace KeViraKombinaTodos.Web.Controllers
 {
@@ -34,15 +35,6 @@ namespace KeViraKombinaTodos.Web.Controllers
 
 			return View(model);
 		}
-		public ActionResult Details(int produtoID)
-        {
-			ProdutoModel model = CarregarProduto(produtoID);
-
-			if (model == null)
-				return RedirectToAction("Index");
-
-			return View(model);
-		}
 
 		public ActionResult Create()
         {
@@ -60,39 +52,93 @@ namespace KeViraKombinaTodos.Web.Controllers
 
                 produtoID = _produtoService.CriarProduto(produto);
 
-            } catch {
-				return View(model);
+            } catch (Exception ex){
+                ModelState.AddModelError(ex.Message, "Erro ao criar produto");
+                return View(model);
 			}
-			return RedirectToAction("Details", new { produtoID = produtoID });
-		}
-		public ActionResult Edit(int produtoID)
-        {
-			return View(CarregarProduto(produtoID));
+			return RedirectToAction("Index");
 		}
 
-		[HttpPost]
-		public ActionResult Edit(ProdutoModel model)
+        [HttpPost]
+        public ActionResult Edit(int produtoID, string propertyName, string value)
         {
-			try {
-                _produtoService.AtualizarProduto(ConverterTiposObjetosProdutoViewModelParaProduto(model));
+            var status = false;
+            var message = "";
+            ProdutoModel model = new ProdutoModel();
+            model.Ativo = _produtoService.CarregarProduto(produtoID).Ativo;
+            model.ProdutoID = produtoID;
 
-                return RedirectToAction("Index");
-			} catch
+
+            if (propertyName == "Codigo")
             {
-				return View(model);
-			}
-		}
-		public ActionResult Excluir(int produtoID)
+                model.Codigo = value;
+            }
+            else if (propertyName == "Descricao")
+            {
+                model.Descricao = value;
+            }               
+            else if (propertyName == "Preco")
+            {
+                model.Valor = Convert.ToDouble(value);
+            }              
+            else 
+                model.Quantidade = Convert.ToDouble(value);
+
+            try
+            {
+                _produtoService.AtualizarProduto(ConverterTiposObjetosProdutoViewModelParaProduto(model));
+                status = true;
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                ModelState.AddModelError(message, "Erro ao atualizar produto");
+            }
+
+            var response = new { value = value, status = status, message = message };
+            JObject o = JObject.FromObject(response);
+            return Content(o.ToString());
+        }
+
+        public ActionResult EditCheckd(int produtoID, int value)
         {
-            _produtoService.ExcluirProduto(produtoID);
+            var message = "";
+            ProdutoModel model = new ProdutoModel();
+            model.ProdutoID = produtoID;
+            model.Ativo = Convert.ToBoolean(value);
 
+            try
+            {
+                _produtoService.AtualizarProduto(ConverterTiposObjetosProdutoViewModelParaProduto(model));
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                ModelState.AddModelError(message, "Erro ao atualizar status produto");
+            }
             return RedirectToAction("Index");
-		}
-		#endregion
+        }
 
-		#region Methods
+        public ActionResult Excluir(int produtoID, int value = 0)
+        {
+            var message = "";
 
-		private ProdutoModel ConverterTiposObjetosProdutoParaProdutoViewModel(Produto produto)
+            try
+            {
+                _produtoService.ExcluirProduto(produtoID);
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                ModelState.AddModelError(message, "Erro ao excluir produto");
+            }
+            return RedirectToAction("Index");
+        }
+        #endregion
+
+        #region Methods
+
+        private ProdutoModel ConverterTiposObjetosProdutoParaProdutoViewModel(Produto produto)
         {
 			ProdutoModel model = new ProdutoModel();
 			PropertyCopier<Produto, ProdutoModel>.Copy(produto, model);

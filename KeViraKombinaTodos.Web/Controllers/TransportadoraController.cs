@@ -7,6 +7,7 @@ using KeViraKombinaTodos.Core.Models;
 using KeViraKombinaTodos.Core.Services;
 using KeViraKombinaTodos.Web.Extensions;
 using KeViraKombinaTodos.Web.Models;
+using Newtonsoft.Json.Linq;
 
 namespace KeViraKombinaTodos.Web.Controllers {
 	[AuthorizeAttribute]
@@ -35,14 +36,6 @@ namespace KeViraKombinaTodos.Web.Controllers {
 
             return View(model);
 		}
-		public ActionResult Details(int transportadoraID) {
-			TransportadoraModel model = CarregarTransportadora(transportadoraID);
-
-			if (model == null)
-				return RedirectToAction("Index");
-			
-			return View(model);
-		}
 
 		public ActionResult Create() {
 			return View(new TransportadoraModel());
@@ -56,36 +49,64 @@ namespace KeViraKombinaTodos.Web.Controllers {
 
                 transportadoraID = _transportadoraService.CriarTransportadora(transportadora);
 
-            } catch {
-				return View(model);
+            } catch (Exception ex){
+                ModelState.AddModelError(ex.Message, "Erro ao criar transportadora");
+                return View(model);
 			}
-			return RedirectToAction("Details", new { transportadoraID = transportadoraID });
-		}
-		public ActionResult Edit(int transportadoraID) {
-			return View(CarregarTransportadora(transportadoraID));
+			return RedirectToAction("Index");
 		}
 
-		[HttpPost]
-		public ActionResult Edit(TransportadoraModel model) {
-			try {
+        [HttpPost]
+        public ActionResult Edit(int transportadoraID, string propertyName, string value)
+        {
+            var status = false;
+            var message = "";
+            TransportadoraModel model = new TransportadoraModel();
+            model.TransportadoraID = transportadoraID;
+
+            if (propertyName == "Codigo")
+            {
+                model.Codigo = value;
+            }
+            else
+                model.Descricao = value;
+
+            try
+            {
                 _transportadoraService.AtualizarTransportadora(ConverterTiposObjetosTransportadoraViewModelParaTransportadora(model));
+                status = true;
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                ModelState.AddModelError(message, "Erro ao atualizar transportadora");
+            }
 
-                return RedirectToAction("Index");
-			} catch {
-				return View(model);
-			}
-		}
-		public ActionResult Excluir(int transportadoraID) {
+            var response = new { value = value, status = status, message = message };
+            JObject o = JObject.FromObject(response);
+            return Content(o.ToString());
+        }
 
-            _transportadoraService.ExcluirTransportadora(transportadoraID);
+        public ActionResult Excluir(int transportadoraID, int value = 0)
+        {
+            var message = "";
 
+            try
+            {
+                _transportadoraService.ExcluirTransportadora(transportadoraID);
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                ModelState.AddModelError(message, "Erro ao atualizar transportadora");
+            }
             return RedirectToAction("Index");
-		}
-		#endregion
+        }
+        #endregion
 
-		#region Methods
+        #region Methods
 
-		private TransportadoraModel ConverterTiposObjetosTransportadoraParaTransportadoraViewModel(Transportadora Transportadora) {
+        private TransportadoraModel ConverterTiposObjetosTransportadoraParaTransportadoraViewModel(Transportadora Transportadora) {
 			TransportadoraModel model = new TransportadoraModel();
 
 			PropertyCopier<Transportadora, TransportadoraModel>.Copy(Transportadora, model);

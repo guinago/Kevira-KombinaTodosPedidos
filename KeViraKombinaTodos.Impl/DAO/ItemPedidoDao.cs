@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 
 namespace KeViraKombinaTodos.Impl.DAO {
 	[Component]
@@ -34,17 +35,22 @@ namespace KeViraKombinaTodos.Impl.DAO {
 		public ItemPedido CarregarItemPedido(int PedidoID) {
 			return LoadOnlyOneRetorno(PedidoID);
 		}				
-		public void AtualizarItemPedido(ItemPedido obj) {
-            string query = "UPDATE ItemPedido " +
-            "SET " +
-            string.Format("Preco = CONVERT(FLOAT, REPLACE({0},',','.') ), ", obj.Preco != null ? obj.Preco.ToString().Replace(",", ".") : "Preco") +
-            string.Format("Quantidade = CONVERT(FLOAT, REPLACE({0},',','.') ), ", obj.Quantidade != null ? obj.Quantidade.ToString().Replace(",", ".") : "Quantidade") +
-            string.Format("DataModif = GETDATE() ") +
-            string.Format(" WHERE PedidoID = {0}", obj.PedidoID) +
-            string.Format(" AND ProdutoID = {0}", obj.ProdutoID);
 
-            ExecutarQuery(query);
-		}
+        public void AtualizarItemPedido(ItemPedido obj)
+        {
+            StringBuilder query = new StringBuilder();
+            query.AppendLine(string.Format("UPDATE ItemPedido "));
+            query.AppendLine(string.Format("SET "));
+            if (!string.IsNullOrWhiteSpace(obj.Preco.ToString()))
+                query.AppendLine(string.Format("Preco = CONVERT(FLOAT, REPLACE({0},',','.') ), ", obj.Preco.ToString().Replace(",", ".")));
+            if (!string.IsNullOrWhiteSpace(obj.Quantidade.ToString()))
+                query.AppendLine(string.Format("Quantidade = CONVERT(FLOAT, REPLACE({0},',','.') ), ", obj.Quantidade.ToString().Replace(",", ".")));
+            query.AppendLine(string.Format("DataModif = GETDATE()"));
+            query.AppendLine(string.Format(" WHERE PedidoID = {0}", obj.PedidoID));
+            query.AppendLine(string.Format(" AND ProdutoID = {0}", obj.ProdutoID));
+
+            ExecutarQuery(query.ToString());
+        }
 
         public void ExcluirItemPedido(int PedidoID, int ProdutoID)
         {
