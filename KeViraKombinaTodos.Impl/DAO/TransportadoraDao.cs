@@ -20,15 +20,14 @@ namespace KeViraKombinaTodos.Impl.DAO {
 
 		public int CriarTransportadora(Transportadora Transportadora) {
             string query = "INSERT INTO Transportadora " +
-                "VALUES(" +
-                string.Format("'{0}',", Transportadora.Descricao) +
-                string.Format("{0},", Transportadora.Codigo) +
-                string.Format("{0},", "GETDATE()") +
-                string.Format("{0}", "GETDATE()") +
-                ")" +
+            "VALUES(" +
+            string.Format("'{0}',", Transportadora.Descricao) +
+            string.Format("'{0}',", Transportadora.Codigo) +
+            string.Format("{0}, ", "GETDATE() ") +
+            string.Format("{0} ", "null") +
+            ") " +
 
-                " DECLARE @TransportadoraID INT = (SELECT @@IDENTITY AS TransportadoraID)" +
-                " SELECT @TransportadoraID AS TransportadoraID";
+            " SELECT @@IDENTITY AS TransportadoraID";
 
             return ExecutarQueryCriarTransportadora(query);
 		}
@@ -70,7 +69,8 @@ namespace KeViraKombinaTodos.Impl.DAO {
             band.Descricao = (string)reader["Descricao"];
             band.Codigo = (string)reader["Codigo"];
             band.DataCriacao = (DateTime)reader["Datacriacao"];
-            band.DataModificacao = (DateTime)reader["DataModif"];
+            if (!string.IsNullOrWhiteSpace(reader["DataModif"].ToString()))
+                band.DataModificacao = (DateTime)reader["DataModif"];
 
             return band;
 		}

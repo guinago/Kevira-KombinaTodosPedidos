@@ -37,6 +37,7 @@ namespace KeViraKombinaTodos.Impl.DAO {
                 string.Format("'{0}',", obj.NotaFiscal) +
                 string.Format("'{0}',", obj.Status) +
                 string.Format("CONVERT(FLOAT, REPLACE({0},',','.') ), ", obj.ValorTotal.ToString().Replace(",", ".")) +
+                string.Format("CONVERT(FLOAT, REPLACE({0},',','.') ), ", obj.Frete.ToString().Replace(",", ".")) +
                 string.Format("{0}, ", "GETDATE() ") +
                 string.Format("{0} ", "null") +
                 ") " +
@@ -67,6 +68,7 @@ namespace KeViraKombinaTodos.Impl.DAO {
             string.Format("NotaFiscal = '{0}',", obj.NotaFiscal) +
             string.Format("Status = '{0}',", obj.Status) +
             string.Format("ValorTotal = CONVERT(FLOAT, REPLACE({0},',','.') ), ", obj.ValorTotal.ToString().Replace(",", ".")) +
+            string.Format("Frete = CONVERT(FLOAT, REPLACE({0},',','.') ), ", obj.Frete.ToString().Replace(",", ".")) +
             string.Format("DataModif = GETDATE() ") +
             string.Format(" WHERE PedidoID = {0}", obj.PedidoID);
 
@@ -109,6 +111,9 @@ namespace KeViraKombinaTodos.Impl.DAO {
             band.Vendedor = (string)reader["Vendedor"];
             band.CondicaoPagamento = (string)reader["CondicaoPagamento"];
             band.Transportadora = (string)reader["Transportadora"];
+            band.Frete = (double)reader["Frete"];
+            if (!string.IsNullOrWhiteSpace(reader["DataModif"].ToString()))
+                band.DataModificacao = (DateTime)reader["DataModif"];
 
             return band;
 		}
@@ -129,7 +134,7 @@ namespace KeViraKombinaTodos.Impl.DAO {
                 SqlDataReader reader;
                 string query = "SELECT DISTINCT P.PedidoID, P.ClienteID, P.VendedorID, P.TransportadoraID, P.CondicaoPagamentoID, P.Telefone, P.Email, P.CEP, " +
                     "P.Endereco, P.Estado, P.Municipio, P.Bairro, P.DataEntrega, P.Observacao, P.Restricao, P.NotaFiscal, P.ValorTotal, P.DataCriacao, P.Status, " +
-                    "C.Nome AS Cliente, C.CPF, C.Complemento, A.Nome AS Vendedor, CP.Descricao AS CondicaoPagamento, T.Descricao AS Transportadora " +
+                    "P.Frete, P.DataModif, C.Nome AS Cliente, C.CPF, C.Complemento, A.Nome AS Vendedor, CP.Descricao AS CondicaoPagamento, T.Descricao AS Transportadora " +
                     "FROM Pedido P " +
                     "INNER JOIN Cliente C ON C.ClienteID = P.ClienteID " +
                     "INNER JOIN AspNetUsers A ON A.ID = P.VendedorID " +
@@ -176,7 +181,7 @@ namespace KeViraKombinaTodos.Impl.DAO {
                 SqlDataReader reader;
                 string query = "SELECT DISTINCT P.PedidoID, P.ClienteID, P.VendedorID, P.TransportadoraID, P.CondicaoPagamentoID, P.Telefone, P.Email, P.CEP, " +
                     "P.Endereco, P.Estado, P.Municipio, P.Bairro, P.DataEntrega, P.Observacao, P.Restricao, P.NotaFiscal, P.ValorTotal, P.DataCriacao, P.Status, " +
-                    "C.Nome AS Cliente, C.CPF, C.Complemento, A.Nome AS Vendedor, CP.Descricao AS CondicaoPagamento, T.Descricao AS Transportadora " +
+                    "P.Frete, P.DataModif, C.Nome AS Cliente, C.CPF, C.Complemento, A.Nome AS Vendedor, CP.Descricao AS CondicaoPagamento, T.Descricao AS Transportadora " +
                     "FROM Pedido P " +
                     "INNER JOIN Cliente C ON C.ClienteID = P.ClienteID " +
                     "INNER JOIN AspNetUsers A ON A.ID = P.VendedorID " +

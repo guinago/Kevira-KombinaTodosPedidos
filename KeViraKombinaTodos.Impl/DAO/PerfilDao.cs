@@ -21,13 +21,13 @@ namespace KeViraKombinaTodos.Impl.DAO {
 				string.Format("{0}, ", Convert.ToInt32(perfil.SouTodoPoderoso)) +
                 string.Format("{0}, ", Convert.ToInt32(perfil.SouComprador)) +
                 string.Format("{0}, ", Convert.ToInt32(perfil.SouTransportador)) +
-                " GetDate(), " +
-                " GetDate() " +
+                string.Format("{0}, ", "GETDATE() ") +
+                string.Format("{0} ", "null") +
                 ") " +
 
-				" SELECT @@IDENTITY AS PerfilID";				
+				" SELECT @@IDENTITY AS PerfilID";
 
-			return ExecutarQueryCriarPerfil(query);
+            return ExecutarQueryCriarPerfil(query);
 		}		
 		public IList<Perfil> CarregarPerfis() {
 			return LoadAllPerfil();
@@ -74,7 +74,8 @@ namespace KeViraKombinaTodos.Impl.DAO {
             band.SouComprador = Convert.ToBoolean((int)reader["SouComprador"]);
             band.SouTransportador = Convert.ToBoolean((int)reader["SouTransportador"]);
             band.Datacriacao = (DateTime)reader["DataCriacao"];
-            band.DataModificacao = (DateTime)reader["DataModif"];
+            if(!string.IsNullOrWhiteSpace(reader["DataModif"].ToString()))
+                band.DataModificacao = (DateTime)reader["DataModif"];
 
             return band;
 		}

@@ -102,6 +102,11 @@
                 <strong>Total do Pedido:</strong> @Model.ValorTotal
             </td>
         </tr>
+        <tr>
+            <td>
+                <strong>Frete:</strong> @Model.Frete
+            </td>
+        </tr>
     </table>
     <br />
 
@@ -114,6 +119,7 @@
             <div class="col-md-offset-2 col-md-10">
                 <input type="Button" value="Voltar" id="btnVoltar" class="btn btn-warning" onClick="location.href='@Url.Action("VisualizarPedidos", "Pedido")'; return false;" />
                 <input type="submit" value="Editar" id="btnEdit" class="btn btn-primary" onclick="location.href='@Url.Action("Edit", "Pedido", new { PedidoID = Model.PedidoID})'; return false;" />
+                <input type="submit" value="Imprimir" id="btnEdit" class="btn btn-primary" onclick="print()" />
             </div>
         </div>
     </p>
@@ -148,14 +154,12 @@
                 },
                 callback: function (value, settings) {
                     var jsonData = $.parseJSON(value);
-                    if ($(this).data('propertyname') == "Quantidade" && jsonData.status && jsonData.value == 0) {
-                        $(this).text(jsonData.value);
-                        window.location.reload();
-                    }else if (jsonData.status) {
+                    if (jsonData.status) {
                         $(this).text(jsonData.value);
                     } else {
                         $(this).text(oldValue)
                     }
+                    window.location.reload();
                 }
             })
            

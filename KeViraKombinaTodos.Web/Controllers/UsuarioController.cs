@@ -47,6 +47,7 @@ namespace KeViraKombinaTodos.Web.Controllers {
             var status = false;
             var message = "";
             UsuarioModel model = new UsuarioModel();
+            model.UsuarioID = id;
             model.Status = _usuariosService.CarregarUsuario(id).IsEnabled;
 
             if (propertyName == "Nome")
@@ -66,12 +67,17 @@ namespace KeViraKombinaTodos.Web.Controllers {
                 model.Email = value;
             }
             else
-                model.Perfil = value;
+                model.PerfilID = Convert.ToInt32(value);
 
             try
             {
                 _usuariosService.AtualizarAspNetUsers(ConverterTiposObjetosUsuarioViewModelParaAspNetUsers(model));
-                status = true;
+                if(propertyName == "Perfil")
+                {
+                    value = GetModelPerfil().Where(a => a.Key == model.PerfilID).FirstOrDefault().Value;
+                    status = true;
+                }else
+                    status = true;
             }
             catch (Exception ex)
             {
@@ -84,34 +90,11 @@ namespace KeViraKombinaTodos.Web.Controllers {
             return Content(o.ToString());
         }
 
-        [HttpPost]
-        public ActionResult EditPerfil(int usuarioID, string propertyName, string value)
-        {
-            var status = false;
-            var message = "";
-            UsuarioModel model = new UsuarioModel();
-            model.Status = _usuariosService.CarregarUsuario(usuarioID).IsEnabled;
-            model.Perfil = value;
-
-            try
-            {
-                _usuariosService.AtualizarAspNetUsers(ConverterTiposObjetosUsuarioViewModelParaAspNetUsers(model));
-                status = true;
-            }
-            catch (Exception ex)
-            {
-                message = ex.Message;
-                ModelState.AddModelError(message, "Erro ao atualizar usuário");
-            }
-
-            var response = new { value = value, status = status, message = message };
-            JObject o = JObject.FromObject(response);
-            return Content(o.ToString());
-        }
-        public ActionResult GetPerfis(int perfilID)
+        public ActionResult GetPerfis(int usuarioID)
         {
             string selectedPerfilID = "";
             StringBuilder sb = new StringBuilder();
+            int? perfilUsuario = _usuariosService.CarregarUsuario(usuarioID).PerfilID;
 
             var listPerfil = GetModelPerfil().OrderBy(a => a.Key).ToList();
 
@@ -120,7 +103,7 @@ namespace KeViraKombinaTodos.Web.Controllers {
                 sb.Append(string.Format("'{0}':'{1}',", item.Key, item.Value));
             }
 
-            selectedPerfilID = listPerfil.Where(a => a.Key == perfilID).First().Value;
+            selectedPerfilID = listPerfil.Where(a => a.Key == perfilUsuario).First().Value;
 
             sb.Append(string.Format("'selected': '{0}'", selectedPerfilID));
             return Content("{" + sb.ToString() + "}");
@@ -168,12 +151,13 @@ namespace KeViraKombinaTodos.Web.Controllers {
         private AspNetUsers ConverterTiposObjetosUsuarioViewModelParaAspNetUsers(UsuarioModel model)
         {
             AspNetUsers user = new AspNetUsers();
+            user.Id = model.UsuarioID;
             user.Nome = model.Nome;
             user.CGC = model.CPF;
             user.Email = model.Email;
             user.PhoneNumber = model.Telefone;
             user.IsEnabled = model.Status.GetValueOrDefault();
-
+            user.PerfilID = model.PerfilID.GetValueOrDefault();
 
             return user;
         }
@@ -190,8 +174,8 @@ namespace KeViraKombinaTodos.Web.Controllers {
             model.Status = user.IsEnabled;
             model.DataCriacao = user.DataCadastro;
             model.PerfilID = user.PerfilID;            
-            model.ListPerfil = GetModelPerfil();
-            model.Perfil = model.ListPerfil.FirstOrDefault().Value;
+            //model.ListPerfil = GetModelPerfil();
+            model.Perfil = GetModelPerfil().Where(p => p.Key == user.PerfilID).FirstOrDefault().Value;
 
             return model;
 		}
@@ -199,6 +183,8 @@ namespace KeViraKombinaTodos.Web.Controllers {
         public IDictionary<int, string> GetModelPerfil()
         {
             var result = new Dictionary<int, string>();
+            result.Add(0, "Selecione");
+
             var perfis = (List<Perfil>)_perfilService.CarregarPerfis();
 
             perfis.ForEach(d => result.Add(d.PerfilID, d.Descricao));

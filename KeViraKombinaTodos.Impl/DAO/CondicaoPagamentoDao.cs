@@ -19,17 +19,16 @@ namespace KeViraKombinaTodos.Impl.DAO {
 		}
 
 		public int CriarCondicaoPagamento(CondicaoPagamento CondicaoPagamento) {
-            string query = "INSERT INTO CondicaoPagamento " +
-                "VALUES(" +
-                string.Format("'{0}',", CondicaoPagamento.Descricao) +
-                //string.Format("'{0}',", CondicaoPagamento.Codigo) +
-                string.Format("{0}, ", "GETDATE()") +
-                string.Format("{0}, ", "GETDATE()") +
-                string.Format("'{0}' ", CondicaoPagamento.Codigo) +
-                ")" +
 
-                " DECLARE @CondicaoPagamentoID INT = (SELECT @@IDENTITY AS CondicaoPagamentoID)" +
-                " SELECT @CondicaoPagamentoID AS CondicaoPagamentoID";
+            string query = "INSERT INTO CondicaoPagamento " +
+            "VALUES(" +
+            string.Format("'{0}',", CondicaoPagamento.Descricao) +
+            string.Format("'{0}',", CondicaoPagamento.Codigo) +
+            string.Format("{0}, ", "GETDATE() ") +
+            string.Format("{0} ", "null") +
+            ") " +
+
+            " SELECT @@IDENTITY AS CondicaoPagamentoID";
 
             return ExecutarQueryCriarCondicaoPagamento(query);
 		}
@@ -69,7 +68,8 @@ namespace KeViraKombinaTodos.Impl.DAO {
             band.Descricao = (string)reader["Descricao"];
             band.Codigo = (string)reader["Codigo"];
             band.DataCriacao = (DateTime)reader["Datacriacao"];
-            band.DataModificacao = (DateTime)reader["DataModif"];
+            if (!string.IsNullOrWhiteSpace(reader["DataModif"].ToString()))
+                band.DataModificacao = (DateTime)reader["DataModif"];
 
             return band;
 		}

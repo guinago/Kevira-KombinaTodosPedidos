@@ -585,9 +585,7 @@ namespace KeViraKombinaTodos.Web.Controllers
             Pedido.NotaFiscal = model.NotaFiscal;
             Pedido.Status = model.Status;
             Pedido.ValorTotal = model.Itens.Sum(i => i.Preco * i.Quantidade).GetValueOrDefault();
-
-
-            //PropertyCopier<PedidoModel, Pedido>.Copy(model, Pedido);
+            Pedido.Frete = model.DadosEntrega.Frete != null ? model.DadosEntrega.Frete.GetValueOrDefault() : model.Frete.GetValueOrDefault();
 
             return Pedido;
         }

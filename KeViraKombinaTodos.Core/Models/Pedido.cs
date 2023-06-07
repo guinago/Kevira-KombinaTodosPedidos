@@ -29,6 +29,7 @@ namespace KeViraKombinaTodos.Core.Models {
         public string Vendedor { get; set; }
         public string CondicaoPagamento { get; set; }
         public string Transportadora { get; set; }
+        public double? Frete { get; set; }
         #endregion
     }
 }

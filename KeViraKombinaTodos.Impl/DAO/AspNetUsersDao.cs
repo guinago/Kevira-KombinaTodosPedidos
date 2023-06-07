@@ -49,9 +49,9 @@ namespace KeViraKombinaTodos.Impl.DAO
                 query.AppendLine(string.Format("PhoneNumber = '{0}',", objeto.PhoneNumber));
             if (!string.IsNullOrWhiteSpace(objeto.Email))
                 query.AppendLine(string.Format("Email = '{0}',", objeto.Email));
-            if (objeto.IsEnabled.Equals(0))
-                query.AppendLine(string.Format("Ativo = '{0}',", Convert.ToInt32(objeto.IsEnabled)));
-            if (!string.IsNullOrWhiteSpace(objeto.PerfilID.ToString()))
+            if (!string.IsNullOrWhiteSpace(objeto.IsEnabled.ToString()))
+                query.AppendLine(string.Format("IsEnabled = '{0}',", Convert.ToInt32(objeto.IsEnabled)));
+            if (!objeto.PerfilID.Equals(0))
                 query.AppendLine(string.Format("PerfilID = '{0}',", objeto.PerfilID));
             query.AppendLine(string.Format("DataModif = GETDATE()"));
             query.AppendLine(string.Format(" WHERE ID = {0}", objeto.Id));
@@ -116,7 +116,8 @@ namespace KeViraKombinaTodos.Impl.DAO
             user.CGC = (string)reader["CPF"];
             user.Nome = (string)reader["Nome"] + (string)reader["SobreNome"];
             user.IsEnabled = Convert.ToBoolean(reader["IsEnabled"]);
-            //user.PerfilID = Convert.ToBoolean(reader["IsEnabled"]);//(int)reader["PerfilID"];
+            if (!string.IsNullOrWhiteSpace(reader["PerfilID"].ToString()))
+                user.PerfilID = (int)reader["PerfilID"];
 
             return user;
         }
@@ -201,7 +202,7 @@ namespace KeViraKombinaTodos.Impl.DAO
             try
             {
                 SqlDataReader reader;
-                string query = "SELECT * FROM AspNetUsers WHERE IsEnabled = 1";
+                string query = "SELECT * FROM AspNetUsers";
                 SqlCommand cmd = new SqlCommand(query, conexao.conn);
                 cmd.CommandType = System.Data.CommandType.Text;
 

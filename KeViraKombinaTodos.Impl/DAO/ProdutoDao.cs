@@ -19,19 +19,19 @@ namespace KeViraKombinaTodos.Impl.DAO {
 			return Produto;
 		}
 		public int CriarProduto(Produto Produto) {
-            string query = "INSERT INTO Produto " +
-                "VALUES(" +
-                string.Format("'{0}', ", Produto.Descricao) +
-                string.Format("'{0}', ", Produto.Codigo) +
-                string.Format("CONVERT(FLOAT, REPLACE({0},',','.') ), ", Produto.Valor.ToString().Replace(",", ".")) +
-                string.Format("{0}, ", Produto.Quantidade.ToString().Replace(",", ".")) +
-                string.Format("{0}, ", 1) +
-                string.Format("{0}, ", "GETDATE()") +
-                string.Format("{0}", "GETDATE()") +
-                ")" +
 
-                " DECLARE @ProdutoID INT = (SELECT @@IDENTITY AS ProdutoID)" +
-                " SELECT @ProdutoID AS ProdutoID";
+            string query = "INSERT INTO Produto " +
+            "VALUES(" +
+            string.Format("'{0}', ", Produto.Descricao) +
+            string.Format("'{0}', ", Produto.Codigo) +
+            string.Format("CONVERT(FLOAT, REPLACE({0},',','.') ), ", Produto.Valor.ToString().Replace(",", ".")) +
+            string.Format("{0}, ", Produto.Quantidade.ToString().Replace(",", ".")) +
+            string.Format("{0}, ", 1) +
+            string.Format("{0}, ", "GETDATE()") +
+            string.Format("{0} ", "null") +
+            ") " +
+
+            " SELECT @@IDENTITY AS ProdutoID";
 
             return ExecutarQueryCriarProduto(query);
 		}
@@ -75,7 +75,8 @@ namespace KeViraKombinaTodos.Impl.DAO {
             band.Quantidade = (double)reader["Quantidade"];
             band.Ativo = Convert.ToBoolean((int)reader["Ativo"]);
             band.DataCriacao = (DateTime)reader["DataCriacao"];
-            band.DataModificacao = (DateTime)reader["DataModif"];
+            if (!string.IsNullOrWhiteSpace(reader["DataModif"].ToString()))
+                band.DataModificacao = (DateTime)reader["DataModif"];
 
             return band;
 		}
