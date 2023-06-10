@@ -40,27 +40,22 @@ namespace KeViraKombinaTodos.Impl.Services {
         public void AtualizarPedido(Pedido Pedido){
             _pedidoDao.AtualizarPedido(Pedido);
         }
-
         public void ExcluirPedido(int pedidoID)
         {
             _pedidoDao.ExcluirPedido(pedidoID);
         }
-
         public int CriarItemPedido(ItemPedido Pedido)
         {
             return _itemPedidoDao.CriarItemPedido(Pedido);
         }
-
         public IList<ItemPedido> CarregarItensPedido(int PedidoID)
         {
             return _itemPedidoDao.CarregarItensPedido(PedidoID);
         }
-
         public void AtualizarItemPedido(ItemPedido Pedido)
         {
             _itemPedidoDao.AtualizarItemPedido(Pedido);
         }
-
         public void ExcluirItemPedido(int PedidoID, int ProdutoID)
         {
             _itemPedidoDao.ExcluirItemPedido(PedidoID, ProdutoID);

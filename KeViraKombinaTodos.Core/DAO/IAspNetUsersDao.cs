@@ -7,7 +7,7 @@ namespace KeViraKombinaTodos.Core.DAO {
 		void AtualizarPerfilUsuario(int idUser, int perfilID);
 		IList<AspNetUsers> CarregarUsuarios();
 		AspNetUsers CarregarUsuario(int id);
-		void CriarNovoUsuarioWorkflow(AspNetUsers objeto);
+        void CriarNovoUsuarioWorkflow(AspNetUsers objeto);
 		void AtualizarUsuario(AspNetUsers objeto);
 		void ExcluirUsuario(int usuarioID);
         void DesativarUsuario(int usuarioID);

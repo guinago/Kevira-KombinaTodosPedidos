@@ -16,30 +16,9 @@
         webGrid.Column("DataEntrega", header: "Data Entrega"),
         webGrid.Column("ValorTotal", header: "Valor Total"),
         webGrid.Column("StatusPedido", header: "Status Pedido"),
+        webGrid.Column("StatusPedido", header: "Status Pedido", format:@<text><div class="editSelect" data-id="@item.PedidoID" data-propertyname="Status">@item.StatusPedido</div></text>),
         webGrid.Column("Detalhes", header: "Detalhes", format: @<text> @Html.ActionLink(linkText: "Detalhes", actionName: "Details", routeValues: new { pedidoID = item.PedidoID })</text>)
     )
 )
         
 </div>
-
-@*<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-<script type="text/javascript" src="~/Scripts/quicksearch.js"></script>
-<script type="text/javascript">
-        $(function () {
-            //Add Header Row with TextBoxes.
-            var row = $("<TR />");
-            $("#WebGrid TR").eq(0).find("TH").each(function () {
-                row.append("<th><input type = 'text' /></th>");
-            });
-            $("#WebGrid TR").eq(0).after(row);
-
-            //Applying the QuickSearch Plugin to each TextBox.
-            $("#WebGrid TR").eq(1).find("INPUT").each(function (i) {
-                $(this).quicksearch("#WebGrid tr:not(:has(th))", {
-                    'testQuery': function (query, txt, row) {
-                        return $(row).children(":eq(" + i + ")").text().toLowerCase().indexOf(query[0].toLowerCase()) != -1;
-                    }
-                });
-            });
-        });
-</script>*@

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using KeViraKombinaTodos.Core.Models;
 using KeViraKombinaTodos.Core.Services;
@@ -13,10 +14,11 @@ namespace KeViraKombinaTodos.Web.Controllers
 
 		#region Inject
 		private IProdutoService _produtoService;
-
-        public ProdutoController(IProdutoService produtoService)
+        private IPedidoService _pedidoService;
+        public ProdutoController(IProdutoService produtoService, IPedidoService pedidoService)
         {
             _produtoService = produtoService ?? throw new ArgumentNullException(nameof(produtoService));
+            _pedidoService = pedidoService ?? throw new ArgumentNullException(nameof(pedidoService));
         }
         #endregion
 
@@ -35,74 +37,77 @@ namespace KeViraKombinaTodos.Web.Controllers
 
 			return View(model);
 		}
-
 		public ActionResult Create()
         {
 			ProdutoModel model = new ProdutoModel();
 
 			return View(model);
 		}
-
 		[HttpPost]
 		public ActionResult Create(ProdutoModel model)
         {
 			int produtoID = 0;
 			try {
                 Produto produto = ConverterTiposObjetosProdutoViewModelParaProduto(model);
+                string message = ValidaCadastro(produto);
+
+                if (!string.IsNullOrWhiteSpace(message))
+                {
+                    TempData["error"] = message;
+                    return View(model);
+                }
 
                 produtoID = _produtoService.CriarProduto(produto);
+                TempData["success"] = "Produto salvo com sucesso";
 
             } catch (Exception ex){
-                ModelState.AddModelError(ex.Message, "Erro ao criar produto");
+                TempData["error"] = ("Erro ao criar produto", ex.Message);
                 return View(model);
 			}
 			return RedirectToAction("Index");
 		}
-
         [HttpPost]
         public ActionResult Edit(int produtoID, string propertyName, string value)
         {
             var status = false;
             var message = "";
             ProdutoModel model = new ProdutoModel();
-            model.Ativo = _produtoService.CarregarProduto(produtoID).Ativo;
-            model.ProdutoID = produtoID;
-
-
-            if (propertyName == "Codigo")
-            {
-                model.Codigo = value;
-            }
-            else if (propertyName == "Descricao")
-            {
-                model.Descricao = value;
-            }               
-            else if (propertyName == "Preco")
-            {
-                model.Valor = Convert.ToDouble(value);
-            }              
-            else 
-                model.Quantidade = Convert.ToDouble(value);
-
             try
             {
+                model.Ativo = _produtoService.CarregarProduto(produtoID).Ativo;
+                model.ProdutoID = produtoID;
+
+                if (propertyName == "Codigo")
+                {
+                    model.Codigo = value;
+                }
+                else if (propertyName == "Descricao")
+                {
+                    model.Descricao = value;
+                }
+                else if (propertyName == "Preco")
+                {
+                    model.Valor = Convert.ToDouble(value);
+                }
+                else
+                    model.Quantidade = Convert.ToDouble(value);
+
                 _produtoService.AtualizarProduto(ConverterTiposObjetosProdutoViewModelParaProduto(model));
+                TempData["success"] = "Produto atualizado com sucesso";
                 status = true;
             }
             catch (Exception ex)
             {
                 message = ex.Message;
-                ModelState.AddModelError(message, "Erro ao atualizar produto");
+                TempData["error"] = ("Erro ao atualizar produto", message);
             }
 
             var response = new { value = value, status = status, message = message };
             JObject o = JObject.FromObject(response);
             return Content(o.ToString());
         }
-
         public ActionResult EditCheckd(int produtoID, int value)
         {
-            var message = "";
             ProdutoModel model = new ProdutoModel();
             model.ProdutoID = produtoID;
             model.Ativo = Convert.ToBoolean(value);
@@ -110,34 +115,40 @@ namespace KeViraKombinaTodos.Web.Controllers
             try
             {
                 _produtoService.AtualizarProduto(ConverterTiposObjetosProdutoViewModelParaProduto(model));
+                TempData["success"] = "Produto atualizado com sucesso";
             }
             catch (Exception ex)
             {
-                message = ex.Message;
-                ModelState.AddModelError(message, "Erro ao atualizar status produto");
+                TempData["error"] = ("Erro ao atualizar status produto", ex.Message);
+                return RedirectToAction("Index");
             }
             return RedirectToAction("Index");
         }
-
         public ActionResult Excluir(int produtoID, int value = 0)
         {
-            var message = "";
-
             try
             {
+                var itemPedido = _pedidoService.CarregarItensPedido(0).Where(p => p.ProdutoID == produtoID).FirstOrDefault();
+
+                if (itemPedido != null)
+                {
+                    TempData["error"] = "Não é possível excluir o produto, pois existem pedidos gerados no sistema com este produto.";
+                    return RedirectToAction("Index");
+                }
+
                 _produtoService.ExcluirProduto(produtoID);
+                TempData["success"] = "Produto excluído com sucesso";
             }
             catch (Exception ex)
             {
-                message = ex.Message;
-                ModelState.AddModelError(message, "Erro ao excluir produto");
+                TempData["error"] = ("Erro ao excluir produto", ex.Message);
+                return RedirectToAction("Index");
             }
             return RedirectToAction("Index");
         }
         #endregion
 
         #region Methods
-
         private ProdutoModel ConverterTiposObjetosProdutoParaProdutoViewModel(Produto produto)
         {
 			ProdutoModel model = new ProdutoModel();
@@ -152,7 +163,6 @@ namespace KeViraKombinaTodos.Web.Controllers
 
 			return Produto;
 		}
-
 		private ProdutoModel CarregarProduto(int produtoID)
         {
 			ProdutoModel model = new ProdutoModel();
@@ -165,8 +175,16 @@ namespace KeViraKombinaTodos.Web.Controllers
 			
 			return model;
 		}
+        private string ValidaCadastro(Produto produto)
+        {
+            string message = "";
+            var codigoProduto = _produtoService.CarregarProdutos().Where(p => p.Codigo == produto.Codigo).FirstOrDefault();
 
+            if (codigoProduto != null)
+                return message = "Não é possível incluir o produto, pois já existe produto cadastrado no sistema com este código.";
 
-		#endregion
-	}
+            return message;
+        }
+        #endregion
+    }
 }

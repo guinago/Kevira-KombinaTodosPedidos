@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using KeViraKombinaTodos.Core.Models;
 using KeViraKombinaTodos.Core.Services;
-using KeViraKombinaTodos.Web.Extensions;
 using KeViraKombinaTodos.Web.Models;
 using Newtonsoft.Json.Linq;
 
@@ -13,9 +13,11 @@ namespace KeViraKombinaTodos.Web.Controllers {
 
 		#region Inject
 		private IPerfilService _perfilService;
-		public PerfilController(IPerfilService perfilService) {
+        private IUsuarioService _usuariosService;
+        public PerfilController(IPerfilService perfilService, IUsuarioService usuariosService) {
 			_perfilService = perfilService ?? throw new ArgumentNullException(nameof(perfilService));
-		}
+            _usuariosService = usuariosService ?? throw new ArgumentException(nameof(usuariosService));
+        }
 		#endregion
 
 		#region Actions
@@ -33,26 +35,31 @@ namespace KeViraKombinaTodos.Web.Controllers {
 			}
 			return View(model);
 		}
-
 		public ActionResult Create() {
 			return View(new PerfilModel());
 		}
-
 		[HttpPost]
 		public ActionResult Create(PerfilModel model) {
 			int perfilID = 0;
-			try {
-				Perfil perfil = ConverterTiposObjetosPerfilViewModelParaPerfil(model);		
 
-				perfilID = _perfilService.CriarPerfil(perfil);
+            try {
+                Perfil perfil = ConverterTiposObjetosPerfilViewModelParaPerfil(model);
+                string message = ValidaCadastro(perfil);
 
+                if (!string.IsNullOrWhiteSpace(message))
+                {
+                    TempData["error"] = message;
+                    return View(model);
+                }
+
+                perfilID = _perfilService.CriarPerfil(perfil);
+                TempData["success"] = "Perfil salvo com sucesso";
 			} catch (Exception ex){
-                ModelState.AddModelError(ex.Message, "Erro ao criar Perfil");
+                TempData["error"] = (ex.Message, "Erro ao criar Perfil");
                 return View(model);
 			}
 			return RedirectToAction("Index");
 		}
-
         [HttpPost]
         public ActionResult Edit(int perfilID, string propertyName, string value)
         {
@@ -75,19 +82,18 @@ namespace KeViraKombinaTodos.Web.Controllers {
             try
             {
                 _perfilService.AtualizarPerfil(ConverterTiposObjetosPerfilViewModelParaPerfil(model));
+                TempData["success"] = "Perfil atualizado com sucesso.";
                 status = true;
             }
             catch (Exception ex)
             {
                 message = ex.Message;
-                ModelState.AddModelError(message, "Erro ao atualizar perfil");
+                TempData["error"] =  (message, "Erro ao atualizar perfil");
             }
-
             var response = new { value = value, status = status, message = message };
             JObject o = JObject.FromObject(response);
             return Content(o.ToString());
         }
-
         public ActionResult EditCheckd(int perfilID, string propertyName, int value)
         {
             var message = "";
@@ -106,27 +112,34 @@ namespace KeViraKombinaTodos.Web.Controllers {
             try
             {
                 _perfilService.AtualizarPerfil(ConverterTiposObjetosPerfilViewModelParaPerfil(model));
+                TempData["success"] = "Perfil atualizado com sucesso.";
             }
             catch (Exception ex)
             {
                 message = ex.Message;
-                ModelState.AddModelError(message, "Erro ao atualizar perfil");
+                TempData["error"] = (message, "Erro ao atualizar perfil");
             }
             return RedirectToAction("Index");
         }
-
         public ActionResult Excluir(int perfilID, int value = 0)
-        {
-            var message = "";
-
+        {       
             try
             {
+                var usuario = _usuariosService.CarregarUsuarios().Where(u => u.PerfilID == perfilID).FirstOrDefault();
+
+                if (usuario != null)
+                {
+                    TempData["error"] = "Não é possível excluir este perfil, pois existem usuários cadastra-dos no sistema com este perfil.";
+                    return RedirectToAction("Index");
+                }
+
                 _perfilService.ExcluirPerfil(perfilID);
+                TempData["success"] = "Perfil excluído com sucesso.";
             }
             catch (Exception ex)
             {
-                message = ex.Message;
-                ModelState.AddModelError(message, "Erro ao atualizar condição de pagamento");
+                TempData["error"] = ("Erro ao excluir perfil", ex.Message);
+                return RedirectToAction("Index");
             }
             return RedirectToAction("Index");
         }
@@ -134,7 +147,6 @@ namespace KeViraKombinaTodos.Web.Controllers {
 		#endregion
 
 		#region Methods
-
 		private PerfilModel ConverterTiposObjetosPerfilParaPerfilViewModel(Perfil perfil) {
 			PerfilModel model = new PerfilModel();
 
@@ -149,7 +161,6 @@ namespace KeViraKombinaTodos.Web.Controllers {
 
 			return perfil;
 		}
-
 		private PerfilModel CarregarPerfil(int perfilID) {
 			PerfilModel model = new PerfilModel();
 
@@ -163,6 +174,16 @@ namespace KeViraKombinaTodos.Web.Controllers {
 
 			return model;
 		}
-		#endregion
-	}
+        private string ValidaCadastro(Perfil perfil)
+        {
+            string message = "";
+            var descricaoPerfil = _perfilService.CarregarPerfis().Where(p => p.Descricao == perfil.Descricao).FirstOrDefault();
+
+            if (descricaoPerfil != null)
+                return message = "Não é possível incluir este perfil, pois já existe perfil cadastrado com esta descrição no sistema";
+
+            return message;
+        }
+        #endregion
+    }
 }

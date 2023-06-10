@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web.Mvc;
 using KeViraKombinaTodos.Core.Models;
 using KeViraKombinaTodos.Core.Services;
@@ -43,17 +44,14 @@ namespace KeViraKombinaTodos.Web.Controllers
 
             return View(model);
         }
-
         public ActionResult VisualizarPedidos()
         {
             return View(CarregarPedidos());
         }
-
         public ActionResult VisualizarEntregas()
         {
             return View(CarregarPedidos());
         }
-
         public ActionResult CreateCarrinhoItens()
         {
             IList<PedidoItemModel> model = new List<PedidoItemModel>();
@@ -63,7 +61,6 @@ namespace KeViraKombinaTodos.Web.Controllers
 
             return View(model);
         }
-
         [HttpPost]
         public ActionResult CreateCarrinhoItens(int produtoID, string propertyName, float value)
         {
@@ -80,16 +77,8 @@ namespace KeViraKombinaTodos.Web.Controllers
                     {
                         if (value == 0)
                         {
-                            try
-                            {
-                                RemoverCarrinho(produtoID);
-                                status = true;
-                            }
-                            catch (Exception ex)
-                            {
-                                message = ex.Message;
-                                ModelState.AddModelError(message, "Erro ao atualizar o Item do Pedido");
-                            }
+                            RemoverCarrinho(produtoID);                         
+                            status = true;
                         }
                         else
                             item.Quantidade = value;
@@ -102,19 +91,19 @@ namespace KeViraKombinaTodos.Web.Controllers
                     var jsonModel = JsonConvert.SerializeObject(itensCache);
 
                     _cacheService.SetStrings(key, jsonModel);
+                    TempData["success"] = "Item atualizado no carrinho com sucesso";
                     status = true;
                 }
             }
             catch (Exception ex)
             {
                 message = ex.Message;
+                TempData["error"] = ("Erro ao atualizar o Item do Pedido", ex.Message);
             }
             var response = new { value = value, status = status, message = message };
             JObject o = JObject.FromObject(response);
             return Content(o.ToString());
         }
-
-
         public ActionResult CreateDadosCliente()
         {
             DadosClienteModel model = new DadosClienteModel();
@@ -126,7 +115,6 @@ namespace KeViraKombinaTodos.Web.Controllers
 
             return View(model);
         }
-
         [HttpPost]
         public ActionResult CreateDadosCliente(DadosClienteModel model)
         {
@@ -144,7 +132,6 @@ namespace KeViraKombinaTodos.Web.Controllers
             }
             return RedirectToAction("CreateDadosEntrega");
         }
-
         public ActionResult CreateDadosEntrega()
         {
             DadosEntregaModel model = new DadosEntregaModel();
@@ -158,11 +145,9 @@ namespace KeViraKombinaTodos.Web.Controllers
 
             return View(model);
         }
-
         [HttpPost]
         public ActionResult CreateDadosEntrega(DadosEntregaModel model)
         {
-
             try
             {
                 var key = "CreateDadosEntrega_" + User.Identity.GetIdUsuarioLogado();
@@ -178,7 +163,6 @@ namespace KeViraKombinaTodos.Web.Controllers
 
             return RedirectToAction("CreateCondPagtoPedido");
         }
-
         public ActionResult CreateCondPagtoPedido()
         {
             CondicaoPagamentoModel model = new CondicaoPagamentoModel();
@@ -187,7 +171,6 @@ namespace KeViraKombinaTodos.Web.Controllers
 
             return View(model);
         }
-
         [HttpPost]
         public ActionResult CreateCondPagtoPedido(CondicaoPagamentoModel model)
         {
@@ -204,18 +187,20 @@ namespace KeViraKombinaTodos.Web.Controllers
                 foreach (var item in modelPedido.Itens)
                 {
                     _pedidoService.CriarItemPedido(ConverterTiposObjetosPedidoItemViewModelParaPedidoItem(item));
+                    AtualizarQuantidadeProduto(item.ProdutoID, item.Quantidade);
                 }
+                
+                TempData["success"] = "Pedido gerado sucesso";
                 LimparCacheUsuarioAposPedido();
             }
             catch (Exception ex)
             {
-                // cuspir erro
+                TempData["error"] = ("Erro na geração do pedido", ex.Message);
                 return RedirectToAction("CreateCondPagtoPedido");
             }
 
             return RedirectToAction("Details", new { pedidoID = IDPedido });
         }
-
         public ActionResult Details(int pedidoID)
         {
             PedidoModel model = CarregarPedido(pedidoID);
@@ -227,33 +212,29 @@ namespace KeViraKombinaTodos.Web.Controllers
 
             return View(model);
         }
-
         public ActionResult Edit(int pedidoID)
         {
             return View(CarregarPedido(pedidoID));
         }
-
         [HttpPost]
         public ActionResult Edit(PedidoModel model)
         {
             try
             {
                 _pedidoService.AtualizarPedido(ConverterTiposObjetosPedidoViewModelParaPedido(model));
-
+                TempData["success"] = "Pedido atualizado com sucesso";
                 return RedirectToAction("Details", new { pedidoID = model.PedidoID });
             }
             catch
             {
+                TempData["error"] = "Erro ao atualizar pedido";
                 return View(model);
             }
         }
-
         public ActionResult Excluir(int pedidoID)
         {
-
             return RedirectToAction("Index");
         }
-
         public ActionResult InserirCarrinho(int id)
         {
             try
@@ -281,12 +262,13 @@ namespace KeViraKombinaTodos.Web.Controllers
                     var jsonModel = JsonConvert.SerializeObject(itens);
 
                     _cacheService.SetStrings(key, jsonModel);
+                    TempData["success"] = "Produto inserido no carrinho";
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                //naudinha
+                TempData["error"] = ("Erro ao inserir produto no carrinho", ex.Message);
+                return RedirectToAction("Index");
             }
             return RedirectToAction("Index");
         }
@@ -315,11 +297,13 @@ namespace KeViraKombinaTodos.Web.Controllers
                     var jsonModel = JsonConvert.SerializeObject(itens);
 
                     _cacheService.SetStrings(key, jsonModel);
+                    TempData["info"] = "Produto removido do carrinho";
                 }
             }
-            catch
+            catch(Exception ex)
             {
-                //nauda                
+                TempData["error"] = ("Erro ao remover produto do carrinho", ex.Message);
+                return RedirectToAction("Index");
             }
 
             return RedirectToAction("Index");
@@ -328,7 +312,6 @@ namespace KeViraKombinaTodos.Web.Controllers
         #endregion
 
         #region Methods
-
         [HttpPost]
         public ActionResult SaveItem(int pedidoID, int produtoID, string propertyName, float value)
         {
@@ -337,47 +320,45 @@ namespace KeViraKombinaTodos.Web.Controllers
             PedidoItemModel model = new PedidoItemModel();
             model.PedidoID = pedidoID;
             model.ProdutoID = produtoID;
-            if (propertyName == "Quantidade")
+            try
             {
-                if (value == 0)
+                if (propertyName == "Quantidade")
                 {
-                    try
+                    if (value == 0)
                     {
-                        _pedidoService.ExcluirItemPedido(pedidoID, produtoID);
+                        IList<ItemPedido> itensPedido = _pedidoService.CarregarItensPedido(pedidoID);
+                        if(itensPedido.Count() > 1)
+                        {
+                            _pedidoService.ExcluirItemPedido(pedidoID, produtoID);
+                            TempData["success"] = "Item excluído com sucesso";
+                            status = true;
+                        }
+                        TempData["error"] = "Item não pode ser excluído, o pedido deve conter pelo menos um item";
                         status = true;
                     }
-                    catch (Exception ex)
-                    {
-                        message = ex.Message;
-                        ModelState.AddModelError(message, "Erro ao atualizar o Item do Pedido");
-                    }
+                    else
+                        model.Quantidade = value;
                 }
                 else
-                    model.Quantidade = value;
-            }
-            else
-                model.Preco = value;
+                    model.Preco = value;
 
-            if (!status)
-            {
-                try
+                if (!status)
                 {
                     _pedidoService.AtualizarItemPedido(ConverterTiposObjetosPedidoItemViewModelParaPedidoItem(model));
+                    TempData["success"] = "Item atualizado com sucesso";
                     status = true;
                 }
-                catch (Exception ex)
-                {
-                    message = ex.Message;
-                    ModelState.AddModelError(message, "Erro ao atualizar o Item do Pedido");
-                }
             }
-
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                TempData["error"] = ("Erro salvar o item", message);
+            }
+            
             var response = new { value = value, status = status, message = message };
             JObject o = JObject.FromObject(response);
             return Content(o.ToString());
-        }
-        
-
+        }     
         private IList<PedidoModel> CarregarPedidos()
         {
             IList<PedidoModel> model = new List<PedidoModel>();
@@ -393,7 +374,6 @@ namespace KeViraKombinaTodos.Web.Controllers
             }
             return model;
         }
-
         private PedidoModel CarregarPedido(int pedidoID)
         {
             PedidoModel model = new PedidoModel();
@@ -410,11 +390,8 @@ namespace KeViraKombinaTodos.Web.Controllers
             {
                 model.Itens.Add(ConverterTiposObjetosPedidoItemParaPedidoItemViewModel(item));
             }
-
             return model;
-
         }
-
         private List<PedidoItemModel> CarregarItensDoCache()
         {
             List<PedidoItemModel> itens = new List<PedidoItemModel>();
@@ -436,11 +413,10 @@ namespace KeViraKombinaTodos.Web.Controllers
             }
             catch (Exception ex)
             {
-                // fica mudo por enquanto
+                TempData["error"] = ("Erro ao carregar itens do cache", ex.Message);
             }
             return itens;
         }
-
         private PedidoModel CarregarDadosGeracaoPedido()
         {
             var modelPedido = new PedidoModel();
@@ -468,11 +444,10 @@ namespace KeViraKombinaTodos.Web.Controllers
             }
             catch (Exception ex)
             {
-                throw;
+                TempData["error"] = ("Erro ao carregar daddo do cache para geração do pedido", ex.Message);
             }
             return modelPedido;
         }
-
         private object CarregarModelCache(string key, object model)
         {
             try
@@ -493,10 +468,8 @@ namespace KeViraKombinaTodos.Web.Controllers
             {
                 model = null;
             }
-
             return model;
         }
-
         private IList<PedidoItemModel> CarregarTodosProdutos()
         {
             IList<PedidoItemModel> itens = new List<PedidoItemModel>();
@@ -512,7 +485,6 @@ namespace KeViraKombinaTodos.Web.Controllers
             }
             return itens;
         }
-
         private PedidoModel ConverterTiposObjetosPedidoParaPedidoViewModel(Pedido Pedido)
         {
             PedidoModel model = new PedidoModel();
@@ -540,7 +512,6 @@ namespace KeViraKombinaTodos.Web.Controllers
 
             return itemPedido;
         }
-
         private Pedido ConverterTiposObjetosPedidoViewModelParaPedido(PedidoModel model)
         {
             model.VendedorID = User.Identity.GetIdUsuarioLogado();
@@ -589,7 +560,6 @@ namespace KeViraKombinaTodos.Web.Controllers
 
             return Pedido;
         }
-
         private PedidoItemModel ConverterTiposObjetosPedidoItemParaPedidoItemViewModel(ItemPedido item)
         {
             PedidoItemModel itemPedido = new PedidoItemModel();
@@ -598,7 +568,6 @@ namespace KeViraKombinaTodos.Web.Controllers
 
             return itemPedido;
         }
-
         private PedidoItemModel TransformarProdutoEmItemPedido(Produto produto)
         {
             var item = new PedidoItemModel();
@@ -610,7 +579,6 @@ namespace KeViraKombinaTodos.Web.Controllers
 
             return item;
         }
-
         public IDictionary<int, string> GetModelTransportadoraGeral()
         {
             var result = new Dictionary<int, string>();
@@ -620,7 +588,6 @@ namespace KeViraKombinaTodos.Web.Controllers
 
             return result;
         }
-
         public IDictionary<int, string> GetModelCondPagto()
         {
             var result = new Dictionary<int, string>();
@@ -630,7 +597,6 @@ namespace KeViraKombinaTodos.Web.Controllers
 
             return result;
         }
-
         private Object RetornarTipoModel(object model, string result)
         {
             if (model is DadosEntregaModel)
@@ -641,7 +607,6 @@ namespace KeViraKombinaTodos.Web.Controllers
 
             return null;
         }
-
         private void LimparCacheUsuarioAposPedido()
         {
             try
@@ -650,11 +615,36 @@ namespace KeViraKombinaTodos.Web.Controllers
                 _cacheService.SetStrings("CreateDadosEntrega_" + User.Identity.GetIdUsuarioLogado(), string.Empty);
                 _cacheService.SetStrings("GerandoPedido_" + User.Identity.GetIdUsuarioLogado(), string.Empty);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                TempData["error"] = ("Erro ao limpar cache", ex.Message);
             }
+        }
+        public void AtualizarQuantidadeProduto(int? produtoID, double? quantidade)
+        {
+            var produto = _produtoService.CarregarProduto(produtoID.GetValueOrDefault());
+            produto.Quantidade = produto.Quantidade - quantidade.GetValueOrDefault();
+            _produtoService.AtualizarProduto(produto);
+        }
+
+        public ActionResult GetStatus(int pedidoID)
+        {
+            string selectedStatusID = "";
+            StringBuilder sb = new StringBuilder();
+            int? statusPedido = _pedidoService.CarregarPedido(pedidoID).Status;
+            PedidoModel model = new PedidoModel();
+
+            var listStatus = model.ListStatus.FirstOrDefault(l => l.Key == statusPedido);
+
+            foreach (var item in model.ListStatus)
+            {
+                sb.Append(string.Format("'{0}':'{1}',", item.Key, item.Value));
+            }
+
+            selectedStatusID = model.ListStatus.Where(a => a.Key == statusPedido).First().Value;
+
+            sb.Append(string.Format("'selected': '{0}'", selectedStatusID));
+            return Content("{" + sb.ToString() + "}");
         }
         #endregion
     }

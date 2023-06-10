@@ -15,9 +15,12 @@ namespace KeViraKombinaTodos.Web.Controllers {
 
 		#region Inject
 		private ITransportadoraService _transportadoraService;
-		public TransportadoraController(ITransportadoraService TransportadoraService) {
+        private IPedidoService _pedidoService;
+
+        public TransportadoraController(ITransportadoraService TransportadoraService, IPedidoService PedidoService) {
 			_transportadoraService = TransportadoraService ?? throw new ArgumentNullException(nameof(TransportadoraService));
-		}
+            _pedidoService = PedidoService ?? throw new ArgumentNullException(nameof(PedidoService));
+        }
 		#endregion
 
 		#region Actions
@@ -44,13 +47,21 @@ namespace KeViraKombinaTodos.Web.Controllers {
 		[HttpPost]
 		public ActionResult Create(TransportadoraModel model) {
 			int transportadoraID = 0;
-			try {
+
+            try {
                 Transportadora transportadora = ConverterTiposObjetosTransportadoraViewModelParaTransportadora(model);
+                string message = ValidaCadastro(transportadora);
+
+                if (!string.IsNullOrWhiteSpace(message))
+                {
+                    TempData["error"] = message;
+                    return View(model);
+                }
 
                 transportadoraID = _transportadoraService.CriarTransportadora(transportadora);
-
+                TempData["success"] = "Transportadora salva com sucesso!";
             } catch (Exception ex){
-                ModelState.AddModelError(ex.Message, "Erro ao criar transportadora");
+                TempData["error"] = (ex.Message, "Erro ao criar transportadora");
                 return View(model);
 			}
 			return RedirectToAction("Index");
@@ -74,12 +85,13 @@ namespace KeViraKombinaTodos.Web.Controllers {
             try
             {
                 _transportadoraService.AtualizarTransportadora(ConverterTiposObjetosTransportadoraViewModelParaTransportadora(model));
+                TempData["success"] = "Transportadora atualizada com sucesso!";
                 status = true;
             }
             catch (Exception ex)
             {
                 message = ex.Message;
-                ModelState.AddModelError(message, "Erro ao atualizar transportadora");
+                TempData["error"] = (message, "Erro ao atualizar transportadora");
             }
 
             var response = new { value = value, status = status, message = message };
@@ -89,16 +101,23 @@ namespace KeViraKombinaTodos.Web.Controllers {
 
         public ActionResult Excluir(int transportadoraID, int value = 0)
         {
-            var message = "";
-
             try
             {
+                var pedido = _pedidoService.CarregarPedidos(0).Where(p => p.TransportadoraID == transportadoraID).FirstOrDefault();
+
+                if (pedido != null)
+                {
+                    TempData["error"] = "Não é possível excluir a transportadora, pois existem pedidos gerados no sistema com esta transportadora.";
+                    return RedirectToAction("Index");
+                }
+
                 _transportadoraService.ExcluirTransportadora(transportadoraID);
+                TempData["success"] = "Transportadora excluída com sucesso!";
             }
             catch (Exception ex)
             {
-                message = ex.Message;
-                ModelState.AddModelError(message, "Erro ao atualizar transportadora");
+                TempData["error"] = ("Erro ao excluir transportadora", ex);
+                return RedirectToAction("Index");
             }
             return RedirectToAction("Index");
         }
@@ -134,8 +153,17 @@ namespace KeViraKombinaTodos.Web.Controllers {
 			
 			return model;
 		}
-		
 
-		#endregion
-	}
+        private string ValidaCadastro(Transportadora transportadora)
+        {
+            string message = "";
+            var codigoTransportadora = _transportadoraService.CarregarTransportadoras().Where(t => t.Codigo == transportadora.Codigo).FirstOrDefault();
+
+            if (codigoTransportadora != null)
+                return message = "Não é possível incluir a transportadora, pois já existe transportadora cadastrada no sistema com este código.";
+
+            return message;
+        }
+        #endregion
+    }
 }

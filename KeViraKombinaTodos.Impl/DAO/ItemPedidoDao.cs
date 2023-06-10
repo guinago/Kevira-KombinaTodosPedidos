@@ -72,7 +72,7 @@ namespace KeViraKombinaTodos.Impl.DAO {
 
             return band;
 		}
-        private IList<ItemPedido> LoadAllItensPedido(int PedidoID)
+        private IList<ItemPedido> LoadAllItensPedido(int PedidoID = 0)
         {
             ConexaoDB conexao = new ConexaoDB(TipoConexao.Conexao.Classe);
 
@@ -80,6 +80,9 @@ namespace KeViraKombinaTodos.Impl.DAO {
             {
                 // erro
             }
+
+            IList<Pedido> pedidos = new List<Pedido>();
+            var condicao = (PedidoID > 0 ? $" Where P.PedidoID = {PedidoID}" : string.Empty);
 
             IList<ItemPedido> Itens = new List<ItemPedido>();
 
@@ -90,7 +93,7 @@ namespace KeViraKombinaTodos.Impl.DAO {
                     "FROM ItemPedido IP " +
                     "INNER JOIN Pedido P ON P.PedidoID = IP.PedidoID " +
                     "INNER JOIN Produto Prod ON Prod.ProdutoID = IP.ProdutoID " +
-                    "WHERE P.PedidoID = " + PedidoID;
+                condicao;
 
                 SqlCommand cmd = new SqlCommand(query, conexao.conn);
                 cmd.CommandType = System.Data.CommandType.Text;

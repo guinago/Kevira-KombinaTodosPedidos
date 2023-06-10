@@ -43,7 +43,8 @@ namespace KeViraKombinaTodos.Impl.Services {
 		public AspNetUsers CarregarUsuario(int usuarioID) {
 			return _AspNetUsersDao.CarregarUsuario(usuarioID);
 		}
-		public void CriarNovoUsuarioWorkflow(AspNetUsers objeto) {
+
+        public void CriarNovoUsuarioWorkflow(AspNetUsers objeto) {
 			_AspNetUsersDao.CriarNovoUsuarioWorkflow(objeto);
 		}
 

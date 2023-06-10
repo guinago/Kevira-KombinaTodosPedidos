@@ -208,7 +208,6 @@ namespace KeViraKombinaTodos.Impl.DAO {
                 // erro
             }
             conexao.CloseConexao();
-            //return Pedidos.FirstOrDefault(d => d.PedidosID == PedidosID);
             return Pedidos.FirstOrDefault();
         }
 

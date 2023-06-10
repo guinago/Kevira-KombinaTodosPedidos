@@ -8,9 +8,9 @@
 htmlAttributes: new { @id = "WebGrid", @class = "Grid" },
     tableStyle:"table table-responsive table-striped table-bordered",
     columns: webGrid.Columns(
-        webGrid.Column("Nome", header: "Nome", format: @<text><div class="edit" data-id="@item.UsuarioID" data-propertyname="Nome">@item.Nome</div></text>),
-        webGrid.Column("CPF", header: "CPF", format: @<text><div class="edit" data-id="@item.UsuarioID" data-propertyname="CPF">@item.CPF</div></text>),
-        webGrid.Column("Telefone", header: "Telefone", format: @<text><div class="edit" data-id="@item.UsuarioID" data-propertyname="TeleFone">@item.Telefone</div></text>),
+        webGrid.Column("Nome", header: "Nome"),
+        webGrid.Column("CPF", header: "CPF"),
+        webGrid.Column("Telefone", header: "Telefone"),
         webGrid.Column("Email", header: "Email", format: @<text><div class="edit" data-id="@item.UsuarioID" data-propertyname="Email">@item.Email</div></text>),
         webGrid.Column("Ativo", header: "Ativo", format: @<text> @Html.ActionLink(linkText: (@item.Status == true ? "Sim" : "Não"), actionName: ("EditCheckd"), routeValues: new { usuarioID = item.UsuarioID, value = @item.Status == true ? 0 : 1 })</text>),
         webGrid.Column("Perfil", header: "Perfil", format:@<text><div class="editSelect" data-id="@item.UsuarioID" data-propertyname="Perfil">@item.Perfil</div></text>),

@@ -174,7 +174,6 @@ namespace KeViraKombinaTodos.Web.Controllers {
             model.Status = user.IsEnabled;
             model.DataCriacao = user.DataCadastro;
             model.PerfilID = user.PerfilID;            
-            //model.ListPerfil = GetModelPerfil();
             model.Perfil = GetModelPerfil().Where(p => p.Key == user.PerfilID).FirstOrDefault().Value;
 
             return model;
@@ -197,21 +196,6 @@ namespace KeViraKombinaTodos.Web.Controllers {
 
 			return usuario;
 		}
-
-		private UsuarioModel CarregarUsuario(int usuarioID) {
-			UsuarioModel model = new UsuarioModel();
-
-            //Usuario usuario = _usuariosService.CarregarUsuario(usuarioID);
-
-			//if (usuario == null) {
-			//	return null;
-			//}
-
-			//model = ConverterTiposObjetosUsuarioParaUsuarioViewModel(usuario);			
-
-			return model;
-		}
-
 
 		#endregion
 	}

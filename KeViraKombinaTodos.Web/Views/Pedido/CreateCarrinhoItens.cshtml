@@ -50,14 +50,12 @@
                 },
                 callback: function (value, settings) {
                     var jsonData = $.parseJSON(value);
-                    if ($(this).data('propertyname') == "Quantidade" && jsonData.status && jsonData.value == 0) {
-                        $(this).text(jsonData.value);
-                        window.location.reload();
-                    } else if (jsonData.status) {
+                    if (jsonData.status) {
                         $(this).text(jsonData.value);
                     } else {
                         $(this).text(oldValue)
                     }
+                    window.location.reload();
                 }
             })
         })
