@@ -65,11 +65,11 @@ namespace KeViraKombinaTodos.Web.Controllers {
         {
             var status = false;
             var message = "";
-            var produto = _perfilService.CarregarPerfil(perfilID);
+            var perfil = _perfilService.CarregarPerfil(perfilID);
             PerfilModel model = new PerfilModel();
-            model.SouComprador = produto.SouComprador;
-            model.SouTodoPoderoso = produto.SouTodoPoderoso;
-            model.SouTransportador = produto.SouTransportador;
+            model.SouComprador = perfil.SouComprador;
+            model.SouTodoPoderoso = perfil.SouTodoPoderoso;
+            model.SouTransportador = perfil.SouTransportador;
             model.PerfilID = perfilID;
 
             if (propertyName == "Codigo")

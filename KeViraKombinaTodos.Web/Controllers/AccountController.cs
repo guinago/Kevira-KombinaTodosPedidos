@@ -142,7 +142,6 @@ namespace KeViraKombinaTodos.Web.Controllers
                 var user = new ApplicationUser
                 {
                     Nome = model.Nome,
-                    SobreNome = model.SobreNome,
                     UserName = model.Email,
                     Email = model.Email,
                     PasswordHash = model.ConfirmPassword,

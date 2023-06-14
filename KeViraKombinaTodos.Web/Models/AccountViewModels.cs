@@ -68,10 +68,6 @@ namespace KeViraKombinaTodos.Web.Models
 		public string Nome { get; set; }
 
         [Required(ErrorMessage = "Title is required")]
-        [Display(Name = "Sobre Nome")]
-        public string SobreNome { get; set; }
-
-        [Required(ErrorMessage = "Title is required")]
 		[StringLength(100, ErrorMessage = "O {0} deve ter pelo menos {2} caracteres.", MinimumLength = 6)]
 		[DataType(DataType.Password)]
 		[Display(Name = "Senha")]

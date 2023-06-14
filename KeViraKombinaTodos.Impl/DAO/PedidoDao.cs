@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 
 namespace KeViraKombinaTodos.Impl.DAO {
 	[Component]
@@ -38,6 +39,7 @@ namespace KeViraKombinaTodos.Impl.DAO {
                 string.Format("'{0}',", obj.Status) +
                 string.Format("CONVERT(FLOAT, REPLACE({0},',','.') ), ", obj.ValorTotal.ToString().Replace(",", ".")) +
                 string.Format("CONVERT(FLOAT, REPLACE({0},',','.') ), ", obj.Frete.ToString().Replace(",", ".")) +
+                string.Format("'{0}',", obj.PedidoInterno) +
                 string.Format("{0}, ", "GETDATE() ") +
                 string.Format("{0} ", "null") +
                 ") " +
@@ -46,35 +48,50 @@ namespace KeViraKombinaTodos.Impl.DAO {
 
             return ExecutarQueryCriarRetorno(query);
 		}
-
 		public Pedido CarregarPedido(int PedidoID) {
 			return LoadOnlyOneRetorno(PedidoID);
 		}				
-		public void AtualizarPedido(Pedido obj) {
-            string query = "UPDATE Pedido " +
-                "SET " +
-            string.Format("TransportadoraID = '{0}',", obj.TransportadoraID) +
-            string.Format("CondicaoPagamentoID = '{0}',", obj.CondicaoPagamentoID) +
-            string.Format("Telefone = '{0}',", obj.Telefone) +
-            string.Format("Email = '{0}',", obj.Email) +
-            string.Format("CEP = '{0}',", obj.CEP) +
-            string.Format("Endereco = '{0}',", obj.Endereco) +
-            string.Format("Estado = '{0}',", obj.Estado) +
-            string.Format("Municipio = '{0}',", obj.Municipio) +
-            string.Format("Bairro = '{0}',", obj.Bairro) +
-            string.Format("DataEntrega = '{0}',", obj.DataEntrega.Value.ToString("yyyy-MM-dd HH:mm:ss")) +
-            string.Format("Observacao = '{0}',", obj.Observacao) +
-            string.Format("Restricao = '{0}',", obj.Restricao) +
-            string.Format("NotaFiscal = '{0}',", obj.NotaFiscal) +
-            string.Format("Status = '{0}',", obj.Status) +
-            string.Format("ValorTotal = CONVERT(FLOAT, REPLACE({0},',','.') ), ", obj.ValorTotal.ToString().Replace(",", ".")) +
-            string.Format("Frete = CONVERT(FLOAT, REPLACE({0},',','.') ), ", obj.Frete.ToString().Replace(",", ".")) +
-            string.Format("DataModif = GETDATE() ") +
-            string.Format(" WHERE PedidoID = {0}", obj.PedidoID);
+        public void AtualizarPedido(Pedido obj)
+        {
+            StringBuilder query = new StringBuilder();
+            query.AppendLine(string.Format("UPDATE Pedido "));
+            query.AppendLine(string.Format("SET "));
+            if (!obj.TransportadoraID.Equals(0))
+                query.AppendLine(string.Format("TransportadoraID = '{0}',", obj.TransportadoraID));
+            if (!obj.CondicaoPagamentoID.Equals(0))
+                query.AppendLine(string.Format("CondicaoPagamentoID = '{0}',", obj.CondicaoPagamentoID));
+            if (!string.IsNullOrWhiteSpace(obj.PedidoInterno))
+                query.AppendLine(string.Format("PedidoInterno = '{0}',", obj.PedidoInterno));
+            if (!string.IsNullOrWhiteSpace(obj.Telefone))
+                query.AppendLine(string.Format("Telefone = '{0}',", obj.Telefone));
+            if (!string.IsNullOrWhiteSpace(obj.Email))
+                query.AppendLine(string.Format("Email = '{0}',", obj.Email));
+            if (!string.IsNullOrWhiteSpace(obj.CEP))
+                query.AppendLine(string.Format("CEP = '{0}',", obj.CEP));
+            if (!string.IsNullOrWhiteSpace(obj.Estado))
+                query.AppendLine(string.Format("Estado = '{0}',", obj.Estado));
+            if (!string.IsNullOrWhiteSpace(obj.Municipio))
+                query.AppendLine(string.Format("Municipio = '{0}',", obj.Municipio));
+            if (!string.IsNullOrWhiteSpace(obj.Bairro))
+                query.AppendLine(string.Format("Bairro = '{0}',", obj.Bairro));
+            if (!string.IsNullOrWhiteSpace(obj.DataEntrega.ToString()))
+                query.AppendLine(string.Format("DataEntrega = '{0}',", obj.DataEntrega.Value.ToString("yyyy-MM-dd HH:mm:ss")));
+            if (!string.IsNullOrWhiteSpace(obj.Observacao))
+                query.AppendLine(string.Format("Observacao = '{0}',", obj.Observacao));
+            if (!string.IsNullOrWhiteSpace(obj.Restricao))
+                query.AppendLine(string.Format("Restricao = '{0}',", obj.Restricao));
+            if (!string.IsNullOrWhiteSpace(obj.NotaFiscal))
+                query.AppendLine(string.Format("NotaFiscal = '{0}',", obj.NotaFiscal));
+            query.AppendLine(string.Format("Status = '{0}',", obj.Status));
+            if (!string.IsNullOrWhiteSpace(obj.ValorTotal.ToString()))
+                query.AppendLine(string.Format("ValorTotal = CONVERT(FLOAT, REPLACE({0},',','.') ), ", obj.ValorTotal.ToString().Replace(",", ".")));
+            if (!string.IsNullOrWhiteSpace(obj.Frete.ToString()))
+                query.AppendLine(string.Format("Frete = CONVERT(FLOAT, REPLACE({0},',','.') ), ", obj.Frete.ToString().Replace(",", ".")));
+            query.AppendLine(string.Format("DataModif = GETDATE()"));
+            query.AppendLine(string.Format(" WHERE PedidoID = {0}", obj.PedidoID));
 
-            ExecutarQuery(query);
-		}
-
+            ExecutarQuery(query.ToString());
+        }
         public void ExcluirPedido(int PedidoID)
         {
             string query = string.Format("DELETE Pedido WHERE PedidoID = {0}", PedidoID);
@@ -112,6 +129,7 @@ namespace KeViraKombinaTodos.Impl.DAO {
             band.CondicaoPagamento = (string)reader["CondicaoPagamento"];
             band.Transportadora = (string)reader["Transportadora"];
             band.Frete = (double)reader["Frete"];
+            band.PedidoInterno = (string)reader["PedidoInterno"];
             if (!string.IsNullOrWhiteSpace(reader["DataModif"].ToString()))
                 band.DataModificacao = (DateTime)reader["DataModif"];
 
@@ -134,7 +152,7 @@ namespace KeViraKombinaTodos.Impl.DAO {
                 SqlDataReader reader;
                 string query = "SELECT DISTINCT P.PedidoID, P.ClienteID, P.VendedorID, P.TransportadoraID, P.CondicaoPagamentoID, P.Telefone, P.Email, P.CEP, " +
                     "P.Endereco, P.Estado, P.Municipio, P.Bairro, P.DataEntrega, P.Observacao, P.Restricao, P.NotaFiscal, P.ValorTotal, P.DataCriacao, P.Status, " +
-                    "P.Frete, P.DataModif, C.Nome AS Cliente, C.CPF, C.Complemento, A.Nome AS Vendedor, CP.Descricao AS CondicaoPagamento, T.Descricao AS Transportadora " +
+                    "P.Frete, P.PedidoInterno, P.DataModif, C.Nome AS Cliente, C.CPF, C.Complemento, A.Nome AS Vendedor, CP.Descricao AS CondicaoPagamento, T.Descricao AS Transportadora " +
                     "FROM Pedido P " +
                     "INNER JOIN Cliente C ON C.ClienteID = P.ClienteID " +
                     "INNER JOIN AspNetUsers A ON A.ID = P.VendedorID " +
@@ -165,7 +183,6 @@ namespace KeViraKombinaTodos.Impl.DAO {
 
             return pedidos;
         }
-
         private Pedido LoadOnlyOneRetorno(int PedidoID)
         {
             ConexaoDB conexao = new ConexaoDB(TipoConexao.Conexao.Classe);
@@ -181,7 +198,7 @@ namespace KeViraKombinaTodos.Impl.DAO {
                 SqlDataReader reader;
                 string query = "SELECT DISTINCT P.PedidoID, P.ClienteID, P.VendedorID, P.TransportadoraID, P.CondicaoPagamentoID, P.Telefone, P.Email, P.CEP, " +
                     "P.Endereco, P.Estado, P.Municipio, P.Bairro, P.DataEntrega, P.Observacao, P.Restricao, P.NotaFiscal, P.ValorTotal, P.DataCriacao, P.Status, " +
-                    "P.Frete, P.DataModif, C.Nome AS Cliente, C.CPF, C.Complemento, A.Nome AS Vendedor, CP.Descricao AS CondicaoPagamento, T.Descricao AS Transportadora " +
+                    "P.Frete, P.PedidoInterno, P.DataModif, C.Nome AS Cliente, C.CPF, C.Complemento, A.Nome AS Vendedor, CP.Descricao AS CondicaoPagamento, T.Descricao AS Transportadora " +
                     "FROM Pedido P " +
                     "INNER JOIN Cliente C ON C.ClienteID = P.ClienteID " +
                     "INNER JOIN AspNetUsers A ON A.ID = P.VendedorID " +
@@ -210,7 +227,6 @@ namespace KeViraKombinaTodos.Impl.DAO {
             conexao.CloseConexao();
             return Pedidos.FirstOrDefault();
         }
-
         private int ExecutarQueryCriarRetorno(string query) {
 			ConexaoDB conexao = new ConexaoDB(TipoConexao.Conexao.Classe);
 
@@ -242,7 +258,6 @@ namespace KeViraKombinaTodos.Impl.DAO {
 
 			return PedidosID;
 		}
-
 		private void ExecutarQuery(string query) {
 			ConexaoDB conexao = new ConexaoDB(TipoConexao.Conexao.Classe);
 

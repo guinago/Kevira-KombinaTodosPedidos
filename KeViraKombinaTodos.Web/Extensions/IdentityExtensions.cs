@@ -9,8 +9,8 @@ namespace KeViraKombinaTodos.Web.Extensions {
 			// Test for null to avoid issues during local testing
 			return (claim != null) ? claim.Value : string.Empty;
 		}
-		public static int GetIDMasterID(this IIdentity identity) {
-			var claim = ((ClaimsIdentity)identity).FindFirst("IDMaster");
+		public static int GetPerfilID(this IIdentity identity) {
+			var claim = ((ClaimsIdentity)identity).FindFirst("PerfilID");
 			// Test for null to avoid issues during local testing
 			return (claim != null) ? Convert.ToInt32(claim.Value) : 0;
 		}

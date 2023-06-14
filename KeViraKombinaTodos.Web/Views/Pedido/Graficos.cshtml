@@ -1,0 +1,130 @@
+﻿<div class="container">
+    <div class="row mt-2">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-header"> Vendas últimos 365 dias</div>
+                <div class="card-body">
+                    <canvas id="chartVendas" style="max-height:500px; width:100%; max-width:750px;"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-header"> Produtos mais vendidos</div>
+                <div class="card-body">
+                    <canvas id="chartProdutos" style="max-height:500px; width:100%; max-width:750px;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/inputmask")
+    @Scripts.Render("~/bundles/funcoesjs")
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script type="text/javascript">
+    function vendas() {
+        $.getJSON('@Url.Action("Vendas")',
+            function (dataJson) {
+                const labels = dataJson.map((item) => { return item.Data })
+                const values = dataJson.map((item) => { return item.Quantidade })
+
+                console.log(labels)
+                console.log(values)
+
+                const data = {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Número pedidos vendidos',
+                        data: values,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(255, 159, 64, 0.2)',
+                            'rgba(255, 205, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 20, 147, 0.2)',
+                            'rgba(0, 255, 0, 0.2)',
+                            'rgba(255, 0, 255, 0.2)',
+                            'rgba(255, 255, 0, 0.2)',
+                            'rgba(220, 20, 60, 0.2)',
+                            'rgba(0, 0, 255, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgb(255, 99, 132)',
+                            'rgb(255, 159, 64)',
+                            'rgb(255, 205, 86)',
+                            'rgb(75, 192, 192)',
+                            'rgb(54, 162, 235)',
+                            'rgb(153, 102, 255)',
+                            'rgb(255, 20, 147)',
+                            'rgb(0, 255, 0)',
+                            'rgb(255, 0, 255)',
+                            'rgb(255, 255, 0)',
+                            'rgb(220, 20, 60)',
+                            'rgb(0, 0, 255)'
+                        ],
+                        borderWidth: 1
+                    }]
+                };
+
+                const config = {
+                    type: 'bar',
+                    data: data,
+                    options: {
+                        scales: {
+                            yAxes: [{ ticks: { min: 0} }],
+                        }
+                    },
+                };
+
+                const canvasBarras = document.getElementById("chartVendas");
+
+                const graficoBarras = new Chart(canvasBarras, config);
+        });
+    }
+
+    function vendasProdutos() {
+        $.getJSON('@Url.Action("VendasProdutos")',
+            function (dataJson) {
+                const labels = dataJson.map((item) => { return item.Produto })
+                const values = dataJson.map((item) => { return item.Quantidade })
+
+                console.log(labels)
+                console.log(values)
+
+                const data = {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Quantidade',
+                        data: values,
+                        backgroundColor: [
+                            'rgb(255, 99, 132)',
+                            'rgb(54, 162, 235)',
+                            'rgb(255, 205, 86)',
+                            "#01AF40"
+                        ],
+                        hoverOffset: 4
+                    }]
+                };
+
+                const config = {
+                    type: 'doughnut',
+                    data: data,
+                };
+
+                const canvasDona = document.getElementById("chartProdutos");
+
+                const graficoDona = new Chart(canvasDona, config)
+        });
+    }
+
+    $(document).ready(() => {
+        vendas()
+        vendasProdutos()
+    })
+    </script>
+}

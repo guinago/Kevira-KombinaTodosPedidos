@@ -114,7 +114,7 @@ namespace KeViraKombinaTodos.Impl.DAO
             user.UserName = (string)reader["UserName"];
             user.DataCadastro = (DateTime)reader["DataCriacao"];
             user.CGC = (string)reader["CPF"];
-            user.Nome = (string)reader["Nome"] + " " + (string)reader["SobreNome"];
+            user.Nome = (string)reader["Nome"];
             user.IsEnabled = Convert.ToBoolean(reader["IsEnabled"]);
             if (!string.IsNullOrWhiteSpace(reader["PerfilID"].ToString()))
                 user.PerfilID = (int)reader["PerfilID"];

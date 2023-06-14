@@ -9,13 +9,12 @@
     tableStyle:"table table-responsive table-striped table-bordered",
     columns: webGrid.Columns(
         webGrid.Column("PedidoID", header: "Pedido"),
-        webGrid.Column("VendedorID", header: "Vendedor"),
-        webGrid.Column("ClienteID", header: "Cliente"),
+        webGrid.Column("Vendedor", header: "Vendedor"),
+        webGrid.Column("Cliente", header: "Cliente"),
         webGrid.Column("Telefone", header: "Telefone"),
         webGrid.Column("CEP", header: "CEP"),
         webGrid.Column("DataEntrega", header: "Data Entrega"),
         webGrid.Column("ValorTotal", header: "Valor Total"),
-        webGrid.Column("StatusPedido", header: "Status Pedido"),
         webGrid.Column("StatusPedido", header: "Status Pedido", format:@<text><div class="editSelect" data-id="@item.PedidoID" data-propertyname="Status">@item.StatusPedido</div></text>),
         webGrid.Column("Detalhes", header: "Detalhes", format: @<text> @Html.ActionLink(linkText: "Detalhes", actionName: "Details", routeValues: new { pedidoID = item.PedidoID })</text>)
     )

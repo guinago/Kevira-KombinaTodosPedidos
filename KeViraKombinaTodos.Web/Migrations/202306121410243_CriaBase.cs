@@ -37,7 +37,6 @@
                     Id = c.Int(nullable: false, identity: true),
                     CPF = c.String(),
                     Nome = c.String(),
-                    SobreNome = c.String(),
                     IsEnabled = c.Boolean(),
                     DataCriacao = c.DateTime(nullable: false),
                     DataModif = c.DateTime(),
@@ -55,7 +54,6 @@
                     PerfilID = c.Int(nullable: true)
                 })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Perfil", t => t.PerfilID, cascadeDelete: true, name: "PerfilID")
                 .Index(t => t.UserName, unique: true, name: "UserNameIndex");
 
             CreateTable(
@@ -222,6 +220,7 @@
                   Status = c.Int(nullable: false, defaultValue: 0),
                   ValorTotal = c.Double(nullable: true),
                   Frete = c.Double(nullable: true),
+                  PedidoInterno = c.String(nullable: false, maxLength: 1000),
                   DataCriacao = c.DateTime(nullable: false),
                   DataModif = c.DateTime(nullable: true),
               })
@@ -248,9 +247,6 @@
               .ForeignKey("dbo.Pedido", t => t.PedidoID, cascadeDelete: true, name: "PedidoID")
               .ForeignKey("dbo.Produto", t => t.ProdutoID, cascadeDelete: true, name: "ProdutoID");
         }
-
-
-
         public override void Down()
         {
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");

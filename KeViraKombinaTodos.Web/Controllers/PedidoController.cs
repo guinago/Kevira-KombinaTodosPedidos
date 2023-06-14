@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
@@ -43,6 +44,11 @@ namespace KeViraKombinaTodos.Web.Controllers
             model.Itens = CarregarTodosProdutos();
 
             return View(model);
+        }
+
+        public ActionResult Graficos()
+        {
+            return View();
         }
         public ActionResult VisualizarPedidos()
         {
@@ -358,7 +364,40 @@ namespace KeViraKombinaTodos.Web.Controllers
             var response = new { value = value, status = status, message = message };
             JObject o = JObject.FromObject(response);
             return Content(o.ToString());
-        }     
+        }
+
+        [HttpPost]
+        public ActionResult EditStatusPedido(int pedidoID, string propertyName, string value)
+        {
+            var status = false;
+            var message = "";
+            PedidoModel model = new PedidoModel();
+            Pedido pedido = _pedidoService.CarregarPedido(pedidoID);
+            model.PedidoID = pedido.PedidoID;
+            model.Status = Convert.ToInt32(value);
+            try
+            {
+                if (propertyName == "Status")
+                {                
+                    if (pedido != null)
+                    {                       
+                        _pedidoService.AtualizarPedido(pedido);
+                        value = model.ListStatus.Where(s => s.Key == Convert.ToInt32(value)).FirstOrDefault().Value;
+                        TempData["success"] = "Status pedido atualizado com sucesso";
+                        status = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                TempData["error"] = ("Erro ao atualizar Status do Pedido", message);
+            }
+
+            var response = new { value = value, status = status, message = message };
+            JObject o = JObject.FromObject(response);
+            return Content(o.ToString());
+        }
         private IList<PedidoModel> CarregarPedidos()
         {
             IList<PedidoModel> model = new List<PedidoModel>();
@@ -523,12 +562,12 @@ namespace KeViraKombinaTodos.Web.Controllers
             Cliente.Nome = model.DadosCliente != null ? model.DadosCliente.Nome : model.Cliente;
             Cliente.Telefone = model.DadosCliente != null ? model.DadosCliente.Telefone : model.Telefone;
             Cliente.Email = model.DadosCliente != null ? model.DadosCliente.Email : model.Email;
-            Cliente.CEP = model.DadosEntrega.CEP != null ? model.DadosEntrega.CEP : model.CEP;
-            Cliente.Estado = model.DadosEntrega.Estado != null ? model.DadosEntrega.Estado : model.Estado;
-            Cliente.Municipio = model.DadosEntrega.Municipio != null ? model.DadosEntrega.Municipio : model.Municipio;
-            Cliente.Bairro = model.DadosEntrega.Bairro != null ? model.DadosEntrega.Bairro : model.Bairro;
-            Cliente.Endereco = model.DadosEntrega.Complemento != null ? model.DadosEntrega.Logradouro + ", " + model.DadosEntrega.Numero : model.Endereco;
-            Cliente.Complemento = model.DadosEntrega != null ? model.DadosEntrega.Complemento : model.Complemento;
+            Cliente.CEP = (model.DadosEntrega != null && model.DadosEntrega.CEP != null) ? model.DadosEntrega.CEP : model.CEP;
+            Cliente.Estado = (model.DadosEntrega != null && model.DadosEntrega.Estado != null) ? model.DadosEntrega.Estado : model.Estado;
+            Cliente.Municipio = (model.DadosEntrega != null && model.DadosEntrega.Municipio != null) ? model.DadosEntrega.Municipio : model.Municipio;
+            Cliente.Bairro = (model.DadosEntrega != null && model.DadosEntrega.Bairro != null) ? model.DadosEntrega.Bairro : model.Bairro;
+            Cliente.Endereco = (model.DadosEntrega != null && model.DadosEntrega.Complemento != null) ? model.DadosEntrega.Logradouro + ", " + model.DadosEntrega.Numero : model.Endereco;
+            Cliente.Complemento = (model.DadosEntrega != null && model.DadosEntrega != null) ? model.DadosEntrega.Complemento : model.Complemento;
 
             if (model.DadosCliente != null)
             {
@@ -539,24 +578,25 @@ namespace KeViraKombinaTodos.Web.Controllers
 
             Pedido Pedido = new Pedido();
             Pedido.PedidoID = model.PedidoID;
+            Pedido.PedidoInterno = model.PedidoInterno;
             Pedido.ClienteID = ClienteID != 0 ? ClienteID : model.ClienteID;
             Pedido.VendedorID = model.VendedorID;
             Pedido.TransportadoraID = model.DadosEntrega.TransportadoraIDSelected;
             Pedido.CondicaoPagamentoID = model.CondPagtoPedido != null ? model.CondPagtoPedido.CondicaoPagamentoID : model.CondicaoPagamentoID;
             Pedido.Telefone = model.DadosCliente != null ? model.DadosCliente.Telefone : model.Telefone;
             Pedido.Email = model.DadosCliente != null ? model.DadosCliente.Email : model.Email;
-            Pedido.CEP = model.DadosEntrega.CEP != null ? model.DadosEntrega.CEP : model.CEP;
-            Pedido.Estado = model.DadosEntrega.Estado != null ? model.DadosEntrega.Estado : model.Estado;
-            Pedido.Municipio = model.DadosEntrega.Municipio != null ? model.DadosEntrega.Municipio : model.Municipio;
-            Pedido.Bairro = model.DadosEntrega.Bairro != null ? model.DadosEntrega.Bairro : model.Bairro;
-            Pedido.Endereco = model.DadosEntrega.Logradouro != null ? model.DadosEntrega.Logradouro + ", " + model.DadosEntrega.Numero : model.Endereco;
-            Pedido.DataEntrega = model.DadosEntrega.DataEntrega != null ? model.DadosEntrega.DataEntrega : model.DataEntrega;
-            Pedido.Observacao = model.DadosEntrega.Observacao != null ? model.DadosEntrega.Observacao : model.Observacao;
-            Pedido.Restricao = model.DadosEntrega.Restricao != null ? model.DadosEntrega.Restricao : model.Restricao;
+            Pedido.CEP = (model.DadosEntrega != null && model.DadosEntrega.CEP != null) ? model.DadosEntrega.CEP : model.CEP;
+            Pedido.Estado = (model.DadosEntrega != null && model.DadosEntrega.Estado != null) ? model.DadosEntrega.Estado : model.Estado;
+            Pedido.Municipio = (model.DadosEntrega != null && model.DadosEntrega.Municipio != null) ? model.DadosEntrega.Municipio : model.Municipio;
+            Pedido.Bairro = (model.DadosEntrega != null && model.DadosEntrega.Bairro != null) ? model.DadosEntrega.Bairro : model.Bairro;
+            Pedido.Endereco = (model.DadosEntrega != null && model.DadosEntrega.Logradouro != null) ? model.DadosEntrega.Logradouro + ", " + model.DadosEntrega.Numero : model.Endereco;
+            Pedido.DataEntrega = (model.DadosEntrega != null && model.DadosEntrega.DataEntrega != null) ? model.DadosEntrega.DataEntrega : model.DataEntrega;
+            Pedido.Observacao = (model.DadosEntrega != null && model.DadosEntrega.Observacao != null) ? model.DadosEntrega.Observacao : model.Observacao;
+            Pedido.Restricao = (model.DadosEntrega != null && model.DadosEntrega.Restricao != null) ? model.DadosEntrega.Restricao : model.Restricao;
             Pedido.NotaFiscal = model.NotaFiscal;
             Pedido.Status = model.Status;
             Pedido.ValorTotal = model.Itens.Sum(i => i.Preco * i.Quantidade).GetValueOrDefault();
-            Pedido.Frete = model.DadosEntrega.Frete != null ? model.DadosEntrega.Frete.GetValueOrDefault() : model.Frete.GetValueOrDefault();
+            Pedido.Frete = (model.DadosEntrega != null && model.DadosEntrega.Frete != null) ? model.DadosEntrega.Frete.GetValueOrDefault() : model.Frete.GetValueOrDefault();
 
             return Pedido;
         }
@@ -646,6 +686,46 @@ namespace KeViraKombinaTodos.Web.Controllers
             sb.Append(string.Format("'selected': '{0}'", selectedStatusID));
             return Content("{" + sb.ToString() + "}");
         }
+        public JsonResult Vendas()
+        {
+            DateTime fechaVendas = DateTime.Now;
+            fechaVendas = fechaVendas.AddDays(-365);
+            var listaPedidosVendas = (from pedidos in CarregarPedidos()
+                                      where pedidos.DataCriacao >= fechaVendas.Date
+                                      group pedidos by pedidos.DataCriacao.Value.Month into grupo
+                                      select new objJasonVendas
+                                      {
+                                          Data = DateTimeFormatInfo.CurrentInfo.GetMonthName(grupo.Key),
+                                          Quantidade = grupo.Count(),
+                                      }).ToList();
+
+            return Json(listaPedidosVendas, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult VendasProdutos()
+        {
+            var listaProdutoPedidos = (from itensPedido in _pedidoService.CarregarItensPedido(0)
+                                       group itensPedido by itensPedido.ProdutoID into grupo
+                                       select new objJasonVendasProduto
+                                       {
+                                           Produto = grupo.Key.ToString(),
+                                           Quantidade = grupo.Count()
+                                       }).ToList();
+
+            listaProdutoPedidos.ForEach(l => l.Produto = _produtoService.CarregarProduto(Convert.ToInt32(l.Produto)).Descricao);
+
+            return Json(listaProdutoPedidos, JsonRequestBehavior.AllowGet);
+        }
         #endregion
+    }
+    public class objJasonVendas
+    {
+        public string Data { get; set; }
+        public int Quantidade { get; set; }
+    }
+
+    public class objJasonVendasProduto
+    {
+        public string Produto { get; set; }
+        public int Quantidade { get; set; }
     }
 }

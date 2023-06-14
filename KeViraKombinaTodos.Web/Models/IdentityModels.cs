@@ -16,9 +16,8 @@ namespace KeViraKombinaTodos.Web.Models {
 		//public string Password { get; set; }
   //      public string email { get; set; }
 		public string Nome { get; set; }
-        public string SobreNome { get; set; }
         public bool? IsEnabled { get; set; }
-        //public int PerfilID { get; set; }
+        public int PerfilID { get; set; }
 
         public DateTime DataCriacao { get; set; }
         public DateTime? DataModif { get; set; }
@@ -29,7 +28,7 @@ namespace KeViraKombinaTodos.Web.Models {
 			var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
 
 			userIdentity.AddClaim(new Claim("NomeID", this.Nome.ToString()));
-			//userIdentity.AddClaim(new Claim("IDMaster", this.IDMaster.ToString()));
+			userIdentity.AddClaim(new Claim("PerfilID", this.PerfilID.ToString()));
 			userIdentity.AddClaim(new Claim("Id", this.Id.ToString()));
 
 			// Add custom user claims here

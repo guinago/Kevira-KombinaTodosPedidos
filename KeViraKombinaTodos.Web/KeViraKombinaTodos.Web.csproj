@@ -282,9 +282,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202306051532039_CriaBase.cs" />
-    <Compile Include="Migrations\202306051532039_CriaBase.designer.cs">
-      <DependentUpon>202306051532039_CriaBase.cs</DependentUpon>
+    <Compile Include="Migrations\202306121410243_CriaBase.cs" />
+    <Compile Include="Migrations\202306121410243_CriaBase.designer.cs">
+      <DependentUpon>202306121410243_CriaBase.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -369,7 +369,7 @@
     <Content Include="Content\fullcalendar.print.css" />
     <Content Include="Content\fullcalendar.print.min.css" />
     <Content Include="Content\Gridmvc.css" />
-    <Content Include="Content\images\logoKK.jpg" />
+    <Content Include="Content\images\Logo_BancoQueViraMesaOficial.jpg" />
     <Content Include="Content\images\ui-icons_444444_256x240.png" />
     <Content Include="Content\images\ui-icons_555555_256x240.png" />
     <Content Include="Content\images\ui-icons_777620_256x240.png" />
@@ -802,6 +802,7 @@
     <Content Include="Views\Pedido\_GridEntregas.cshtml" />
     <Content Include="Views\Produto\_GridProdutos.cshtml" />
     <Content Include="Views\Usuario\_GridUsuarios.cshtml" />
+    <Content Include="Views\Pedido\Graficos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\backups-css\bootstrap.min.css.map" />
@@ -829,8 +830,8 @@
     <TypeScriptCompile Include="Scripts\index.d.ts" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202306051532039_CriaBase.resx">
-      <DependentUpon>202306051532039_CriaBase.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202306121410243_CriaBase.resx">
+      <DependentUpon>202306121410243_CriaBase.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -11,9 +11,14 @@
     @Html.Partial("_GridEntregas", Model)
 </div>
 
-<script src="https://www.appelsiini.net/download/jquery.jeditable.js"></script>
-<script type="text/javascript">
- $('.editSelect').editable('@Url.Action("Edit")', {
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/inputmask")
+    @Scripts.Render("~/bundles/funcoesjs")
+    <script src="https://www.appelsiini.net/download/jquery.jeditable.js"></script>
+    <script type="text/javascript">
+
+        $('.editSelect').editable('@Url.Action("EditStatusPedido")', {
             cssclass: 'jeditForm',
             tooltip: 'click to edit me...',
             width: 'none',
@@ -23,7 +28,7 @@
             loadurl: '@Url.Action("GetStatus")',
             loaddata: function () {
                 return {
-                    usuarioID: $(this).data('id')
+                    pedidoID: $(this).data('id')
                 }
             },
             onsubmit: function (settings, original) {
@@ -31,7 +36,7 @@
             },
             submitdata: function () {
                 return {
-                    id: $(this).data('id'),
+                    pedidoID: $(this).data('id'),
                     PropertyName: $(this).data('propertyname'),
                     value: $(this).data('value')
                 }
@@ -50,6 +55,7 @@
         $('.editSelect').click(function () {
             $('select', this).addClass('form-control pull-left w100');
             $('button', this).addClass('btn btn-sm btn-success margin10')
-    })
-</script>
+        })
+
+    </script>
 }

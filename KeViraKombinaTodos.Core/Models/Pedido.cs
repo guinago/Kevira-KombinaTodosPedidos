@@ -30,6 +30,7 @@ namespace KeViraKombinaTodos.Core.Models {
         public string CondicaoPagamento { get; set; }
         public string Transportadora { get; set; }
         public double? Frete { get; set; }
+        public string PedidoInterno { get; set; }
         #endregion
     }
 }

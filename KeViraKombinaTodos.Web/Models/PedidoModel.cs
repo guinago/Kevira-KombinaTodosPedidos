@@ -37,6 +37,7 @@ namespace KeViraKombinaTodos.Web.Models
         public string Transportadora { get; set; }
         public string StatusPedido { get; set; }
         public double? Frete { get; set; }
+        public string PedidoInterno { get; set; }
         public IList<PedidoItemModel> Itens { get; set; }
         public PedidoItemModel PedidoItem { get; set; }
         public CondicaoPagamentoModel CondPagtoPedido { get; set; }
