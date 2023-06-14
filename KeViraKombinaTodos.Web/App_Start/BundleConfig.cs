@@ -24,11 +24,10 @@ namespace KeViraKombinaTodos.Web
                                 "~/Scripts/fullcalendar.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                "~/Scripts/jquery.datetimepicker.js",
-            "~/Scripts/jquery-{version}.js",
-            "~/Scripts/toastr.js",
-            "~/Scripts/toastr.min.js"
-            ));
+                                "~/Scripts/jquery.datetimepicker.js",
+                                "~/Scripts/jquery-{version}.js",
+                                "~/Scripts/toastr.js",
+                                "~/Scripts/toastr.min.js"));
 
             var bundle = new ScriptBundle("~/bundles/jqueryval") { Orderer = new AsIsBundleOrderer() };
 
@@ -82,27 +81,24 @@ namespace KeViraKombinaTodos.Web
                             "~/Scripts/theme.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-        "~/Content/bootstrap.css",
-        "~/Content/Gridmvc.css",
-        "~/Content/bootstrap.min.css",
-        "~/Content/toastr.css",
-        "~/Content/toastr.less",
-        "~/Content/toastr.min.css",
-        "~/Content/detailspedido.css",
-        "~/Content/Site.css"));
+                            "~/Content/bootstrap.css",
+                            "~/Content/Gridmvc.css",
+                            "~/Content/bootstrap.min.css",
+                            "~/Content/toastr.css",
+                            "~/Content/toastr.less",
+                            "~/Content/toastr.min.css",
+                            "~/Content/detailspedido.css",
+                            "~/Content/Site.css"));
 
             bundles.Add(new ScriptBundle("~/bundles/gridmvc_bundlejs").Include(
-                        "~/Scripts/jquery-3.4.1.min.js",
-                         "~/Scripts/gridmvc.min.js"
-                        ));
+                            "~/Scripts/jquery-3.4.1.min.js",
+                             "~/Scripts/gridmvc.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/inputmask").Include(
-                        //~/Scripts/inputmask/dependencyLibs/inputmask.dependencyLib.js",  //if not using jquery
                         "~/Scripts/inputmask/inputmask.js",
                         "~/Scripts/inputmask/jquery.inputmask.js",
                         "~/Scripts/inputmask/inputmask.extensions.js",
                         "~/Scripts/inputmask/inputmask.date.extensions.js",
-                        //and other extensions you want to include
                         "~/Scripts/inputmask/inputmask.numeric.extensions.js"));
 
         }
