@@ -13,71 +13,47 @@ namespace KeViraKombinaTodos.Web.Models
         public bool TwoFactor { get; set; }
         public bool BrowserRemembered { get; set; }
     }
-
     public class ManageLoginsViewModel
     {
         public IList<UserLoginInfo> CurrentLogins { get; set; }
         public IList<AuthenticationDescription> OtherLogins { get; set; }
     }
-
     public class FactorViewModel
     {
         public string Purpose { get; set; }
     }
-
     public class SetPasswordViewModel
     {
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
-        [DataType(DataType.Password)]
-        [Display(Name = "New password")]
-        public string NewPassword { get; set; }
-
-        [DataType(DataType.Password)]
-        [Display(Name = "Confirm new password")]
-        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
-        public string ConfirmPassword { get; set; }
-    }
-
-    public class ChangePasswordViewModel
-    {
-        [Required]
-        [DataType(DataType.Password)]
-        [Display(Name = "Senha Atual")]
-        public string OldPassword { get; set; }
-
-        [Required]
+        [Required, DataType(DataType.Password), Display(Name = "Nova Senha")]
         [StringLength(100, ErrorMessage = "O {0} deve ter pelo menos {2} caracteres.", MinimumLength = 6)]
-        [DataType(DataType.Password)]
-        [Display(Name = "Nova Senha")]
         public string NewPassword { get; set; }
-
-        [DataType(DataType.Password)]
-        [Display(Name = "Confirme a nova senha")]
+        [DataType(DataType.Password), Display(Name = "Confirme a nova senha")]
         [Compare("NewPassword", ErrorMessage = "A nova senha e a senha de confirmação não coincidem.")]
         public string ConfirmPassword { get; set; }
     }
-
+    public class ChangePasswordViewModel
+    {
+        [Required, DataType(DataType.Password), Display(Name = "Senha Atual")]
+        public string OldPassword { get; set; }
+        [Required, DataType(DataType.Password), Display(Name = "Nova Senha")]
+        [StringLength(100, ErrorMessage = "O {0} deve ter pelo menos {2} caracteres.", MinimumLength = 6)]
+        public string NewPassword { get; set; }
+        [DataType(DataType.Password), Display(Name = "Confirme a nova senha")]
+        [Compare("NewPassword", ErrorMessage = "A nova senha e a senha de confirmação não coincidem.")]
+        public string ConfirmPassword { get; set; }
+    }
     public class AddPhoneNumberViewModel
     {
-        [Required]
-        [Phone]
-        [Display(Name = "Phone Number")]
+        [Required, Phone, Display(Name = "Telefone")]
         public string Number { get; set; }
     }
-
     public class VerifyPhoneNumberViewModel
     {
-        [Required]
-        [Display(Name = "Code")]
+        [Required, Display(Name = "Código")]
         public string Code { get; set; }
-
-        [Required]
-        [Phone]
-        [Display(Name = "Phone Number")]
+        [Required, Phone, Display(Name = "Telefone")]
         public string PhoneNumber { get; set; }
     }
-
     public class ConfigureTwoFactorViewModel
     {
         public string SelectedProvider { get; set; }

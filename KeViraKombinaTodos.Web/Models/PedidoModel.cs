@@ -32,7 +32,9 @@ namespace KeViraKombinaTodos.Web.Models
         public string CPF { get; set; }
         public string Complemento { get; set; }
         public string Vendedor { get; set; }
+        [Required]
         public string CondicaoPagamento { get; set; }
+        [Required]
         public string Transportadora { get; set; }
         public string StatusPedido { get; set; }
         public double? Frete { get; set; }

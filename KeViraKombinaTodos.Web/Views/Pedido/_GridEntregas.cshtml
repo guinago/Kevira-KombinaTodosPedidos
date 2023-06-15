@@ -15,9 +15,8 @@
         webGrid.Column("CEP", header: "CEP"),
         webGrid.Column("DataEntrega", header: "Data Entrega"),
         webGrid.Column("ValorTotal", header: "Valor Total"),
-        webGrid.Column("StatusPedido", header: "Status Pedido", format:@<text><div class="editSelect" data-id="@item.PedidoID" data-propertyname="Status">@item.StatusPedido</div></text>),
+        webGrid.Column("StatusPedido", header: "Status Entrega", format:@<text><div class="editSelect" data-id="@item.PedidoID" data-propertyname="Status">@item.StatusPedido</div></text>),
         webGrid.Column("Detalhes", header: "Detalhes", format: @<text> @Html.ActionLink(linkText: "Detalhes", actionName: "Details", routeValues: new { pedidoID = item.PedidoID })</text>)
     )
-)
-        
+)       
 </div>

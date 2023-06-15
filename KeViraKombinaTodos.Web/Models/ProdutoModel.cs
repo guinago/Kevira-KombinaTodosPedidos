@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using KeViraKombinaTodos.Core.Models;
 
 namespace KeViraKombinaTodos.Web.Models {
 	public class ProdutoModel {		
         public int ProdutoID { get; set; }
-		[Required]				
-		public string Descricao { get; set; }
-        [Required]
+        [Required, Display(Name = "Descrição")]
+        public string Descricao { get; set; }
+        [MinLength(1), Required, Display(Name = "Código")]
         public string Codigo { get; set; }
         public double Valor { get; set; }
         public double Quantidade { get; set; }

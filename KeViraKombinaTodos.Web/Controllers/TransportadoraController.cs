@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
 using KeViraKombinaTodos.Core.Models;
 using KeViraKombinaTodos.Core.Services;
-using KeViraKombinaTodos.Web.Extensions;
 using KeViraKombinaTodos.Web.Models;
 using Newtonsoft.Json.Linq;
 

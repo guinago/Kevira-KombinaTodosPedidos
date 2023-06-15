@@ -97,7 +97,7 @@ namespace KeViraKombinaTodos.Web.Controllers
                     var jsonModel = JsonConvert.SerializeObject(itensCache);
 
                     _cacheService.SetStrings(key, jsonModel);
-                    TempData["success"] = "Item atualizado no carrinho com sucesso";
+                    TempData["success"] = "Item atualizado no carrinho com sucesso!";
                     status = true;
                 }
             }
@@ -196,7 +196,7 @@ namespace KeViraKombinaTodos.Web.Controllers
                     AtualizarQuantidadeProduto(item.ProdutoID, item.Quantidade);
                 }
                 
-                TempData["success"] = "Pedido gerado sucesso";
+                TempData["success"] = "Pedido gerado com sucesso!";
                 LimparCacheUsuarioAposPedido();
             }
             catch (Exception ex)
@@ -228,7 +228,7 @@ namespace KeViraKombinaTodos.Web.Controllers
             try
             {
                 _pedidoService.AtualizarPedido(ConverterTiposObjetosPedidoViewModelParaPedido(model));
-                TempData["success"] = "Pedido atualizado com sucesso";
+                TempData["success"] = "Pedido atualizado com sucesso!";
                 return RedirectToAction("Details", new { pedidoID = model.PedidoID });
             }
             catch
@@ -336,7 +336,7 @@ namespace KeViraKombinaTodos.Web.Controllers
                         if(itensPedido.Count() > 1)
                         {
                             _pedidoService.ExcluirItemPedido(pedidoID, produtoID);
-                            TempData["success"] = "Item excluído com sucesso";
+                            TempData["success"] = "Item excluído com sucesso!";
                             status = true;
                         }
                         TempData["error"] = "Item não pode ser excluído, o pedido deve conter pelo menos um item";
@@ -351,7 +351,7 @@ namespace KeViraKombinaTodos.Web.Controllers
                 if (!status)
                 {
                     _pedidoService.AtualizarItemPedido(ConverterTiposObjetosPedidoItemViewModelParaPedidoItem(model));
-                    TempData["success"] = "Item atualizado com sucesso";
+                    TempData["success"] = "Item atualizado com sucesso!";
                     status = true;
                 }
             }
@@ -383,7 +383,7 @@ namespace KeViraKombinaTodos.Web.Controllers
                     {                       
                         _pedidoService.AtualizarPedido(pedido);
                         value = model.ListStatus.Where(s => s.Key == Convert.ToInt32(value)).FirstOrDefault().Value;
-                        TempData["success"] = "Status pedido atualizado com sucesso";
+                        TempData["success"] = "Status entrega atualizado com sucesso!";
                         status = true;
                     }
                 }

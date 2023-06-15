@@ -4,10 +4,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace KeViraKombinaTodos.Web.Models {
 	public class CondicaoPagamentoModel {
-
         public int CondicaoPagamentoID { get; set; }
-        [Required]				
-		public string Descricao { get; set; }
+        [Required, Display(Name = "Descrição")]
+        public string Descricao { get; set; }
+        [MinLength(1), Required, Display(Name = "Código")]
         public string Codigo { get; set; }
         public DateTime? DataCriacao { get; set; }
         public DateTime? DataModificacao { get; set; }

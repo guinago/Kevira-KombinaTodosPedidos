@@ -10,13 +10,10 @@ namespace KeViraKombinaTodos.Web.Models
     public class ClienteModel
     {
         public int ClienteID { get; set; }
-        [Required]
         public string Nome { get; set; }
         public string CPF { get; set; }
         public string Email { get; set; }
         public string Telefone { get; set; }
-        [Required]
-        [Display(Name = "CEP")]
         public string CEP { get; set; }
         public string Estado { get; set; }
         public string Municipio { get; set; }
