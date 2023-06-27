@@ -1,28 +1,44 @@
-﻿using KeViraKombinaTodos.Core.Services;
+﻿using KeViraKombinaTodos.Core.Models;
+using KeViraKombinaTodos.Core.Services;
+using KeViraKombinaTodos.Web.Extensions;
+using KeViraKombinaTodos.Web.Models;
 using System;
+using System.Collections.Generic;
 using System.Web.Mvc;
 
 namespace KeViraKombinaTodos.Web.Controllers
 {
     public class HomeController : Controller
-    {          
+    {
+        #region Inject
+        private IPerfilService _perfilService;
+
+        public HomeController(IPerfilService perfilService)
+        {
+            _perfilService = perfilService ?? throw new ArgumentNullException(nameof(perfilService));
+        }
+        #endregion
         public ActionResult Index()
-        {            
-            return View();
-        }
-
-        public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
+            IList<PerfilModel> model = new List<PerfilModel>();
+            //PerfilModel model = new PerfilModel();
+            Perfil perfil = _perfilService.CarregarPerfil(User.Identity.GetPerfilID());
+            if(perfil != null)
+            {
+                PerfilModel modelPerfil = new PerfilModel();
 
-            return View();
+                modelPerfil = ConverterTiposObjetosPerfilParaPerfilViewModel(perfil);
+                model.Add(modelPerfil);
+            }
+            return View(model);
         }
-
-        public ActionResult Contact()
+        private PerfilModel ConverterTiposObjetosPerfilParaPerfilViewModel(Perfil perfil)
         {
-            ViewBag.Message = "Your contact page.";
+            PerfilModel model = new PerfilModel();
 
-            return View();
+            PropertyCopier<Perfil, PerfilModel>.Copy(perfil, model);
+
+            return model;
         }
     }
 }

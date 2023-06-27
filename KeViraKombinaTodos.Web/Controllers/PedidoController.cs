@@ -25,8 +25,9 @@ namespace KeViraKombinaTodos.Web.Controllers
         private IRedisService _cacheService;
         private IClienteService _clienteService;
         private ICondicaoPagamentoService _condPgtoService;
+        private IPerfilService _perfilService;
 
-        public PedidoController(IPedidoService pedidoService, IProdutoService produtoService, ITransportadoraService transportadoraService, IRedisService cacheService, IClienteService clienteService, ICondicaoPagamentoService condPgtoService)
+        public PedidoController(IPedidoService pedidoService, IProdutoService produtoService, ITransportadoraService transportadoraService, IRedisService cacheService, IClienteService clienteService, ICondicaoPagamentoService condPgtoService, IPerfilService perfilService)
         {
             _pedidoService = pedidoService ?? throw new ArgumentNullException(nameof(pedidoService));
             _produtoService = produtoService ?? throw new ArgumentException(nameof(produtoService));
@@ -34,6 +35,7 @@ namespace KeViraKombinaTodos.Web.Controllers
             _cacheService = cacheService ?? throw new ArgumentException(nameof(cacheService));
             _clienteService = clienteService ?? throw new ArgumentException(nameof(clienteService));
             _condPgtoService = condPgtoService ?? throw new ArgumentException(nameof(condPgtoService));
+            _perfilService = perfilService ?? throw new ArgumentException(nameof(perfilService));
         }
         #endregion
 
@@ -62,6 +64,12 @@ namespace KeViraKombinaTodos.Web.Controllers
         {
             IList<PedidoItemModel> model = new List<PedidoItemModel>();
             var itensCache = CarregarItensDoCache();
+
+            if (itensCache.Count() == 0)
+            {
+                TempData["error"] = ("A seleção do Produto é obrigatória para geração do pedido");
+                return RedirectToAction("Index");
+            }
 
             itensCache.ForEach(d => model.Add(d));
 
@@ -373,8 +381,7 @@ namespace KeViraKombinaTodos.Web.Controllers
             var message = "";
             PedidoModel model = new PedidoModel();
             Pedido pedido = _pedidoService.CarregarPedido(pedidoID);
-            model.PedidoID = pedido.PedidoID;
-            model.Status = Convert.ToInt32(value);
+            pedido.Status = Convert.ToInt32(value);
             try
             {
                 if (propertyName == "Status")
@@ -402,7 +409,8 @@ namespace KeViraKombinaTodos.Web.Controllers
         {
             IList<PedidoModel> model = new List<PedidoModel>();
 
-            IList<Pedido> pedidos = _pedidoService.CarregarPedidos(User.Identity.GetIdUsuarioLogado());
+            bool souTodoPoderoso = _perfilService.CarregarPerfil(User.Identity.GetPerfilID()).SouTodoPoderoso;
+            IList<Pedido> pedidos = _pedidoService.CarregarPedidos(souTodoPoderoso == true ? 0 : User.Identity.GetIdUsuarioLogado());
 
             foreach (var item in pedidos)
             {

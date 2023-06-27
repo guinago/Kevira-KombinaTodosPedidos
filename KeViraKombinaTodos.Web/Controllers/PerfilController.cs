@@ -65,25 +65,48 @@ namespace KeViraKombinaTodos.Web.Controllers {
         {
             var status = false;
             var message = "";
+            string descPerfil = "";
             var perfil = _perfilService.CarregarPerfil(perfilID);
             PerfilModel model = new PerfilModel();
             model.SouComprador = perfil.SouComprador;
             model.SouTodoPoderoso = perfil.SouTodoPoderoso;
             model.SouTransportador = perfil.SouTransportador;
             model.PerfilID = perfilID;
+            
 
-            if (propertyName == "Codigo")
+            if (propertyName == "Descricao")
             {
-                model.Codigo = value;
+                if (!string.IsNullOrWhiteSpace(value))
+                    descPerfil = _perfilService.CarregarPerfis().Where(u => u.Descricao == value).FirstOrDefault().Descricao;
+
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    TempData["error"] = "O campo " + propertyName + " é de preenchimento obrigatório";
+                    status = true;
+                }                    
+                else if (value.Length < 2)
+                {
+                    TempData["error"] = "O campo " + propertyName + " deve conter no mínimo 2 caracteres";
+                    status = true;
+                }
+                else if (!string.IsNullOrWhiteSpace(descPerfil))
+                {
+                    TempData["error"] = "Não é possível atualizar a descrição deste perfil, pois já existe perfil cadastrado com esta descrição no sistema";
+                    status = true;
+                }
+                model.Descricao = value;
             }
             else
-                model.Descricao = value;
+                model.Codigo = value;
 
             try
             {
-                _perfilService.AtualizarPerfil(ConverterTiposObjetosPerfilViewModelParaPerfil(model));
-                TempData["success"] = "Perfil atualizado com sucesso.";
-                status = true;
+                if (!status)
+                {
+                    _perfilService.AtualizarPerfil(ConverterTiposObjetosPerfilViewModelParaPerfil(model));
+                    TempData["success"] = "Perfil atualizado com sucesso.";
+                    status = true;
+                }
             }
             catch (Exception ex)
             {

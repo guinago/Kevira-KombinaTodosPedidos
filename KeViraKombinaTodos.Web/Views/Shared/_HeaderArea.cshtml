@@ -14,104 +14,117 @@
             </div>
         </div>
     </div>
-    <div class="main_menu">
+    <div class="navbar navbar-default">
         <nav class="navbar navbar-expand-lg navbar-light">
-            <div class="container">
+            <div class="container-fluid">
 
                 @if (Request.IsAuthenticated)
                 {
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#responsive" aria-controls="responsive" aria-expanded="false" aria-label="Toggle navigation">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#responsive" aria-expanded="false">
+                        <span class="navbar-toggler-icon"></span>
+                        <span class="navbar-toggler-icon"></span>
+                        <span class="navbar-toggler-icon"></span>
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <!-- Collect the nav links, forms, and other content for toggling -->
-                    <div class="collapse navbar-collapse" id="responsive">
-                        <ul class="nav navbar-nav menu_nav mx-auto">
-                            <li class="nav-item submenu dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Perfil</a>
-                                <ul class="dropdown-menu">
-                                    <li class="nav-item">
-                                        @Html.ActionLink("Perfil", "Index", "Perfil", null, new { @class = "nav-link" })
-                                    </li>
-                                </ul>
-                            </li>
 
-                            <li class="nav-item submenu dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Usuário</a>
-                                <ul class="dropdown-menu">
-                                    <li class="nav-item">
-                                        @Html.ActionLink("Usuário", "Index", "Usuario", null, new { @class = "nav-link" })
-                                    </li>
-                                </ul>
-                            </li>
+                    if (User.Identity.GetPerfilID() > 0)
+                    {
+                        <!-- Collect the nav links, forms, and other content for toggling -->
+                        <div class="collapse navbar-collapse" id="responsive">
+                            <ul class="nav navbar-nav menu_nav mx-auto">
+                                <li class="nav-item submenu dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Perfil</a>
+                                    <ul class="dropdown-menu">
+                                        <li class="nav-item">
+                                            @Html.ActionLink("Perfil", "Index", "Perfil", null, new { @class = "nav-link" })
+                                        </li>
+                                    </ul>
+                                </li>
 
-                            <li class="nav-item submenu dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Condição de Pagamento</a>
-                                <ul class="dropdown-menu">
-                                    <li class="nav-item">
-                                        @Html.ActionLink("Condição de Pagamento", "Index", "CondicaoPagamento", null, new { @class = "nav-link" })
-                                    </li>
-                                </ul>
-                            </li>
+                                <li class="nav-item submenu dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Usuário</a>
+                                    <ul class="dropdown-menu">
+                                        <li class="nav-item">
+                                            @Html.ActionLink("Usuário", "Index", "Usuario", null, new { @class = "nav-link" })
+                                        </li>
+                                    </ul>
+                                </li>
 
-                            <li class="nav-item submenu dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Transportadora</a>
-                                <ul class="dropdown-menu">
-                                    <li class="nav-item">
-                                        @Html.ActionLink("Transportadora", "Index", "Transportadora", null, new { @class = "nav-link" })
-                                    </li>
-                                </ul>
-                            </li>
+                                <li class="nav-item submenu dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Condição de Pagamento</a>
+                                    <ul class="dropdown-menu">
+                                        <li class="nav-item">
+                                            @Html.ActionLink("Condição de Pagamento", "Index", "CondicaoPagamento", null, new { @class = "nav-link" })
+                                        </li>
+                                    </ul>
+                                </li>
 
-                            <li class="nav-item submenu dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Produto</a>
-                                <ul class="dropdown-menu">
-                                    <li class="nav-item">
-                                        @Html.ActionLink("Produto", "Index", "Produto", null, new { @class = "nav-link" })
-                                    </li>
-                                </ul>
-                            </li>
+                                <li class="nav-item submenu dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Transportadora</a>
+                                    <ul class="dropdown-menu">
+                                        <li class="nav-item">
+                                            @Html.ActionLink("Transportadora", "Index", "Transportadora", null, new { @class = "nav-link" })
+                                        </li>
+                                    </ul>
+                                </li>
 
-                            <li class="nav-item submenu dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Pedidos</a>
-                                <ul class="dropdown-menu">
-                                    <li class="nav-item">
-                                        @Html.ActionLink("Novo Pedido", "Index", "Pedido", null, new { @class = "nav-link" })
-                                    </li>
-                                    <li class="nav-item">
-                                        @Html.ActionLink("Visualizar Pedidos", "VisualizarPedidos", "Pedido", null, new { @class = "nav-link" })
-                                    </li>
-                                </ul>
-                            </li>
+                                <li class="nav-item submenu dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Produto</a>
+                                    <ul class="dropdown-menu">
+                                        <li class="nav-item">
+                                            @Html.ActionLink("Produto", "Index", "Produto", null, new { @class = "nav-link" })
+                                        </li>
+                                    </ul>
+                                </li>
 
-                            <li class="nav-item submenu dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Visualizar Entregas</a>
-                                <ul class="dropdown-menu">
-                                    <li class="nav-item">
-                                        @Html.ActionLink("Visualizar Entregas", "VisualizarEntregas", "Pedido", null, new { @class = "nav-link" })
-                                    </li>
-                                </ul>
-                            </li>
+                                <li class="nav-item submenu dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Pedidos</a>
+                                    <ul class="dropdown-menu">
+                                        <li class="nav-item">
+                                            @Html.ActionLink("Novo Pedido", "Index", "Pedido", null, new { @class = "nav-link" })
+                                        </li>
+                                        <li class="nav-item">
+                                            @Html.ActionLink("Visualizar Pedidos", "VisualizarPedidos", "Pedido", null, new { @class = "nav-link" })
+                                        </li>
+                                    </ul>
+                                </li>
 
-                            <li class="nav-item submenu dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Gráficos</a>
-                                <ul class="dropdown-menu">
-                                    <li class="nav-item">
-                                        @Html.ActionLink("Gráficos", "Graficos", "Pedido", null, new { @class = "nav-link" })
-                                    </li>
-                                </ul>
+                                <li class="nav-item submenu dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Visualizar Entregas</a>
+                                    <ul class="dropdown-menu">
+                                        <li class="nav-item">
+                                            @Html.ActionLink("Visualizar Entregas", "VisualizarEntregas", "Pedido", null, new { @class = "nav-link" })
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li class="nav-item submenu dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Gráficos</a>
+                                    <ul class="dropdown-menu">
+                                        <li class="nav-item">
+                                            @Html.ActionLink("Gráficos", "Graficos", "Pedido", null, new { @class = "nav-link" })
+                                        </li>
+                                    </ul>
+                                </li>
+                                <!--
+                    <li class="nav-item submenu dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Extração Relatórios</a>
+                        <ul class="dropdown-menu">
+                            <li class="nav-item">
+                                @Html.ActionLink("Relatório Vendas", "Index", "Pedido", null, new { @class = "nav-link" })
                             </li>
-                            <!--
-                <li class="nav-item submenu dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Extração Relatórios</a>
-                    <ul class="dropdown-menu">
-                        <li class="nav-item">
-                            @Html.ActionLink("Relatório Vendas", "Index", "Pedido", null, new { @class = "nav-link" })
-                        </li>
-                    </ul>
-                </li>
-                -->
                         </ul>
-                    </div>
+                    </li>
+                    -->
+                            </ul>
+                        </div>
+                    }
+                    else
+                    {
+                        <div>
+                                Você não tem permissão de acesso, por favor contate o Administrador do sistema para associar seu usuário a um perfil.
+                        </div>                   
+                    }
                 }
             </div>
         </nav>

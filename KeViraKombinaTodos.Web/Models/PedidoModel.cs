@@ -11,15 +11,20 @@ namespace KeViraKombinaTodos.Web.Models
         public int ClienteID { get; set; }
         public int TransportadoraID { get; set; }
         public int CondicaoPagamentoID { get; set; }
+        [Required]
         public string Telefone { get; set; }
         public string Email { get; set; }
         [Required]
-        [Display (Name = "CEP")]
         public string CEP { get; set; }
+        [Required]
         public string Endereco { get; set; }
+        [Required]
         public string Estado { get; set; }
+        [Required]
         public string Municipio { get; set; }
+        [Required]
         public string Bairro { get; set; }
+        [DisplayFormat(DataFormatString ="dd/MM/yyyy")]
         public DateTime? DataEntrega { get; set; }
         public string Observacao { get; set; }
         public string Restricao { get; set; }
@@ -28,11 +33,12 @@ namespace KeViraKombinaTodos.Web.Models
         public double? ValorTotal { get; set; }
 		public DateTime? DataCriacao { get; set; }
         public DateTime? DataModificacao { get; set; }
+        [Required]
         public string Cliente { get; set; }
         public string CPF { get; set; }
         public string Complemento { get; set; }
         public string Vendedor { get; set; }
-        [Required]
+        [Required, Display(Name = "Condição de Pagamento")]
         public string CondicaoPagamento { get; set; }
         [Required]
         public string Transportadora { get; set; }
@@ -61,7 +67,7 @@ namespace KeViraKombinaTodos.Web.Models
         public int? ProdutoID { get; set; }        
         public DateTime? DataCriacao { get; set; }
         public DateTime? DataModificacao { get; set; }       
-        [Required]
+        [Required, Display(Name = "Preço")]
         public double? Preco { get; set; }
         [Required]
         public double? Quantidade { get; set; }
@@ -86,17 +92,20 @@ namespace KeViraKombinaTodos.Web.Models
         [Required]
         public string CEP { get; set; }
         public string Estado { get; set; }
+        [Required]
         public string Municipio { get; set; }
         public string Bairro { get; set; }
-        public string Logradouro { get; set; }
         [Required]
+        public string Logradouro { get; set; }
+        [Required, Display(Name = "Número")]
         public string Numero { get; set; }
         public string Complemento { get; set; }
         public string Observacao { get; set; }
         public string Restricao { get; set; }
         [Required]
-        public DateTime? DataEntrega { get; set; }        
-
+        [DisplayFormat(DataFormatString = "dd/MM/yyyy")]
+        public DateTime? DataEntrega { get; set; }
+        [Required]
         public int TransportadoraIDSelected { get; set; }
         public IDictionary<int, string> ListTransportadora { get; set; }
         public double? Frete { get; set; }

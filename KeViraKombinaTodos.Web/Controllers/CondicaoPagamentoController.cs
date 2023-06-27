@@ -72,18 +72,43 @@ namespace KeViraKombinaTodos.Web.Controllers {
             var message = "";
             CondicaoPagamentoModel model = new CondicaoPagamentoModel();
             model.CondicaoPagamentoID = condicaoPagamentoID;
+            string codDescPagto = "";
 
             if (propertyName == "Codigo")
             {
+                if(!string.IsNullOrWhiteSpace(value))
+                    codDescPagto = _condicaoPagamentoService.CarregarCondicoesPagamento().Where(u => u.Codigo == value).FirstOrDefault().Codigo;
+
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    TempData["error"] = "O campo " + propertyName + " é de preenchimento obrigatório";
+                    status = true;
+                }
+                else if (!string.IsNullOrWhiteSpace(codDescPagto))
+                {
+                    TempData["error"] = "Não é possível atualizar o código da condição de pagamento, pois já existe condição de pagamento cadastrada no sistema com este código.";
+                    status = true;
+                }
                 model.Codigo = value;
             }
             else
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    TempData["error"] = "O campo " + propertyName + " é de preenchimento obrigatório";
+                    status = true;
+                }
                 model.Descricao = value;
+            }
+               
 
             try {
-                _condicaoPagamentoService.AtualizarCondicaoPagamento(ConverterTiposObjetosCondicaoPagamentoViewModelParaCondicaoPagamento(model));
-                TempData["success"] = "Condição de Pagamento atualizada com sucesso";
-                status = true;
+                if (!status)
+                {
+                    _condicaoPagamentoService.AtualizarCondicaoPagamento(ConverterTiposObjetosCondicaoPagamentoViewModelParaCondicaoPagamento(model));
+                    TempData["success"] = "Condição de Pagamento atualizada com sucesso";
+                    status = true;
+                }              
 			} catch (Exception ex){
                 message = ex.Message;
                 TempData["error"] = ("Erro ao atualizar condição de pagamento", message);

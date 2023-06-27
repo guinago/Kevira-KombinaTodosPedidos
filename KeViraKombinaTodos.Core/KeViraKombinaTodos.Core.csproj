@@ -179,7 +179,6 @@
     <Compile Include="DAO\ITransportadoraDao.cs" />
     <Compile Include="DAO\ICondicaoPagamentoDao.cs" />
     <Compile Include="DAO\IClienteDao.cs" />
-    <Compile Include="DAO\IUsuariosDao.cs" />
     <Compile Include="DAO\IPerfilDao.cs" />
     <Compile Include="Models\ItemPedido.cs" />
     <Compile Include="Models\Pedido.cs" />

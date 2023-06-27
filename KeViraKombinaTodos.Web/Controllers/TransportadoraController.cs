@@ -70,21 +70,45 @@ namespace KeViraKombinaTodos.Web.Controllers {
         {
             var status = false;
             var message = "";
+            string codTransportadora = "";
             TransportadoraModel model = new TransportadoraModel();
             model.TransportadoraID = transportadoraID;
 
             if (propertyName == "Codigo")
             {
+                if (!string.IsNullOrWhiteSpace(value))
+                    codTransportadora = _transportadoraService.CarregarTransportadoras().Where(u => u.Codigo == value).FirstOrDefault().Codigo;
+
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    TempData["error"] = "O campo " + propertyName + " é de preenchimento obrigatório";
+                    status = true;
+                }
+                else if (!string.IsNullOrWhiteSpace(codTransportadora))
+                {
+                    TempData["error"] = "Não é possível atualizar o código da transportadora, pois já existe transportadora cadastrada no sistema com este código.";
+                    status = true;
+                }
                 model.Codigo = value;
             }
             else
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    TempData["error"] = "O campo " + propertyName + " é de preenchimento obrigatório";
+                    status = true;
+                }
                 model.Descricao = value;
-
+            }
+                
             try
             {
-                _transportadoraService.AtualizarTransportadora(ConverterTiposObjetosTransportadoraViewModelParaTransportadora(model));
-                TempData["success"] = "Transportadora atualizada com sucesso!";
-                status = true;
+                if (!status)
+                {
+                    _transportadoraService.AtualizarTransportadora(ConverterTiposObjetosTransportadoraViewModelParaTransportadora(model));
+                    TempData["success"] = "Transportadora atualizada com sucesso!";
+                    status = true;
+                }
             }
             catch (Exception ex)
             {

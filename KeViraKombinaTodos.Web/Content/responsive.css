@@ -146,7 +146,7 @@
 		line-height: 40px;
 		margin-right: 0px;
 		display: block;
-		border-bottom: 1px solid #ededed33;
+		border-bottom: 1px solid;
 		border-radius: 0px;
 	}
 	.header_area.navbar_fixed .main_menu .navbar .nav .nav-item .nav-link {
@@ -159,6 +159,9 @@
 		max-height: 340px;
 		overflow-y: scroll;
 	}
+    .header_area .navbar .nav .menu_nav ul .nav-item.submenu {
+        padding: 0px 15px;
+    }
 	.header_area .navbar .nav .nav-item.submenu ul .nav-item .nav-link {
 		padding: 0px 15px;
 	}

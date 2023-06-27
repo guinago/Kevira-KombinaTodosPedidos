@@ -11,6 +11,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using KeViraKombinaTodos.Core.Services;
 using KeViraKombinaTodos.Web.Models;
+using System.Collections.Generic;
 
 namespace KeViraKombinaTodos.Web.Controllers
 {
@@ -29,7 +30,7 @@ namespace KeViraKombinaTodos.Web.Controllers
 			_perfilService = perfilService ?? throw new ArgumentException(nameof(perfilService));
 		}
         #endregion
-  //      public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager) {
+        //  public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager) {
 		//	UserManager = userManager;
 		//	SignInManager = signInManager;
 		//}
@@ -138,6 +139,12 @@ namespace KeViraKombinaTodos.Web.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<ActionResult> Register(RegisterViewModel model) {
 			if (ModelState.IsValid) {
+                var usuario = _usuarioService.CarregarUsuarios().Where(u => u.CGC == model.CPF).FirstOrDefault();
+                if(usuario != null)
+                {
+                    TempData["error"] = "Não é permitido mais de um CPF por usuário no sistema";
+                    return RedirectToAction("Register");
+                }
 
                 var user = new ApplicationUser
                 {
@@ -165,6 +172,7 @@ namespace KeViraKombinaTodos.Web.Controllers
                 {
 
 				 result = await UserManager.CreateAsync(user, model.Senha);
+                 TempData["success"] = "Usuário cadastrado com sucesso!";
                 }
                 catch (Exception ex)
                 {

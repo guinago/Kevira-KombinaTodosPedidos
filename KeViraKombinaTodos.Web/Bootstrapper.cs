@@ -46,7 +46,6 @@ namespace KeViraKombinaTodos.Web
             container.RegisterType<IPerfilDao, PerfilDao>();
             container.RegisterType<IProdutoDao, ProdutoDao>();
             container.RegisterType<ITransportadoraDao, TransportadoraDao>();
-            container.RegisterType<IUsuariosDao, UsuariosDao>();
             container.RegisterType<IClienteDao, ClienteDao>();
             container.RegisterType<IItemPedidoDao, ItemPedidoDao>();
             #endregion

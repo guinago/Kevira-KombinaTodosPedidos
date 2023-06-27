@@ -4,7 +4,15 @@ using System.Security.Principal;
 
 namespace KeViraKombinaTodos.Web.Extensions {
 	public static class IdentityExtensions {
-		public static string GetNomeID(this IIdentity identity) {
+
+        public static string GetNomeID(this IIdentity identity, object perfil)
+        {
+            var claim = ((ClaimsIdentity)identity).FindFirst("NomeID");
+            // Test for null to avoid issues during local testing
+            return (claim != null) ? claim.Value : string.Empty;
+        }
+
+        public static string GetNomeID(this IIdentity identity) {
 			var claim = ((ClaimsIdentity)identity).FindFirst("NomeID");
 			// Test for null to avoid issues during local testing
 			return (claim != null) ? claim.Value : string.Empty;

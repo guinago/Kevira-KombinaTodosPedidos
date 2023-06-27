@@ -71,6 +71,7 @@ namespace KeViraKombinaTodos.Web.Controllers
         {
             var status = false;
             var message = "";
+            string codProduto = "";
             ProdutoModel model = new ProdutoModel();
             try
             {
@@ -79,10 +80,28 @@ namespace KeViraKombinaTodos.Web.Controllers
 
                 if (propertyName == "Codigo")
                 {
+                    if (!string.IsNullOrWhiteSpace(value))
+                        codProduto = _produtoService.CarregarProdutos().Where(u => u.Codigo == value).FirstOrDefault().Codigo;
+
+                    if (string.IsNullOrWhiteSpace(value))
+                    {
+                        TempData["error"] = "O campo " + propertyName + " é de preenchimento obrigatório";
+                        status = true;
+                    }
+                    else if (!string.IsNullOrWhiteSpace(codProduto))
+                    {
+                        TempData["error"] = "Não é possível atualizar o código do produto, pois já existe produto cadastrada no sistema com este código.";
+                        status = true;
+                    }
                     model.Codigo = value;
                 }
                 else if (propertyName == "Descricao")
                 {
+                    if (string.IsNullOrWhiteSpace(value))
+                    {
+                        TempData["error"] = "O campo " + propertyName + " é de preenchimento obrigatório";
+                        status = true;
+                    }
                     model.Descricao = value;
                 }
                 else if (propertyName == "Preco")
@@ -92,9 +111,12 @@ namespace KeViraKombinaTodos.Web.Controllers
                 else
                     model.Quantidade = Convert.ToDouble(value);
 
-                _produtoService.AtualizarProduto(ConverterTiposObjetosProdutoViewModelParaProduto(model));
-                TempData["success"] = "Produto atualizado com sucesso";
-                status = true;
+                if (!status)
+                {
+                    _produtoService.AtualizarProduto(ConverterTiposObjetosProdutoViewModelParaProduto(model));
+                    TempData["success"] = "Produto atualizado com sucesso";
+                    status = true;
+                }
             }
             catch (Exception ex)
             {
