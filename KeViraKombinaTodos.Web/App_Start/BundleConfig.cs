@@ -54,7 +54,9 @@ namespace KeViraKombinaTodos.Web
             bundles.Add(new ScriptBundle("~/bundles/fontwesome", fontawesome));
 
             bundles.Add(new Bundle("~/bundles/bootstrap").Include(
-                    "~/Scripts/bootstrap.min.js"));
+                    "~/Scripts/bootstrap.min.js",
+                    "~/bootstrap.bundle.min.js",
+                    "~/popper.min.js "));
 
             bundles.Add(new ScriptBundle("~/bundles/popper").Include(
                             "~/Scripts/popper.js"));

@@ -97,7 +97,6 @@
                 @Html.LabelFor(model => model.ListTransportadora, "Transportadora", htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
                     @Html.DropDownListFor(x => Model.TransportadoraIDSelected, new SelectList(Model.ListTransportadora, "Key", "Value"), htmlAttributes: new { @class = "form-control", id = "Country" })
-                    <option>Please selddect one</option>
                     @Html.ValidationMessageFor(model => model.TransportadoraIDSelected, "", new { @class = "text-danger" })
 
                 </div>
