@@ -104,12 +104,12 @@
         </tr>
         <tr>
             <td>
-                <strong>Total do Pedido:</strong> @Model.ValorTotal
+                <strong>Total do Pedido:</strong> @Model.ValorTotal.GetValueOrDefault().ToString("0.00")
             </td>
         </tr>
         <tr>
             <td>
-                <strong>Frete:</strong> @Model.Frete
+                <strong>Frete:</strong> @Model.Frete.GetValueOrDefault().ToString("0.00")
             </td>
         </tr>
     </table>
