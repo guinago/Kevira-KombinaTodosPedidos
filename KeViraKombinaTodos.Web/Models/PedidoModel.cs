@@ -30,7 +30,7 @@ namespace KeViraKombinaTodos.Web.Models
         public string Restricao { get; set; }
         public string NotaFiscal { get; set; }
         public int Status { get; set; }
-        public double? ValorTotal { get; set; }
+        public decimal? ValorTotal { get; set; }
 		public DateTime? DataCriacao { get; set; }
         public DateTime? DataModificacao { get; set; }
         [Required]
@@ -43,7 +43,7 @@ namespace KeViraKombinaTodos.Web.Models
         [Required]
         public string Transportadora { get; set; }
         public string StatusPedido { get; set; }
-        public double? Frete { get; set; }
+        public decimal? Frete { get; set; }
         public string PedidoInterno { get; set; }
         public IList<PedidoItemModel> Itens { get; set; }
         public PedidoItemModel PedidoItem { get; set; }
@@ -68,9 +68,9 @@ namespace KeViraKombinaTodos.Web.Models
         public DateTime? DataCriacao { get; set; }
         public DateTime? DataModificacao { get; set; }       
         [Required, Display(Name = "Preço")]
-        public double? Preco { get; set; }
+        public decimal? Preco { get; set; }
         [Required]
-        public double? Quantidade { get; set; }
+        public decimal? Quantidade { get; set; }
         public bool Checked { get; set; }
         public bool NoCarrinho { get; set; }
         public string Descricao { get; set; }
@@ -108,7 +108,7 @@ namespace KeViraKombinaTodos.Web.Models
         [Required]
         public int TransportadoraIDSelected { get; set; }
         public IDictionary<int, string> ListTransportadora { get; set; }
-        public double? Frete { get; set; }
+        public decimal? Frete { get; set; }
 
         public DadosEntregaModel()
         {

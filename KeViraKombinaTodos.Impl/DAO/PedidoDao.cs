@@ -120,7 +120,7 @@ namespace KeViraKombinaTodos.Impl.DAO {
             band.Restricao = (string)reader["Restricao"];
             band.NotaFiscal = (string)reader["NotaFiscal"];
             band.Status = (int)reader["Status"];
-            band.ValorTotal = (double)reader["ValorTotal"];
+            band.ValorTotal = Convert.ToDecimal((double)reader["ValorTotal"]);
             band.DataCriacao = (DateTime)reader["Datacriacao"];
             band.Cliente = (string)reader["Cliente"];
             band.CPF = (string)reader["CPF"];
@@ -128,7 +128,7 @@ namespace KeViraKombinaTodos.Impl.DAO {
             band.Vendedor = (string)reader["Vendedor"];
             band.CondicaoPagamento = (string)reader["CondicaoPagamento"];
             band.Transportadora = (string)reader["Transportadora"];
-            band.Frete = (double)reader["Frete"];
+            band.Frete = Convert.ToDecimal((double)reader["Frete"]);
             band.PedidoInterno = (string)reader["PedidoInterno"];
             if (!string.IsNullOrWhiteSpace(reader["DataModif"].ToString()))
                 band.DataModificacao = (DateTime)reader["DataModif"];

@@ -5,8 +5,8 @@ namespace KeViraKombinaTodos.Core.Models {
         #region Public Properties
         public int PedidoID { get; set; }
         public int? ProdutoID { get; set; }
-        public double? Preco { get; set; }
-        public double? Quantidade { get; set; }
+        public decimal? Preco { get; set; }
+        public decimal? Quantidade { get; set; }
         public string Descricao { get; set; }
         public string Codigo { get; set; }
         public DateTime? DataCriacao { get; set; }

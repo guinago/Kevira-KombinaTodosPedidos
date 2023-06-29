@@ -76,7 +76,7 @@ namespace KeViraKombinaTodos.Web.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult CreateCarrinhoItens(int produtoID, string propertyName, float value)
+        public ActionResult CreateCarrinhoItens(int produtoID, string propertyName, string value)
         {
             var status = false;
             var message = "";
@@ -89,16 +89,16 @@ namespace KeViraKombinaTodos.Web.Controllers
                 {
                     if (propertyName == "Quantidade")
                     {
-                        if (value == 0)
+                        if (value == "0")
                         {
                             RemoverCarrinho(produtoID);                         
                             status = true;
                         }
                         else
-                            item.Quantidade = value;
+                            item.Quantidade = Convert.ToDecimal(value);
                     }
                     else
-                        item.Preco = value;
+                        item.Preco = Convert.ToDecimal(value);
                 }
                 if (!status)
                 {
@@ -201,7 +201,7 @@ namespace KeViraKombinaTodos.Web.Controllers
                 foreach (var item in modelPedido.Itens)
                 {
                     _pedidoService.CriarItemPedido(ConverterTiposObjetosPedidoItemViewModelParaPedidoItem(item));
-                    AtualizarQuantidadeProduto(item.ProdutoID, item.Quantidade);
+                    AtualizarQuantidadeProduto(item.ProdutoID, Convert.ToDecimal(item.Quantidade));
                 }
                 
                 TempData["success"] = "Pedido gerado com sucesso!";
@@ -270,7 +270,7 @@ namespace KeViraKombinaTodos.Web.Controllers
                 if (!itens.Exists(d => d.ProdutoID.GetValueOrDefault() == id))
                 {
                     var produtoItem = TransformarProdutoEmItemPedido(_produtoService.CarregarProduto(id));
-
+                    produtoItem.Quantidade = 1;
                     itens.Add(produtoItem);
 
                     var jsonModel = JsonConvert.SerializeObject(itens);
@@ -327,7 +327,7 @@ namespace KeViraKombinaTodos.Web.Controllers
 
         #region Methods
         [HttpPost]
-        public ActionResult SaveItem(int pedidoID, int produtoID, string propertyName, float value)
+        public ActionResult SaveItem(int pedidoID, int produtoID, string propertyName, string value)
         {
             var status = false;
             var message = "";
@@ -338,7 +338,7 @@ namespace KeViraKombinaTodos.Web.Controllers
             {
                 if (propertyName == "Quantidade")
                 {
-                    if (value == 0)
+                    if (value == "0")
                     {
                         IList<ItemPedido> itensPedido = _pedidoService.CarregarItensPedido(pedidoID);
                         if(itensPedido.Count() > 1)
@@ -351,10 +351,10 @@ namespace KeViraKombinaTodos.Web.Controllers
                         status = true;
                     }
                     else
-                        model.Quantidade = value;
+                        model.Quantidade = Convert.ToDecimal(value);
                 }
                 else
-                    model.Preco = value;
+                    model.Preco = Convert.ToDecimal(value);
 
                 if (!status)
                 {
@@ -668,7 +668,7 @@ namespace KeViraKombinaTodos.Web.Controllers
                 TempData["error"] = ("Erro ao limpar cache", ex.Message);
             }
         }
-        public void AtualizarQuantidadeProduto(int? produtoID, double? quantidade)
+        public void AtualizarQuantidadeProduto(int? produtoID, decimal? quantidade)
         {
             var produto = _produtoService.CarregarProduto(produtoID.GetValueOrDefault());
             produto.Quantidade = produto.Quantidade - quantidade.GetValueOrDefault();

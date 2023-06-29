@@ -8,8 +8,8 @@ namespace KeViraKombinaTodos.Web.Models {
         public string Descricao { get; set; }
         [MinLength(1), Required, Display(Name = "Código")]
         public string Codigo { get; set; }
-        public double Valor { get; set; }
-        public double Quantidade { get; set; }
+        public decimal Valor { get; set; }
+        public decimal Quantidade { get; set; }
         public bool Ativo { get; set; }
         public DateTime? DataCriacao { get; set; }
         public DateTime? DataModificacao { get; set; }

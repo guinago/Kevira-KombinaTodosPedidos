@@ -2,7 +2,7 @@
 
 <div>
 @{
-    var webGrid = new WebGrid(source: Model, defaultSort: "Descricao", canPage: true, rowsPerPage: 10);
+    var webGrid = new WebGrid(source: Model, defaultSort: "Codigo", canPage: true, rowsPerPage: 10);
 }
 @webGrid.GetHtml(
     htmlAttributes: new { @id = "WebGrid", @class = "Grid" },
@@ -14,7 +14,7 @@
         webGrid.Column("Telefone", header: "Telefone"),
         webGrid.Column("CEP", header: "CEP"),
         webGrid.Column("DataEntrega", header: "Data Entrega"),
-        webGrid.Column("ValorTotal", header: "Valor Total"),
+        webGrid.Column("ValorTotal", header: "Valor Total", format: @<text>@item.ValorTotal.ToString("0.00")</text>),
         webGrid.Column("StatusPedido", header: "Status Entrega", format:@<text><div class="editSelect" data-id="@item.PedidoID" data-propertyname="Status">@item.StatusPedido</div></text>),
         webGrid.Column("Detalhes", header: "Detalhes", format: @<text> @Html.ActionLink(linkText: "Detalhes", actionName: "Details", routeValues: new { pedidoID = item.PedidoID })</text>)
     )

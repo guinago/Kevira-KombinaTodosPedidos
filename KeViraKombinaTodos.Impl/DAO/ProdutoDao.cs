@@ -71,8 +71,8 @@ namespace KeViraKombinaTodos.Impl.DAO {
 			band.ProdutoID = Convert.ToInt32(reader["ProdutoID"]);
 			band.Descricao = (string)reader["Descricao"];
 			band.Codigo = (string)reader["Codigo"];
-			band.Valor = (double)reader["Valor"];
-            band.Quantidade = (double)reader["Quantidade"];
+			band.Valor = Convert.ToDecimal((double)reader["Valor"]);
+            band.Quantidade = Convert.ToDecimal((double)reader["Quantidade"]);
             band.Ativo = Convert.ToBoolean((int)reader["Ativo"]);
             band.DataCriacao = (DateTime)reader["DataCriacao"];
             if (!string.IsNullOrWhiteSpace(reader["DataModif"].ToString()))

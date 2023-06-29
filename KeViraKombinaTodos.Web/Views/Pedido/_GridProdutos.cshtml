@@ -2,7 +2,7 @@
 
 <div>
 @{
-    var webGrid = new WebGrid(source: Model, defaultSort: "Descricao", canPage: true, rowsPerPage: 10);
+    var webGrid = new WebGrid(source: Model, defaultSort: "Codigo", canPage: true, rowsPerPage: 10);
 }
 @webGrid.GetHtml(
     htmlAttributes: new { @id = "WebGrid", @class = "Grid" },
@@ -10,8 +10,8 @@
     columns: webGrid.Columns(
         webGrid.Column("Codigo", header: "Código"),
         webGrid.Column("Descricao", header: "Descrição"),
-        webGrid.Column("Preco", header: "Preço"),
-        webGrid.Column("Quantidade", header: "Quantidade"),
+        webGrid.Column("Preco", header: "Preço", format: @<text>@item.Preco.ToString("0.00")</text>),
+        webGrid.Column("Quantidade", header: "Quantidade", format: @<text>@item.Quantidade.ToString("0.00")</text>),
         webGrid.Column("Carrinho", header: "Carrinho", format: @<text> @Html.ActionLink(linkText: (@item.Nocarrinho == false ? "Adicionar" : "Remover"), actionName: (@item.NoCarrinho == false ? "InserirCarrinho" : "RemoverCarrinho"), routeValues: new { id = item.ProdutoID })</text>)
     )
 )

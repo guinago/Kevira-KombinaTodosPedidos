@@ -20,7 +20,7 @@ namespace KeViraKombinaTodos.Core.Models {
         public string Restricao { get; set; }
         public string NotaFiscal { get; set; }
         public int Status { get; set; }
-        public double? ValorTotal { get; set; }
+        public decimal? ValorTotal { get; set; }
 		public DateTime? DataCriacao { get; set; }
         public DateTime? DataModificacao { get; set; }
         public string Cliente { get; set; }
@@ -29,7 +29,7 @@ namespace KeViraKombinaTodos.Core.Models {
         public string Vendedor { get; set; }
         public string CondicaoPagamento { get; set; }
         public string Transportadora { get; set; }
-        public double? Frete { get; set; }
+        public decimal? Frete { get; set; }
         public string PedidoInterno { get; set; }
         #endregion
     }

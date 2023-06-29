@@ -81,7 +81,11 @@ namespace KeViraKombinaTodos.Web.Controllers
                 if (propertyName == "Codigo")
                 {
                     if (!string.IsNullOrWhiteSpace(value))
-                        codProduto = _produtoService.CarregarProdutos().Where(u => u.Codigo == value).FirstOrDefault().Codigo;
+                    {
+                        var produto = _produtoService.CarregarProdutos().Where(u => u.Codigo == value).FirstOrDefault();
+                        codProduto = produto?.Codigo;
+                    }
+                        
 
                     if (string.IsNullOrWhiteSpace(value))
                     {
@@ -106,10 +110,10 @@ namespace KeViraKombinaTodos.Web.Controllers
                 }
                 else if (propertyName == "Preco")
                 {
-                    model.Valor = Convert.ToDouble(value);
+                    model.Valor = Convert.ToDecimal(value);
                 }
                 else
-                    model.Quantidade = Convert.ToDouble(value);
+                    model.Quantidade = Convert.ToDecimal(value);
 
                 if (!status)
                 {

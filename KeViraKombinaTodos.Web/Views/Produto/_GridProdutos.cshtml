@@ -10,8 +10,8 @@
     columns: webGrid.Columns(
         webGrid.Column("Codigo", header: "Código", format: @<text><div class="edit" data-id="@item.ProdutoID" data-propertyname="Codigo">@item.Codigo</div></text>),
         webGrid.Column("Descricao", header: "Descrição", format: @<text><div class="edit" data-id="@item.ProdutoID" data-propertyname="Descricao">@item.Descricao</div></text>),
-        webGrid.Column("Valor", header: "Preço", format: @<text><div class="edit" data-id="@item.ProdutoID" data-propertyname="Preco">@item.Valor</div></text>),
-        webGrid.Column("Quantidade", header: "Quantidade", format: @<text><div class="edit" data-id="@item.ProdutoID" data-propertyname="Quantidade">@item.Quantidade</div></text>),
+        webGrid.Column("Valor", header: "Preço", format: @<text><div class="edit" data-id="@item.ProdutoID" data-propertyname="Preco">@item.Valor.ToString("0.00")</div></text>),
+        webGrid.Column("Quantidade", header: "Quantidade", format: @<text><div class="edit" data-id="@item.ProdutoID" data-propertyname="Quantidade">@item.Quantidade.ToString("0.00")</div></text>),
         webGrid.Column("Ativo", header: "Ativo", format: @<text> @Html.ActionLink(linkText: (@item.Ativo == true ? "Sim" : "Não"), actionName: ("EditCheckd"), routeValues: new { produtoID = item.ProdutoID, value = @item.Ativo == true ? 0 : 1 })</text>),
         webGrid.Column("DataCriacao", header: "Data criação"),
         webGrid.Column("DataModificacao", header: "Data Modificação"),

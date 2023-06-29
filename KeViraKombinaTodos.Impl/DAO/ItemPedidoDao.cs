@@ -65,8 +65,8 @@ namespace KeViraKombinaTodos.Impl.DAO {
 
 			band.PedidoID = Convert.ToInt32(reader["PedidoID"]);
             band.ProdutoID = Convert.ToInt32(reader["ProdutoID"]);
-            band.Preco = Convert.ToInt32(reader["Preco"]);
-            band.Quantidade = Convert.ToInt32(reader["Quantidade"]);
+            band.Preco = Convert.ToDecimal((reader["Preco"]));
+            band.Quantidade = Convert.ToDecimal(reader["Quantidade"]);
             band.Descricao = Convert.ToString(reader["Descricao"]);
             band.Codigo = Convert.ToString(reader["Codigo"]);
 

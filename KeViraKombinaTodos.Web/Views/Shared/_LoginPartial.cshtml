@@ -1,16 +1,18 @@
 ﻿@if (Request.IsAuthenticated)
-{   
+{
 
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "nav-link" }))
     {
-    @Html.AntiForgeryToken()
+        @Html.AntiForgeryToken()
+        <!-- Icon -->
+        <a class="text-reset me-3" href="#">
+                <li>@Html.ActionLink(" ", "Index", "Pedido", null, new { @class = "fas fa-shopping-cart" })</li>          
+        </a>
+        <li class="nav-item">
+            @Html.ActionLink("Olá " + User.Identity.GetNomeID() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Gerenciamento" })
+        </li>
+        <li class="nav-item"><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
 
-    
-    <li class="nav-item">
-        @Html.ActionLink("Olá " + User.Identity.GetNomeID() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Gerenciamento" })
-    </li>
-    <li class="nav-item"><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
-    
     }
 }
 else
