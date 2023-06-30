@@ -82,7 +82,7 @@ namespace KeViraKombinaTodos.Web
             bundles.Add(new ScriptBundle("~/bundles/theme").Include(
                             "~/Scripts/theme.js"));
 
-            bundles.Add(new StyleBundle("~/Content/css").Include(
+            bundles.Add(new StyleBundle("~/CSSBundle").Include(
                             "~/Content/bootstrap.css",
                             "~/Content/Gridmvc.css",
                             "~/Content/bootstrap.min.css",

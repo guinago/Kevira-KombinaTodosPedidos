@@ -77,7 +77,11 @@ namespace KeViraKombinaTodos.Web.Controllers {
             if (propertyName == "Descricao")
             {
                 if (!string.IsNullOrWhiteSpace(value))
-                    descPerfil = _perfilService.CarregarPerfis().Where(u => u.Descricao == value).FirstOrDefault().Descricao;
+                {
+                    var descricao = _perfilService.CarregarPerfis().Where(u => u.Descricao == value).FirstOrDefault();
+                    descPerfil = descricao?.Descricao;
+                }
+                    
 
                 if (string.IsNullOrWhiteSpace(value))
                 {

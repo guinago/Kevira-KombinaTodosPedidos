@@ -76,8 +76,12 @@ namespace KeViraKombinaTodos.Web.Controllers {
 
             if (propertyName == "Codigo")
             {
-                if(!string.IsNullOrWhiteSpace(value))
-                    codDescPagto = _condicaoPagamentoService.CarregarCondicoesPagamento().Where(u => u.Codigo == value).FirstOrDefault().Codigo;
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    var codigoCP = _condicaoPagamentoService.CarregarCondicoesPagamento().Where(u => u.Codigo == value).FirstOrDefault();
+                    codDescPagto = codigoCP?.Codigo;
+                }
+                    
 
                 if (string.IsNullOrWhiteSpace(value))
                 {

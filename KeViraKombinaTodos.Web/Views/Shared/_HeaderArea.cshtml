@@ -9,7 +9,7 @@
             </div>
             <div class="float-left">
                 <a class="navbar-brand logo_h" href="/KeViraKombinaTodos.Web/">
-                    <img src="/KeViraKombinaTodos.Web/Content/images/Logo_BancoQueViraMesaOficial.jpg" class="category-icon" width="100" height="100" />
+                    <img src="~/Content/images/Logo_BancoQueViraMesaOficial.jpg" class="category-icon" width="100" height="100" />
                 </a>
             </div>
         </div>
@@ -23,58 +23,70 @@
                 <ul class="nav navbar-nav menu_nav" style="margin-left: auto; margin-right: auto">
                     @if (Request.IsAuthenticated)
                     {
-                        if (User.Identity.GetPerfilID() > 0)
+                        if (User.Identity.GetPerfilID() == 0)
                         {
-                        <li class="nav-item">
-                            @Html.ActionLink("Perfil", "Index", "Perfil", null, new { @class = "nav-link" })
-                        </li>
+                            <div>
+                                Você não tem permissão de acesso, por favor contate o Administrador do sistema para associar seu usuário a um perfil.
 
-                        <li class="nav-item">
-                            @Html.ActionLink("Usuário", "Index", "Usuario", null, new { @class = "nav-link" })
-                        </li>
+                            </div>
+                        }
 
-                        <li class="nav-item">
-                            @Html.ActionLink("Condição de Pagamento", "Index", "CondicaoPagamento", null, new { @class = "nav-link" })
-                        </li>
+                        if (User.Identity.GetPerfilID() == 1)
+                        {
+                            <li class="nav-item">
+                                @Html.ActionLink("Perfil", "Index", "Perfil", null, new { @class = "nav-link" })
+                            </li>
 
-                        <li class="nav-item">
-                            @Html.ActionLink("Transportadora", "Index", "Transportadora", null, new { @class = "nav-link" })
-                        </li>
+                            <li class="nav-item">
+                                @Html.ActionLink("Usuário", "Index", "Usuario", null, new { @class = "nav-link" })
+                            </li>
 
-                        <li class="nav-item">
-                            @Html.ActionLink("Produto", "Index", "Produto", null, new { @class = "nav-link" })
-                        </li>
+                            <li class="nav-item">
+                                @Html.ActionLink("Condição de Pagamento", "Index", "CondicaoPagamento", null, new { @class = "nav-link" })
+                            </li>
 
-                        <li class="nav-item dropdown">
-                          <a class="nav-link dropdown-toggle" href="#" id="responsive" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Pedido
-                          </a>
-                          <ul class="dropdown-menu">
-                              <li>@Html.ActionLink("Novo Pedido", "Index", "Pedido", null, new { @class = "nav-link" })</li>
-                              <li>@Html.ActionLink("Visualizar Pedidos", "VisualizarPedidos", "Pedido", null, new { @class = "nav-link" })</li>
-                          </ul>
-                        </li>
+                            <li class="nav-item">
+                                @Html.ActionLink("Transportadora", "Index", "Transportadora", null, new { @class = "nav-link" })
+                            </li>
+                        }
 
-                        <li class="nav-item">
-                            @Html.ActionLink("Visualizar Entregas", "VisualizarEntregas", "Pedido", null, new { @class = "nav-link" })
-                        </li>
+                        if (User.Identity.GetPerfilID() == 1 || User.Identity.GetPerfilID() == 2)
+                        {
+                            <li class="nav-item">
+                                @Html.ActionLink("Produto", "Index", "Produto", null, new { @class = "nav-link" })
+                            </li>
 
-                        <li class="nav-item">
-                            @Html.ActionLink("Gráficos", "Graficos", "Pedido", null, new { @class = "nav-link" })
-                        </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="responsive" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                     Pedido
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>@Html.ActionLink("Novo Pedido", "Index", "Pedido", null, new { @class = "nav-link" })</li>
+                                    <li>@Html.ActionLink("Visualizar Pedidos", "VisualizarPedidos", "Pedido", null, new { @class = "nav-link" })</li>
+                                </ul>
+                            </li>
+                        }
+
+                        if (User.Identity.GetPerfilID() == 1 || User.Identity.GetPerfilID() == 3)
+                        {
+                            <li class="nav-item">
+                                 @Html.ActionLink("Visualizar Entregas", "VisualizarEntregas", "Pedido", null, new { @class = "nav-link" })
+                            </li>
+                        }
+
+                        if (User.Identity.GetPerfilID() == 1 || User.Identity.GetPerfilID() == 3)
+                        {
+                            <li class="nav-item">
+                                @Html.ActionLink("Gráficos", "Graficos", "Pedido", null, new { @class = "nav-link" })
+                            </li>
 
                         <!--
                             <li class="nav-item">
                                 @Html.ActionLink("Relatório Vendas", "Index", "Pedido", null, new { @class = "nav-link" })
                             </li>
-                        -->
+                        -->                       
                         }
-                        else
-                        {
-                        <div>
-                            Você não tem permissão de acesso, por favor contate o Administrador do sistema para associar seu usuário a um perfil.
-                        </div>
-                        }
+
                     }
                 </ul>
             </div>
