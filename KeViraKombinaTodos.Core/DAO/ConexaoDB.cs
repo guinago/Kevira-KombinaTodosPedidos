@@ -29,7 +29,7 @@ namespace KeViraKombinaTodos.Core.DAO {
 			try {
 			string connectionStrings = "";
 				connectionStrings = getWebConfig(this.ConexaoWebConfig);
-                //connectionStrings = GetConexaoLocal();
+                // connectionStrings = GetConexaoLocal();
                 this.conn = new SqlConnection(connectionStrings);
 			} catch (Exception erro) {
 				this.mErro = erro.Message;

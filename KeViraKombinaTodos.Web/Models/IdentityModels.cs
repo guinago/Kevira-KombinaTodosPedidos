@@ -33,6 +33,7 @@ namespace KeViraKombinaTodos.Web.Models {
 	public class ApplicationDbContext : IdentityDbContext<ApplicationUser, CustomRole, int, CustomUserLogin, CustomUserRole, CustomUserClaim> {
 		public ApplicationDbContext()
 				: base("DefaultConnection") {
+            this.Database.CommandTimeout = 180;
 		}
 		public static ApplicationDbContext Create() {
 			return new ApplicationDbContext();
