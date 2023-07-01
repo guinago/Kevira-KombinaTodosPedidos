@@ -9,6 +9,7 @@ namespace KeViraKombinaTodos.Web
         // For more information on bundling, visit https://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
+            bundles.UseCdn = true;
 
             var bundle = new ScriptBundle("~/bundles/jqueryval") { Orderer = new AsIsBundleOrderer() };
 
@@ -22,6 +23,11 @@ namespace KeViraKombinaTodos.Web
                 .Include("~/Scripts/methods_pt.js");
             bundles.Add(bundle);
 
+            bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
+                    "~/Scripts/jquery.datetimepicker.js",
+                    "~/Scripts/jquery-{version}.js",
+                    "~/Scripts/toastr.js",
+                    "~/Scripts/toastr.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/funcoesjs").Include(
                         "~/Scripts/funcoes.js"));
